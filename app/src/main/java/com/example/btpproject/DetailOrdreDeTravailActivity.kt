@@ -7,8 +7,13 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 
 class DetailOrdreDeTravailActivity : AppCompatActivity() {
+
+    lateinit var tabLayout: TabLayout
+    lateinit var viewPager: ViewPager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +23,19 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Ordre de travail")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        tabLayout = findViewById(R.id.detailOTTabLayout)
+        viewPager = findViewById(R.id.detailOTViewPager)
+
+        val adapter: ViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
+
+        //Ajouter les fragments
+        adapter.addFragment(FragmentListeLigneLot(), "Lignes")
+        adapter.addFragment(FragmentListeArticles(), "Articles")
+
+        //Adapter setup
+        viewPager.setAdapter(adapter)
+        tabLayout.setupWithViewPager(viewPager)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

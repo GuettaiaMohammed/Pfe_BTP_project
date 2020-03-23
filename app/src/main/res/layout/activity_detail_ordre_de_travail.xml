@@ -146,65 +146,20 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <LinearLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/detailOTTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="300dp"
-        android:orientation="horizontal">
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/design_default_color_primary"/>
 
-        <TextView
-            android:id="@+id/textView34"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="Lignes"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textView35"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="@string/articles"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/detailOTViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="350dp"
-        android:orientation="horizontal">
+        android:layout_marginTop="352dp" />
 
-        <TextView
-            android:id="@+id/textView12"
-            android:layout_width="210dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="15dp"
-            android:text="ligne "
-            android:textColor="@android:color/background_dark" />
 
-        <TextView
-            android:id="@+id/textView17"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Qte prévue"
-            android:textColor="@android:color/background_dark" />
-
-        <TextView
-            android:id="@+id/textView20"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:paddingRight="10dp"
-            android:text="Qte realisé"
-            android:textColor="@android:color/background_dark" />
-    </LinearLayout>
 </RelativeLayout>
