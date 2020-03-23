@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">BTP project</string>
+    <string name="articles">Articles</string>
+    <string name="article">Article</string>
+    <string name="materiel">Matériel</string>
+    <string name="avancesEmploye">Avances Employé</string>
+    <string name="title_activity_bottom_nav">BottomNavActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="employe">Employé</string>
+    <string name="title_activity_bottom_navigation">BottomNavigationActivity</string>
+    <string name="title_activity_liste_article">ListeArticleActivity</string>
+    <string name="suiviJ">Suivi/J</string>
+</resources>
