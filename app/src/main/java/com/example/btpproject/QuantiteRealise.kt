@@ -1,3 +1,3 @@
 package com.example.btpproject
 
-class QuantiteRealise(var qterealise: String?, var date: String?)
+class QuantiteRealise(var date: String?, var qterealise: String?, var nbHTravaille: String?, var mtPris: String?)

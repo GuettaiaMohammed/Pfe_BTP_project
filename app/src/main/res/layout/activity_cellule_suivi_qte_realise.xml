@@ -4,7 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
+    android:padding="7dp"
     tools:ignore="MissingDefaultResource">
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TextView" />
 
     <TextView
         android:id="@+id/qteRealise"
@@ -14,9 +22,17 @@
         android:text="Quantité Réalisée" />
 
     <TextView
-        android:id="@+id/date"
+        android:id="@+id/nbHTravaille"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="TextView" />
+
+    <TextView
+        android:id="@+id/montantPri"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TextView" />
+
 </LinearLayout>

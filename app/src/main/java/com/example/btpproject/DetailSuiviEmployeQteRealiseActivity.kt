@@ -40,9 +40,9 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
         mesQtes = ArrayList();
 
 
-        (mesQtes as ArrayList<QuantiteRealise>).add(QuantiteRealise("Quantité Réalisée ",  "Date "))
+        (mesQtes as ArrayList<QuantiteRealise>).add(QuantiteRealise("Date",  "Qantité réalisé", "Nb H Travaillé", "Montant pris"))
 
-        (mesQtes as ArrayList<QuantiteRealise>).add(QuantiteRealise("50",  "13/03/2020"))
+        (mesQtes as ArrayList<QuantiteRealise>).add(QuantiteRealise("13/03/2020", "50", "20:00", "5000.00" ))
 
         qteAdapter!!.addAll(mesQtes)
         listView!!.adapter = qteAdapter

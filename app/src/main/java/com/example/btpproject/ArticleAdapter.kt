@@ -14,7 +14,7 @@ class ArticleAdapter(context: Context, resource: Int) : ArrayAdapter<Article>(co
 
         val layoutInflater =
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        v = layoutInflater.inflate(R.layout.activity_article_cellule, null)
+        v = layoutInflater.inflate(R.layout.activity_cellule_article, null)
 
         val article = getItem(position)
         val nom = v.findViewById<TextView>(R.id.articleNom)

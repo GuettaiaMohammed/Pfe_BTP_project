@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.TextView
 
 
@@ -16,7 +15,7 @@ class MaterielAdapter(context: Context, resource: Int) : ArrayAdapter<Materiel>(
 
         val layoutInflater =
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        v = layoutInflater.inflate(R.layout.activity_materiel_cellule, null)
+        v = layoutInflater.inflate(R.layout.activity_cellule_materiel, null)
 
         val materiel = getItem(position)
         val nom = v.findViewById<TextView>(R.id.nomTV)

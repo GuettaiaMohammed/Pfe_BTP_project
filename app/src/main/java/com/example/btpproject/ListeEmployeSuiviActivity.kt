@@ -39,9 +39,9 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
         mesEmployes= ArrayList();
 
-        (mesEmployes as ArrayList<Employe>).add(Employe("Employé1", "Architecte"))
-        (mesEmployes as ArrayList<Employe>).add(Employe("Employé2", "Maçon"))
-        (mesEmployes as ArrayList<Employe>).add(Employe("Employé3", "Maçon"))
+        (mesEmployes as ArrayList<Employe>).add(Employe("Employé1", "Transport à la décharge publique de l’EPIC ASROUT"))
+        (mesEmployes as ArrayList<Employe>).add(Employe("Employé2", "Transport à la décharge publique de l’EPIC ASROUT"))
+        (mesEmployes as ArrayList<Employe>).add(Employe("Employé3", "Transport à la décharge publique de l’EPIC ASROUT"))
 
         employeAdapter!!.addAll(mesEmployes)
         listView!!.adapter = employeAdapter
@@ -61,7 +61,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
         //button click to show dialog
         fabEmpl.setOnClickListener {
             //Inflate the dialog with custom view
-            val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_employe2, null)
+            val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_employe_suivi, null)
             //AlertDialogBuilder
             val mBuilder = AlertDialog.Builder(this)
                 .setView(mDialogView)

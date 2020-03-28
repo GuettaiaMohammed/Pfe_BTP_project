@@ -78,17 +78,19 @@
                             android:text="  Quantité"
                             android:textSize="24sp" /-->
 
-                        <EditText
-                            android:id="@+id/editText2"
+                        <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="40dp"
-                            android:layout_weight="1"
-                            android:hint="Quantité"
-                            android:inputType="textPersonName"
-                            android:textSize="20dp"
-                            tools:layout_marginRight="40dp" />
+                            android:layout_weight="1">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="30dp"
+                                android:layout_marginRight="30dp"
+                                android:hint="@string/quantiteReceptionne" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
                     </LinearLayout>
 
                     <LinearLayout

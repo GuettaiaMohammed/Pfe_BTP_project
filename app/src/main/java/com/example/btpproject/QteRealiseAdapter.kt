@@ -17,7 +17,7 @@ class QteRealiseAdapter(context: Context, resource: Int) : ArrayAdapter<Quantite
 
         val layoutInflater =
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        v = layoutInflater.inflate(R.layout.activity_suivi_qte_realise_cellule, null)
+        v = layoutInflater.inflate(R.layout.activity_cellule_suivi_qte_realise, null)
 
         val quantite = getItem(position)
         val qte = v.findViewById<TextView>(R.id.qteRealise)

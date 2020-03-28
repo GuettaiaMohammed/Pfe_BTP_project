@@ -15,7 +15,7 @@ class AvanceEmployeAdapter(context: Context, resource: Int) :
 
         val layoutInflater =
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        v = layoutInflater.inflate(R.layout.activity_avance_employe_cellule, null)
+        v = layoutInflater.inflate(R.layout.activity_cellule_avance_employe, null)
 
         val avance = getItem(position)
         val nom = v.findViewById<TextView>(R.id.nomEmpTV)

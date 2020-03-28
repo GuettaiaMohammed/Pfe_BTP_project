@@ -16,12 +16,12 @@ class EmployeAdapter(context: Context, resource: Int) : ArrayAdapter<Employe>(co
 
         val layoutInflater =
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        v = layoutInflater.inflate(R.layout.activity_employe_cellule, null)
+        v = layoutInflater.inflate(R.layout.activity_cellule_employe, null)
 
         val employe= getItem(position)
 
         val nom = v.findViewById<TextView>(R.id.nom)
-        val metier = v.findViewById<TextView>(R.id.metier)
+        val metier = v.findViewById<TextView>(R.id.lotSuiviTV)
 
 
         nom.text = employe.nom

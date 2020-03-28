@@ -25,7 +25,7 @@
             android:text="TextView" />
 
         <TextView
-            android:id="@+id/metier"
+            android:id="@+id/lotSuiviTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

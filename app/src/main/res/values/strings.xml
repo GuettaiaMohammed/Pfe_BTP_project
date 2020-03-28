@@ -14,4 +14,25 @@
     <string name="suiviJ">Suivi/J</string>
     <string name="lignesLot">Lignes</string>
     <string name="lignesSupp">Lignes Supp</string>
+    <string name="qteRealise">Quantité réalisé</string>
+    <string name="nbHTravaille">Nb H travaillé</string>
+    <string name="mtPris">Montant pris</string>
+    <string name="unite">Unité</string>
+    <string name="quantite">Quantité</string>
+    <string name="date">Date</string>
+    <string name="prixDemande">Prix demandé</string>
+    <string name="demandeDapproArticle">Demande appro articles</string>
+    <string name="demandeApproPerson">Demande appro personnel</string>
+    <string name="metier">Métier</string>
+    <string name="dateD">Date début</string>
+    <string name="dateF">Date fin</string>
+    <string name="nbrEmp">Nombre employés</string>
+    <string name="typeInterv">Type intervention</string>
+    <string name="ligneLot">Ligne lot</string>
+    <string name="quantitePrevue">Quantité prévue</string>
+    <string name="nbHPrevues">Nb H prévues</string>
+    <string name="pu">P.U</string>
+    <string name="nom">Nom</string>
+    <string name="ref">Référence</string>
+    <string name="quantiteReceptionne">Quantité réceptionné</string>
 </resources>

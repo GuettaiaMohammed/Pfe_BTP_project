@@ -54,8 +54,7 @@
                 android:layout_width="329dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:longClickable="false"
-                tools:layout_marginLeft="10dp">
+                android:longClickable="false">
 
                 <LinearLayout
                     android:id="@+id/l1"
@@ -64,25 +63,51 @@
                     android:orientation="vertical">
 
 
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         app:layout_constraintTop_toBottomOf="@+id/l1">
 
 
-
-                        <EditText
-                            android:id="@+id/editText2"
+                        <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="50dp"
-                            android:layout_weight="1"
-                            android:hint="Quantité"
-                            android:inputType="textPersonName"
-                            android:textSize="20dp"
-                            tools:layout_marginRight="50dp" />
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_weight="1">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/qteRealise" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_weight="1">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/nbHTravaille" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_weight="1">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/mtPris" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
                     </LinearLayout>
 
@@ -99,18 +124,10 @@
                             android:id="@+id/button"
                             android:layout_width="120dp"
                             android:layout_height="40dp"
-                            android:layout_marginRight="20dp"
                             android:layout_weight="1"
                             android:background="@drawable/button"
                             android:text="Valider" />
 
-                        <Button
-                            android:id="@+id/button2"
-                            android:layout_width="120dp"
-                            android:layout_height="40dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/button"
-                            android:text="Annuler" />
                     </LinearLayout>
 
                 </LinearLayout>
