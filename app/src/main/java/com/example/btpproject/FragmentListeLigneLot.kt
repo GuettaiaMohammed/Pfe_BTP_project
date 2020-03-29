@@ -25,6 +25,9 @@ class FragmentListeLigneLot : Fragment() {
 
         lignes = ArrayList()
 
+        lignes!!.add(LigneLotOT("N°","Désignation","Unité","Quantité réalisé"))
+
+
         lignes!!.add(LigneLotOT("2.0.1a","Déblais en tranchée et en puits :a) tranche comprise entre 0,00 et 1,50m","m²","3050,20"))
         lignes!!.add(LigneLotOT("2.0.1a","Déblais en tranchée et en puits :a) tranche comprise entre 0,00 et 1,50m","m²","3050,20"))
         lignes!!.add(LigneLotOT("2.0.1a","Déblais en tranchée et en puits :a) tranche comprise entre 0,00 et 1,50m","m²","3050,20"))

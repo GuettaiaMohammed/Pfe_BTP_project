@@ -45,7 +45,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="210dp"
         android:layout_marginTop="150dp">
 
         <LinearLayout
@@ -78,7 +78,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="2dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -140,9 +140,9 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/ajouter"
         android:layout_width="340dp"
-        android:layout_height="130dp"
+        android:layout_height="107dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="310dp"
+        android:layout_marginTop="300dp"
         android:layout_weight="1"
         android:longClickable="false"
         app:cardCornerRadius="12dp">
@@ -193,7 +193,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:adjustViewBounds="false"
 
                 app:srcCompat="@drawable/ajouter" />
@@ -203,7 +203,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="130dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 app:srcCompat="@drawable/ajouter" />
 
             <ImageButton
@@ -211,7 +211,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="240dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:scaleType="center"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ajouter" />
@@ -225,7 +225,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="450dp"
+        android:layout_marginTop="430dp"
         android:layout_marginRight="10dp">
 
         <ListView

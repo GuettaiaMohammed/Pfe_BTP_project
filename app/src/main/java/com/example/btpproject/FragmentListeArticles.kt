@@ -24,6 +24,9 @@ class FragmentListeArticles : Fragment() {
         articleAdapter = FragmentArticleAdapter(view.context,0)
         articleOT = ArrayList()
 
+        articleOT!!.add(ArticleOT("Ligne","Article", "Unité","Quantité consommé"))
+
+
         articleOT!!.add(ArticleOT("Remblais de fouilles après exécution des ouvrages en béton armé.","Béton", "m²","300"))
         articleOT!!.add(ArticleOT("Remblais de fouilles après exécution des ouvrages en béton armé.","Béton", "m²","300"))
         articleOT!!.add(ArticleOT("Remblais de fouilles après exécution des ouvrages en béton armé.","Béton", "m²","300"))
