@@ -7,27 +7,25 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 
-class FragmentArticleAdapter (context: Context, resource: Int) : ArrayAdapter<ArticleOT>(context, resource) {
+class FragmentArticleAdapterAjoutOt (context: Context, resource: Int) : ArrayAdapter<ArticleOT>(context, resource) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val v: View
 
         val layoutInflater =
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        v = layoutInflater.inflate(R.layout.activity_cellule_article_detail_ot, null)
+        v = layoutInflater.inflate(R.layout.activity_cellule_article_ajout_ot, null)
 
         val articleOT = getItem(position)
 
-        val ligne = v.findViewById<TextView>(R.id.ligneLotArtDetOTTV)
-        val article = v.findViewById<TextView>(R.id.nomArlDetOTTV)
-        val unite = v.findViewById<TextView>(R.id.uniteArtDetOTTV)
-        val qte = v.findViewById<TextView>(R.id.qteArtConsomeDetOTTV)
+        val ligne = v.findViewById<TextView>(R.id.ligneLotArtAjtOTTV)
+        val article = v.findViewById<TextView>(R.id.nomArlAjtOTTV)
+        val unite = v.findViewById<TextView>(R.id.uniteArtAjtOTTV)
 
 
         ligne.text = articleOT.ligne
         article.text = articleOT.article
         unite.text = articleOT.unite
-        qte.text = articleOT.qteConsomme
 
 
         return v

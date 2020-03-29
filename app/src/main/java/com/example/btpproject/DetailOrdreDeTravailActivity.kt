@@ -30,8 +30,8 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
         val adapter: ViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
 
         //Ajouter les fragments
-        adapter.addFragment(FragmentListeLigneLot(), "Lignes")
-        adapter.addFragment(FragmentListeArticles(), "Articles")
+        adapter.addFragment(FragmentListeLigneLotDetailOt(), "Lignes")
+        adapter.addFragment(FragmentListeArticlesDetailOt(), "Articles")
 
         //Adapter setup
         viewPager.setAdapter(adapter)

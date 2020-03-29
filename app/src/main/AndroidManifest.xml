@@ -21,7 +21,7 @@
             android:parentActivityName=".ListeOrdreDeTravailActivity"/>
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".AjouterOrdreDeTravail" />
+        <activity android:name=".AjouterOrdreDeTravailActivity" />
         <activity android:name=".ListeOrdreDeTravailActivity"
             android:parentActivityName=".MainActivity"/>
         <activity android:name=".AjouterAvanceEmployeActivity" />

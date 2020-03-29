@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 
-class FragmentLigneLotAdapter(context: Context, resource: Int) : ArrayAdapter<LigneLotOT>(context, resource) {
+class FragmentLigneLotAdapterDetailOt(context: Context, resource: Int) : ArrayAdapter<LigneLotOT>(context, resource) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val v: View

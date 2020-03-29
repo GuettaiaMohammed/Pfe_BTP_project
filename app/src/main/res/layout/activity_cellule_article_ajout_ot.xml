@@ -6,34 +6,34 @@
     android:padding="7dp">
 
     <TextView
-        android:id="@+id/numLigneLotDetOTTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center|center_vertical"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/designLigneLotDetOTTV"
+        android:id="@+id/ligneLotArtAjtOTTV"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingLeft="7dp"
         android:text="TextView" />
 
     <TextView
-        android:id="@+id/uniteDetOTTV"
+        android:id="@+id/nomArlAjtOTTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center|center_vertical"
+        android:gravity="center"
         android:text="TextView" />
 
     <TextView
-        android:id="@+id/qteLigneRealiseDetOTTV"
+        android:id="@+id/uniteArtAjtOTTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center|center_vertical"
+        android:gravity="center"
         android:text="TextView" />
+
+    <EditText
+        android:id="@+id/qteConsommeAjtOtET"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="number" />
+
+
 </LinearLayout>

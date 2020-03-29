@@ -7,21 +7,21 @@ import android.view.ViewGroup
 import android.widget.ListView
 import androidx.fragment.app.Fragment
 
-class FragmentListeLigneLot : Fragment() {
+class FragmentListeLigneLotDetailOt : Fragment() {
     internal lateinit var view: View
     private var lignes: ArrayList<LigneLotOT>? = null
     private var listView: ListView? = null
-    private var ligneLotAdapter: FragmentLigneLotAdapter? = null
+    private var ligneLotAdapter: FragmentLigneLotAdapterDetailOt? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        view = inflater.inflate(R.layout.activity_fragment_liste_ligne_lot, container, false)
+        view = inflater.inflate(R.layout.activity_fragment_liste_ligne_lot_detail_ot, container, false)
 
         listView = view.findViewById(R.id.ListLigneLotDetailOT)
-        ligneLotAdapter = FragmentLigneLotAdapter(view.context,0)
+        ligneLotAdapter = FragmentLigneLotAdapterDetailOt(view.context,0)
 
         lignes = ArrayList()
 

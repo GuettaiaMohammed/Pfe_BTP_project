@@ -55,14 +55,9 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
 
         //button click to show dialog
         fabOrdreDeTravail.setOnClickListener {
-            //Inflate the dialog with custom view
-            val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_ordre_de_travail, null)
-            //AlertDialogBuilder
-            val mBuilder = AlertDialog.Builder(this)
-                .setView(mDialogView)
-            //.setTitle("Login Form")
-            //show dialog
-            mBuilder.show()
+            val intent = Intent(this, AjouterOrdreDeTravailActivity::class.java)
+            // start your next activity
+            startActivity(intent)
         }
 
 
