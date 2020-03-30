@@ -2,6 +2,7 @@ package com.example.btpproject
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 
@@ -13,6 +14,11 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ajouter_ordre_de_travail)
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setTitle("Ordre de travail")
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
 
         tabLayout = findViewById(R.id.ajoutOTTabLayout)
