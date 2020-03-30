@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.widget.ListView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import kotlinx.android.synthetic.main.activity_ajouter_article.*
 import kotlinx.android.synthetic.main.activity_mon_chantier2.*
 import java.util.ArrayList
 
@@ -39,6 +40,7 @@ class MonChantier : AppCompatActivity() {
             //.setTitle("Login Form")
             //show dialog
             val  mAlertDialog = mBuilder.show()
+
         }
 
         //button click to show dialog

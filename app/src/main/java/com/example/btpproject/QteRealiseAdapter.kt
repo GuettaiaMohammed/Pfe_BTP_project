@@ -22,9 +22,13 @@ class QteRealiseAdapter(context: Context, resource: Int) : ArrayAdapter<Quantite
         val quantite = getItem(position)
         val qte = v.findViewById<TextView>(R.id.qteRealise)
         val date = v.findViewById<TextView>(R.id.date)
+        val nbHTravaille = v.findViewById<TextView>(R.id.nbHTravaille)
+        val mtPris = v.findViewById<TextView>(R.id.montantPri)
 
         qte.text = quantite.qterealise
         date.text = quantite.date
+        nbHTravaille.text = quantite.nbHTravaille
+        mtPris.text = quantite.mtPris
 
 
         return v
