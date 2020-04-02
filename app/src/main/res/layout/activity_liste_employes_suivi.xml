@@ -62,8 +62,9 @@
             app:layout_constraintStart_toEndOf="@+id/layoutEmplye"
             app:layout_constraintStart_toStartOf="@+id/layoutEmplye"
             app:layout_constraintTop_toTopOf="@+id/toolbar"
-            app:maxImageSize="80dp"
-            app:srcCompat="@drawable/ajouter2" />
+            app:maxImageSize="70dp"
+            app:backgroundTint="@color/colorPrimary"
+            app:srcCompat="@android:drawable/ic_menu_add"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"

@@ -242,7 +242,7 @@
             android:shadowColor="@color/design_default_color_primary_dark"
             android:text="receptionner"
             android:textColor="@android:color/background_light"
-            android:textSize="10sp" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 </RelativeLayout>

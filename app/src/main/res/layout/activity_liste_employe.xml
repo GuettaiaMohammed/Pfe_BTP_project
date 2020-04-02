@@ -58,12 +58,14 @@
             android:layout_marginTop="125dp"
             android:layout_marginEnd="25dp"
             android:layout_marginRight="25dp"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/layoutEmplye"
             app:layout_constraintStart_toStartOf="@+id/layoutEmplye"
             app:layout_constraintTop_toTopOf="@+id/toolbar"
-            app:maxImageSize="80dp"
-            app:srcCompat="@android:drawable/ic_dialog_email"  />
+            app:maxImageSize="70dp"
+            app:backgroundTint="@color/colorPrimary"
+            app:srcCompat="@android:drawable/ic_menu_add"  />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
@@ -88,9 +90,9 @@
             </ListView>
 
             <LinearLayout
-                android:layout_width="400dp"
+                android:layout_width="350dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center|center_horizontal|center_vertical"
+
                 android:layout_marginTop="1040dp"
                 android:gravity="center|center_horizontal|center_vertical"
                 android:orientation="horizontal"
@@ -102,7 +104,9 @@
                     android:id="@+id/receptioner"
                     android:layout_width="120dp"
                     android:layout_height="40dp"
+                    android:textColor="@android:color/background_light"
                     android:layout_marginRight="5dp"
+                    android:textSize="14sp"
                     android:background="@drawable/button"
                     android:text="Receptionner" />
 
@@ -110,8 +114,10 @@
                     android:id="@+id/mettreR"
                     android:layout_width="120dp"
                     android:layout_height="40dp"
+                    android:textSize="14sp"
                     android:layout_marginLeft="5dp"
                     android:background="@drawable/button"
+                    android:textColor="@android:color/background_light"
                     android:text="Mettre en reserve" />
 
             </LinearLayout>
