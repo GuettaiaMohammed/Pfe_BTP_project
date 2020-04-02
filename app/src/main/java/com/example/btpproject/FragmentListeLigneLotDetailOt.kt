@@ -28,10 +28,10 @@ class FragmentListeLigneLotDetailOt : Fragment() {
         lignes!!.add(LigneLotOT("N°","Désignation","Unité","Quantité réalisé"))
 
 
-        lignes!!.add(LigneLotOT("2.0.1a","Déblais en tranchée et en puits :a) tranche comprise entre 0,00 et 1,50m","m²","3050,20"))
-        lignes!!.add(LigneLotOT("2.0.1a","Déblais en tranchée et en puits :a) tranche comprise entre 0,00 et 1,50m","m²","3050,20"))
-        lignes!!.add(LigneLotOT("2.0.1a","Déblais en tranchée et en puits :a) tranche comprise entre 0,00 et 1,50m","m²","3050,20"))
-        lignes!!.add(LigneLotOT("2.0.1a","Déblais en tranchée et en puits :a) tranche comprise entre 0,00 et 1,50m","m²","3050,20"))
+        lignes!!.add(LigneLotOT("2.01.a","Déblais en tranchée et en puits :a) tranche comprise entre 0,00 et 1,50m","m3","490,00"))
+        lignes!!.add(LigneLotOT("2.01.b","Déblais en tranchée et en puits :b) tranche comprise entre 1,50 et 3,00m","m3","490,00"))
+        lignes!!.add(LigneLotOT("2.03","Transport des terres à la décharge publique, quelque soit la distance parcourue","m3","1000,00"))
+        lignes!!.add(LigneLotOT("2.06.a","Béton armé pour ouvrage en infrastructure :b) Béton dosé à 350Kg/m3 pour a/poteaux et voiles","m3","35,00"))
 
         ligneLotAdapter!!.addAll(lignes)
         listView!!.adapter = ligneLotAdapter

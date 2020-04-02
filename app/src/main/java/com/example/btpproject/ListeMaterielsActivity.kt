@@ -12,6 +12,7 @@ import android.widget.AdapterView
 import android.widget.ListView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import kotlinx.android.synthetic.main.activity_cellule_materiel.*
 import kotlinx.android.synthetic.main.activity_liste_materiels.*
 
 import java.util.ArrayList
@@ -37,10 +38,10 @@ class ListeMaterielsActivity : AppCompatActivity() {
 
         mesMateriels = ArrayList();
 
-        (mesMateriels as ArrayList<Materiel>).add(Materiel("Grue", "liebherr/Flat-Top EC-B/Pas de Plaque", "11/03/2020"))
-        (mesMateriels as ArrayList<Materiel>).add(Materiel("Grue", "liebherr/Flat-Top EC-B/Pas de Plaque", "11/03/2020"))
-        (mesMateriels as ArrayList<Materiel>).add(Materiel("Grue", "liebherr/Flat-Top EC-B/Pas de Plaque", "11/03/2020"))
-        (mesMateriels as ArrayList<Materiel>).add(Materiel("Grue", "liebherr/Flat-Top EC-B/Pas de Plaque", "11/03/2020"))
+        (mesMateriels as ArrayList<Materiel>).add(Materiel("Grue", "Interne", "21/03/2020"))
+        (mesMateriels as ArrayList<Materiel>).add(Materiel("JCB/Mini-pelles", "Interne", "17/03/2020"))
+        (mesMateriels as ArrayList<Materiel>).add(Materiel("JCB/Chargeuse-pelleteuse 3CX ECO", "Interne", "11/02/2020"))
+        (mesMateriels as ArrayList<Materiel>).add(Materiel("BELL/tombereau articulé B25E", "Interne", "01/01/2020"))
 
         materielAdapter!!.addAll(mesMateriels)
         listView!!.adapter = materielAdapter
@@ -56,6 +57,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
             }
 
         })
+
 
         //button click to show dialog
         fabMateriel.setOnClickListener {

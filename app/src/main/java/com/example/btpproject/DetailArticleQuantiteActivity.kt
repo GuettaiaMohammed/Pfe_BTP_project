@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_liste_materiels.*
 import java.util.ArrayList
 
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class DetailArticleQuantiteActivity : AppCompatActivity() {
 
     private var mesQtes: ArrayList<QuantiteArticle>? = null
@@ -32,10 +33,10 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
         supportActionBar!!.setTitle("Article")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        listView = findViewById(R.id.qteListe)
+        listView = this.findViewById(R.id.qteListe)
         qteAdapter = QuantiteArticleAdapter(applicationContext, 0)
 
-        mesQtes = ArrayList();
+        this.mesQtes = ArrayList();
 
 
         (mesQtes as ArrayList<QuantiteArticle>).add(QuantiteArticle("Quantité ",  "Date réception"))
@@ -72,14 +73,14 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
-            item!!.getItemId() == R.id.navigation_dashboard ->
+           item.run { getItemId() } == R.id.navigation_dashboard ->
             {
                 val intent = Intent(this, MainActivity::class.java)
                 // start your next activity
                 startActivity(intent)
                 return true
             }
-            item!!.getItemId() == R.id.navigation_materiel ->
+            item.getItemId() == R.id.navigation_materiel ->
             {
                 val intent = Intent(this, ListeMaterielsActivity::class.java)
                 // start your next activity

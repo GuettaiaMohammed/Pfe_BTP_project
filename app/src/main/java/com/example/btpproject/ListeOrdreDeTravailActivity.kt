@@ -32,10 +32,10 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
         listView = findViewById(R.id.ordreDeTravailListe)
         listOT = ArrayList()
 
-        listOT!!.add(OrdreDeTravail("Ordre de travail 1", "lot 1"))
-        listOT!!.add(OrdreDeTravail("Ordre de travail 1", "lot 1"))
-        listOT!!.add(OrdreDeTravail("Ordre de travail 1", "lot 1"))
-        listOT!!.add(OrdreDeTravail("Ordre de travail 1", "lot 1"))
+        listOT!!.add(OrdreDeTravail("Ordre de travail 1", "lot 1","24/02/2020"))
+        listOT!!.add(OrdreDeTravail("Ordre de travail 2", "lot 2","24/02/2020"))
+        listOT!!.add(OrdreDeTravail("Ordre de travail 3", "lot 2","25/02/2020"))
+
 
         ordreTravailAdapter = OrdreDeTravailAdapter(applicationContext, 0)
         listView!!.adapter = ordreTravailAdapter

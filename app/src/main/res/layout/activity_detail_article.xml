@@ -40,7 +40,7 @@
                 android:text="Béton"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:fontFamily="@font/aclonica" />
+                app:fontFamily="sans-serif" />
 
         </LinearLayout>
 
@@ -71,20 +71,20 @@
                     android:id="@+id/textView22"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Référence"
-                    android:textSize="16sp"
-                    app:fontFamily="@font/aclonica" />
+                    android:textSize="14sp"
+                    app:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/textView23"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="A25677"
-                    android:textColor="@color/design_default_color_primary"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
@@ -103,16 +103,15 @@
                     android:gravity="center"
                     android:text="Quantité demandé"
                     android:textSize="14sp"
-                    app:fontFamily="@font/aclonica" />
+                    app:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/textView25"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="100"
-                    android:textColor="@color/design_default_color_primary"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
@@ -127,20 +126,20 @@
                     android:id="@+id/textView26"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Date"
                     android:textSize="14sp"
-                    app:fontFamily="@font/aclonica" />
+                    app:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/textView27"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="center"
-                    android:text="19/03/2020"
-                    android:textColor="@color/design_default_color_primary"
+                    android:text="01/03/2020"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
 

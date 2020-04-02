@@ -23,9 +23,10 @@ class OrdreDeTravailAdapter(context: Context, resource: Int) : ArrayAdapter<Ordr
         val ordreDeTravail = getItem(position)
         val nom = v.findViewById<TextView>(R.id.nomOTTV)
         val lot = v.findViewById<TextView>(R.id.LotOTTV)
-
+        val date = v.findViewById<TextView>(R.id.dateOTTV)
         nom.text = ordreDeTravail!!.nom
         lot.text = ordreDeTravail.lot
+        date.text=ordreDeTravail.date
 
         return v
     }

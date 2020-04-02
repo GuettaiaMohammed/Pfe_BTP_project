@@ -1,6 +1,6 @@
 package com.example.btpproject
 
-class OrdreDeTravail(var nom: String?, var lot: String?) {
+class OrdreDeTravail(var nom: String?, var lot: String?,var date:String?) {
     var ref: String? = null
     var projet: String? = null
     var chantier: String? = null

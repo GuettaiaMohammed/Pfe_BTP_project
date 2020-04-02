@@ -34,6 +34,7 @@
             android:textColor="@color/design_default_color_background"
             android:textSize="24sp"
             android:textStyle="bold"
+            app:fontFamily="sans-serif"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />

@@ -76,10 +76,9 @@ class MonChantier : AppCompatActivity() {
 
         (mesLots as ArrayList<Lot>).add(Lot("Numero ","Lot","Etat"))
 
-        (mesLots as ArrayList<Lot>).add(Lot("1",  "134567","terminé"))
-        (mesLots as ArrayList<Lot>).add(Lot("2",  "187567","terminé"))
-        (mesLots as ArrayList<Lot>).add(Lot("3",  "198767","terminé"))
-        (mesLots as ArrayList<Lot>).add(Lot("4",  "1398765","terminé"))
+        (mesLots as ArrayList<Lot>).add(Lot("1",  "TERRASSEMENT","En cours"))
+        (mesLots as ArrayList<Lot>).add(Lot("2",  "TRAVAUX EN INFRASTRUCTURE","Terminé"))
+        (mesLots as ArrayList<Lot>).add(Lot("3",  "TRAVAUX EN INFRASTRUCTURE","Brouillon"))
 
         lotAdapter!!.addAll(mesLots)
         listView!!.adapter = lotAdapter

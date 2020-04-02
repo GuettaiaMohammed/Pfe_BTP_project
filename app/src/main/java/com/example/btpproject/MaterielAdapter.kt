@@ -18,13 +18,13 @@ class MaterielAdapter(context: Context, resource: Int) : ArrayAdapter<Materiel>(
         v = layoutInflater.inflate(R.layout.activity_cellule_materiel, null)
 
         val materiel = getItem(position)
-        val nom = v.findViewById<TextView>(R.id.nomTV)
-        val type = v.findViewById<TextView>(R.id.typeTV)
-        val date = v.findViewById<TextView>(R.id.dateTV)
+        val nom = v.findViewById<TextView>(R.id.nom)
+        val type = v.findViewById<TextView>(R.id.type)
+        val date = v.findViewById<TextView>(R.id.date)
 
         nom.text = materiel!!.nom
         type.text = materiel!!.type
-        date.text = materiel!!.dateDemande
+       date.text = materiel!!.dateDemande
 
 
         return v

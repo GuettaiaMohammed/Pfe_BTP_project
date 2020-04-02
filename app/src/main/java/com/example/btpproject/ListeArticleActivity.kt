@@ -33,8 +33,9 @@ class ListeArticleActivity : AppCompatActivity() {
         mesArticles = ArrayList();
 
         mesArticles!!.add(Article("Béton",  "100", "01/03/2020"))
-        mesArticles!!.add(Article("Béton",  "200","11/03/2020"))
-        mesArticles!!.add(Article("Béton",  "300","21/03/2020"))
+        mesArticles!!.add(Article("Ciment",  "1000", "01/03/2020"))
+        mesArticles!!.add(Article("Brique",  "200","11/03/2020"))
+        mesArticles!!.add(Article("Gravier",  "300","21/03/2020"))
 
         articleAdapter!!.addAll(mesArticles)
         listView!!.adapter = articleAdapter

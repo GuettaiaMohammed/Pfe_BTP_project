@@ -43,8 +43,9 @@
                 android:layout_marginTop="30dp"
                 android:text="Ordres de travail"
                 android:textColor="@color/design_default_color_background"
-                android:textSize="33sp"
-                android:textStyle="bold|italic" />
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:fontFamily="sans-serif" />
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -62,7 +63,8 @@
             app:layout_constraintStart_toEndOf="@+id/layoutMateriel"
             app:layout_constraintStart_toStartOf="@+id/layoutMateriel"
             app:layout_constraintTop_toTopOf="@+id/toolbar"
-            app:srcCompat="@android:drawable/ic_input_add" />
+            app:maxImageSize="80dp"
+            app:srcCompat="@drawable/ajouter2" />
 
         <LinearLayout
             android:id="@+id/linearLayout3"

@@ -3,10 +3,13 @@ package com.example.btpproject
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import kotlinx.android.synthetic.main.activity_detail_materiel.*
 
 class DetailMaterielActivity : AppCompatActivity() {
 
@@ -18,6 +21,17 @@ class DetailMaterielActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Matériel")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+         receptionMateriel.setOnClickListener {
+                  //Inflate the dialog with custom view
+                  val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_receptioner_materiel, null)
+                  //AlertDialogBuilder
+                  val mBuilder = AlertDialog.Builder(this)
+                      .setView(mDialogView)
+                  //.setTitle("Login Form")
+                  //show dialog
+                  mBuilder.show()
+              }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

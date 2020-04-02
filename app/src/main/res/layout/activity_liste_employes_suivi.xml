@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ListeMaterielsActivity">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -44,8 +43,9 @@
                 android:layout_marginTop="30dp"
                 android:text="Liste des Employés"
                 android:textColor="@color/design_default_color_background"
-                android:textSize="33sp"
-                android:textStyle="bold|italic" />
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:fontFamily="sans-serif" />
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -62,7 +62,8 @@
             app:layout_constraintStart_toEndOf="@+id/layoutEmplye"
             app:layout_constraintStart_toStartOf="@+id/layoutEmplye"
             app:layout_constraintTop_toTopOf="@+id/toolbar"
-            app:srcCompat="@android:drawable/ic_input_add" />
+            app:maxImageSize="80dp"
+            app:srcCompat="@drawable/ajouter2" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"

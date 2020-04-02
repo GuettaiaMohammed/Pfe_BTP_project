@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/OT_cellule"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -22,7 +23,8 @@
             android:text="TextView"
             android:textColor="@android:color/background_dark"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:fontFamily="sans-serif" />
 
         <TextView
             android:id="@+id/LotOTTV"
@@ -30,7 +32,8 @@
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
             android:paddingBottom="5dp"
-            android:text="TextView" />
+            android:text="TextView"
+            app:fontFamily="sans-serif" />
 
     </LinearLayout>
 
@@ -41,6 +44,7 @@
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="TextView" />
+        android:text="TextView"
+        app:fontFamily="sans-serif" />
 
 </LinearLayout>

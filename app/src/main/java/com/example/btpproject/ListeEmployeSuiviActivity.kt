@@ -40,8 +40,6 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
         mesEmployes= ArrayList();
 
         (mesEmployes as ArrayList<Employe>).add(Employe("Employé1", "Transport à la décharge publique de l’EPIC ASROUT"))
-        (mesEmployes as ArrayList<Employe>).add(Employe("Employé2", "Transport à la décharge publique de l’EPIC ASROUT"))
-        (mesEmployes as ArrayList<Employe>).add(Employe("Employé3", "Transport à la décharge publique de l’EPIC ASROUT"))
 
         employeAdapter!!.addAll(mesEmployes)
         listView!!.adapter = employeAdapter

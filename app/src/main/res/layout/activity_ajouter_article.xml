@@ -33,6 +33,7 @@
             android:textColor="@color/design_default_color_background"
             android:textSize="24sp"
             android:textStyle="bold"
+            app:fontFamily="sans-serif"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />
@@ -77,10 +78,11 @@
                             android:layout_weight="1"
                             android:paddingLeft="20dp"
                             android:text="@string/article"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            app:fontFamily="sans-serif" />
 
                         <Spinner
-                            android:id="@+id/spinner"
+                            android:id="@+id/spinnerA"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
@@ -98,7 +100,8 @@
                             android:layout_weight="1"
                             android:paddingLeft="20dp"
                             android:text="@string/unite"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            app:fontFamily="sans-serif" />
 
                         <Spinner
                             android:id="@+id/spinnerUniteDMesure"
@@ -133,7 +136,10 @@
                                 android:layout_marginLeft="27dp"
                                 android:layout_marginRight="20dp"
                                 android:hint="@string/quantite"
-                                android:paddingLeft="5dp" />
+
+                                android:paddingLeft="5dp"
+                                android:textSize="20dp"
+                                android:typeface="sans" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                     </LinearLayout>
@@ -153,7 +159,8 @@
                             android:layout_height="40dp"
                             android:layout_weight="1"
                             android:background="@drawable/button"
-                            android:text="Valider" />
+                            android:text="Valider"
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 

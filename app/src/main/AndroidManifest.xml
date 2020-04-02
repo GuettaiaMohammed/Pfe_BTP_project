@@ -11,50 +11,65 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Main2Activity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".ListeArticleActivity"
             android:label="@string/title_activity_liste_article"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".MainActivity"></activity>
-        <activity android:name=".DetailMaterielActivity"
-            android:parentActivityName=".ListeMaterielsActivity"/>
-        <activity android:name=".DetailOrdreDeTravailActivity"
-            android:parentActivityName=".ListeOrdreDeTravailActivity"/>
-        <activity android:name=".LoginActivity" />
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DetailMaterielActivity"
+            android:parentActivityName=".ListeMaterielsActivity" />
+        <activity
+            android:name=".DetailOrdreDeTravailActivity"
+            android:parentActivityName=".ListeOrdreDeTravailActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".AjouterOrdreDeTravailActivity"
-            android:parentActivityName=".DetailOrdreDeTravailActivity"/>
-        <activity android:name=".ListeOrdreDeTravailActivity"
-            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".AjouterOrdreDeTravailActivity"
+            android:parentActivityName=".DetailOrdreDeTravailActivity" />
+        <activity
+            android:name=".ListeOrdreDeTravailActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".AjouterAvanceEmployeActivity" />
-        <activity android:name=".ListeAvanceEmployeActivity"
-            android:parentActivityName=".MainActivity"/>
-        <activity android:name=".ListeMaterielsActivity"
-            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".ListeAvanceEmployeActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ListeMaterielsActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".AjouterMaterielActivity" />
         <activity android:name=".AjouterEmployeActivity" />
         <activity android:name=".AjouterArticleActivity" />
-        <activity android:name=".ListeEmployeActivity"
-            android:parentActivityName=".MainActivity"/>
-        <activity android:name=".DetailArticleQuantiteActivity"
-            android:parentActivityName=".ListeArticleActivity"/>
-        <activity android:name=".DetailArticle"
-            android:parentActivityName=".ListeArticleActivity"/>
+        <activity
+            android:name=".ListeEmployeActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".DetailArticleQuantiteActivity"
+            android:parentActivityName=".ListeArticleActivity" />
+        <activity
+            android:name=".DetailArticle"
+            android:parentActivityName=".ListeArticleActivity" />
         <activity android:name=".AjouterQteRealiseActivity" />
-        <activity android:name=".MonChantier"
-            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".MonChantier"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".ListeLot" />
-        <activity android:name=".ListeEmployeSuiviActivity"
-            android:parentActivityName=".MainActivity"/>
-        <activity android:name=".DetailSuiviEmployeQteRealiseActivity"
-            android:parentActivityName=".ListeEmployeSuiviActivity"/>
-
-        <activity android:name=".WelcomActivity">
+        <activity
+            android:name=".ListeEmployeSuiviActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".DetailSuiviEmployeQteRealiseActivity"
+            android:parentActivityName=".ListeEmployeSuiviActivity" />
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".AjouterSuiviActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

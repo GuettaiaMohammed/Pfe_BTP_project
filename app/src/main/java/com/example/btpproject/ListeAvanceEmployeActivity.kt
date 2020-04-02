@@ -34,12 +34,12 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
         avanceAdapter = AvanceEmployeAdapter(applicationContext, 0)
         listView = findViewById(R.id.AvanceEmpListe)
 
-        listAvance!!.add(AvanceEmploye("Guettaia Mohammed", "20000.00 DA", "12/03/2020"))
-        listAvance!!.add(AvanceEmploye("Benabed Oussama", "20000.00 DA", "12/03/2020"))
-        listAvance!!.add(AvanceEmploye("Bensaber Ikram", "20000.00 DA", "12/03/2020"))
-        listAvance!!.add(AvanceEmploye("Guettaia Houcine", "20000.00 DA", "12/03/2020"))
-        listAvance!!.add(AvanceEmploye("Fakir Abdelkrim", "20000.00 DA", "12/03/2020"))
-        listAvance!!.add(AvanceEmploye("Lionel Messi", "20000.00 DA", "12/03/2020"))
+        listAvance!!.add(AvanceEmploye("Guettaia Mohammed", "20000.00 DA", "10/01/2020"))
+        listAvance!!.add(AvanceEmploye("Benabed Oussama", "5000.00 DA", "12/02/2020"))
+        listAvance!!.add(AvanceEmploye("Bensaber Ikram", "15000.00 DA", "21/03/2020"))
+        listAvance!!.add(AvanceEmploye("Guettaia Houcine", "10000.00 DA", "21/03/2020"))
+        listAvance!!.add(AvanceEmploye("Fakir Abdelkrim", "20000.00 DA", "30/03/2020"))
+
 
         listView!!.adapter = avanceAdapter
         avanceAdapter!!.addAll(listAvance)

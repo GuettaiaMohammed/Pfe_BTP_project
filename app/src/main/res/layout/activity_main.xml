@@ -32,9 +32,10 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="32dp"
-            android:text="@string/title_dashboard"
+            android:text="Accueil"
             android:textSize="30sp"
-            app:fontFamily="@font/baloo"
+            android:textStyle="bold"
+            app:fontFamily="sans-serif"
             app:layout_constraintEnd_toStartOf="@+id/imageView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
@@ -44,8 +45,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="20dp"
             android:text="Gestion de chantier"
+            app:fontFamily="sans-serif"
             app:layout_constraintEnd_toStartOf="@+id/imageView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -95,7 +97,8 @@
                         android:layout_marginTop="10dp"
                         android:text="Mon chantier"
                         android:textSize="20sp"
-                        app:fontFamily="@font/aclonica" />
+                        android:textStyle="bold"
+                        app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/monChantier"
@@ -130,8 +133,9 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="10dp"
                         android:text="Articles"
-                        android:textSize="22sp"
-                        app:fontFamily="@font/aclonica" />
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/imageView3"
@@ -176,8 +180,9 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="10dp"
                         android:text="Employés"
-                        android:textSize="24sp"
-                        app:fontFamily="@font/aclonica" />
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/employe"
@@ -208,9 +213,10 @@
                         android:layout_below="@id/materiel"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="10dp"
-                        android:text="Matériels"
-                        android:textSize="24sp"
-                        app:fontFamily="@font/aclonica" />
+                        android:text="Matériaux"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/materiel"
@@ -252,12 +258,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ordreT"
-                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         android:gravity="center"
-                        android:text="Ordres de travail"
+                        android:text="  Ordres de travail"
                         android:textSize="20sp"
-                        app:fontFamily="@font/aclonica" />
+                        android:textStyle="bold"
+                        app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/ordreT"
@@ -289,8 +295,9 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="10dp"
                         android:text="Demandes"
-                        android:textSize="24sp"
-                        app:fontFamily="@font/aclonica" />
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/demande"
@@ -333,9 +340,10 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         android:gravity="center"
-                        android:text="Suivi Jour"
+                        android:text="Suivi/J"
                         android:textSize="20sp"
-                        app:fontFamily="@font/aclonica" />
+                        android:textStyle="bold"
+                        app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/suiviJ"
@@ -365,10 +373,12 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/dashB"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="10dp"
-                        android:text="DashBoard"
-                        android:textSize="24sp"
-                        app:fontFamily="@font/aclonica" />
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="Tableaux de bord"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/dashB"

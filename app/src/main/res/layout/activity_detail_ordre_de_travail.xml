@@ -36,10 +36,10 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="Nom de chantier"
+                android:text="Ordre de travail 3"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:fontFamily="@font/aclonica" />
+                app:fontFamily="sans-serif" />
 
         </LinearLayout>
 
@@ -73,8 +73,8 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Référence"
-                    android:textSize="16sp"
-                    app:fontFamily="@font/aclonica" />
+                    android:textSize="14sp"
+                    app:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/textView23"
@@ -82,8 +82,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="OT252622"
-                    android:textColor="@color/design_default_color_primary"
+                    android:text="ot_3"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
@@ -102,7 +102,7 @@
                     android:gravity="center"
                     android:text="Lot"
                     android:textSize="14sp"
-                    app:fontFamily="@font/aclonica" />
+                    app:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/textView25"
@@ -110,8 +110,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="L5256529"
-                    android:textColor="@color/design_default_color_primary"
+                    android:text="2"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
@@ -130,7 +130,7 @@
                     android:gravity="center"
                     android:text="Date"
                     android:textSize="14sp"
-                    app:fontFamily="@font/aclonica" />
+                    app:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/textView27"
@@ -138,8 +138,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="19/03/2020"
-                    android:textColor="@color/design_default_color_primary"
+                    android:text="25/02/2020"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
@@ -151,9 +151,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="300dp"
-        app:tabMode="fixed"
         app:tabGravity="fill"
-        app:tabIndicatorColor="@color/design_default_color_primary"/>
+        app:tabIndicatorColor="@color/colorPrimary"
+        app:tabMode="fixed" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/detailOTViewPager"

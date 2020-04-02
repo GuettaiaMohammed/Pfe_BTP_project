@@ -22,7 +22,7 @@
             android:textColor="@color/design_default_color_on_secondary"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:fontFamily="@font/aclonica" />
+            app:fontFamily="sans-serif" />
 
         <TextView
             android:id="@+id/lotSuiviTV"
@@ -33,7 +33,7 @@
             android:paddingBottom="5dp"
             android:text="TextView"
             android:textSize="14sp"
-            app:fontFamily="@font/aclonica" />
+            app:fontFamily="sans-serif" />
     </LinearLayout>
 
     <TextView
@@ -45,7 +45,7 @@
         android:gravity="center"
         android:text="100 m"
         android:textSize="18sp"
-        app:fontFamily="@font/aclonica" />
+        app:fontFamily="sans-serif" />
 
 </LinearLayout>
 

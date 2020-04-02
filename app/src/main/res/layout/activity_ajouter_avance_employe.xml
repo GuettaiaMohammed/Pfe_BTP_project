@@ -34,6 +34,7 @@
             android:textColor="@color/design_default_color_background"
             android:textSize="24sp"
             android:textStyle="bold"
+            app:fontFamily="sans-serif"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />
@@ -80,7 +81,8 @@
                             android:gravity="start"
                             android:paddingLeft="20dp"
                             android:text="Employé"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            app:fontFamily="sans-serif" />
 
                         <Spinner
                             android:id="@+id/spinnerDate"
@@ -104,7 +106,8 @@
                             android:gravity="start"
                             android:paddingLeft="20dp"
                             android:text="@string/date"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            app:fontFamily="sans-serif" />
 
                         <Spinner
                             android:id="@+id/spinner"
@@ -129,7 +132,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
                                 android:layout_marginRight="20dp"
-                                android:hint="@string/prixDemande" />
+                                android:hint="@string/prixDemande"
+                                android:textSize="20sp" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 

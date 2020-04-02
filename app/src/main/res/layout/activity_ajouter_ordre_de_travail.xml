@@ -58,7 +58,8 @@
                     android:gravity="start"
                     android:paddingLeft="15dp"
                     android:text="Lot"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    app:fontFamily="sans-serif" />
 
                 <Spinner
                     android:id="@+id/spinner2"

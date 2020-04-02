@@ -39,7 +39,7 @@
                 android:text="Grue"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:fontFamily="@font/aclonica" />
+                app:fontFamily="sans-serif" />
 
         </LinearLayout>
 
@@ -73,8 +73,8 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Référence"
-                    android:textSize="16sp"
-                    app:fontFamily="@font/aclonica" />
+                    android:textSize="14sp"
+                    app:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/textView23"
@@ -82,8 +82,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="OT252622"
-                    android:textColor="@color/design_default_color_primary"
+                    android:text="252622"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
@@ -102,7 +102,7 @@
                     android:gravity="center"
                     android:text="Lot"
                     android:textSize="14sp"
-                    app:fontFamily="@font/aclonica" />
+                    app:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/textView25"
@@ -110,8 +110,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="L5256529"
-                    android:textColor="@color/design_default_color_primary"
+                    android:text="2"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
@@ -130,7 +130,7 @@
                     android:gravity="center"
                     android:text="Date"
                     android:textSize="14sp"
-                    app:fontFamily="@font/aclonica" />
+                    app:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/textView27"
@@ -138,8 +138,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="19/03/2020"
-                    android:textColor="@color/design_default_color_primary"
+                    android:text="21/03/2020"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
@@ -172,7 +172,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:paddingLeft="15dp"
-                android:text="20/03/2020"
+                android:text="25/03/2020"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -198,7 +198,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:paddingLeft="15dp"
-                android:text="20/03/2020"
+                android:text="09/04/2020"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -227,10 +227,11 @@
                 android:text="15 jrs"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
         </LinearLayout>
 
         <Button
-            android:id="@+id/receptionButton2"
+            android:id="@+id/receptionMateriel"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_gravity="center"
