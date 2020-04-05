@@ -53,9 +53,9 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="750dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/gardien_background2"
+            android:layout_height="450dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/gardien_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"

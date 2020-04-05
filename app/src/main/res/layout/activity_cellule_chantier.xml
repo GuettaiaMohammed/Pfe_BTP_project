@@ -56,8 +56,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="20dp"
-                    android:layout_weight="1"
-                    android:text="99%"
+                    android:gravity="center"
+                    android:text="99"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="20dp"
+                    android:text="%"
                     android:textSize="18sp" />
 
                 <TextView
