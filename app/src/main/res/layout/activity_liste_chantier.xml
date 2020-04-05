@@ -51,23 +51,22 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:srcCompat="@drawable/btp1" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="0dp"
-            android:layout_height="600dp"
-            android:background="@drawable/gardien_background"
-            android:orientation="vertical"
-            android:padding="10dp"
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="750dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/gardien_background2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView">
 
-            <ListView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listeChantier"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp" />
+        </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

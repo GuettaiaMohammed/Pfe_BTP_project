@@ -16,7 +16,7 @@ class LoginActivity : AppCompatActivity() {
         loginImage.animate().scaleX(1.2F).scaleY(1.2F).setDuration(5000).start()
 
         loginBtn.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, ListeChantierActivity::class.java)
             // start your next activity
             startActivity(intent)
         }
