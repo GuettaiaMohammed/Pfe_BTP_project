@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="Mon chantier"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/navigation_monCh"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="Mon Chantier" />
+    <item
+        android:id="@+id/navigation_employe"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="Demandes personnel" />
+
+    <item
+        android:id="@+id/navigation_materiel"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="Demandes matériel" />
+    <item
+        android:id="@+id/navigation_ordreTravail"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="Ordres de travail" />
+    <item
+        android:id="@+id/navigation_avance"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="Demandes avance" />
+    <item
+        android:id="@+id/navigation_suiviJ"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="@string/suiviJ" />
+
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="Tableaux de bord" />
+    <item
+        android:id="@+id/navigation_disco"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="Déconnexion" />
+
+
+
+</menu>

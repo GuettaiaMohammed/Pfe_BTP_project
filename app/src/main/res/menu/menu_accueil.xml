@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<!-->
+    <item
+        android:id="@+id/navigation_notifications"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="notif"
+        android:visibility="visible"
+        app:showAsAction="ifRoom"
+        app:actionLayout="@layout/custom_action_item_layout"/>
+
+<-->
+
+
+
+    <item
+        android:id="@+id/navigation_disconnect"
+        android:icon="@drawable/disc"
+        android:title="disconnect"
+        app:showAsAction="ifRoom" />
+</menu>
