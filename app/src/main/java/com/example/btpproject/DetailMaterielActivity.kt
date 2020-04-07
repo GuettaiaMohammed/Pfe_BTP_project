@@ -23,7 +23,7 @@ class DetailMaterielActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
          receptionMateriel.setOnClickListener {
                   //Inflate the dialog with custom view
-                  val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_detail_materiel, null)
+                  val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_receptioner_materiel, null)
                   //AlertDialogBuilder
                   val mBuilder = AlertDialog.Builder(this)
                       .setView(mDialogView)
