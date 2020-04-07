@@ -131,12 +131,13 @@
                             android:layout_weight="1">
 
                             <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/qte"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="27dp"
                                 android:layout_marginRight="20dp"
-                                android:hint="@string/quantite"
 
+                                android:hint="@string/quantite"
                                 android:paddingLeft="5dp"
                                 android:textSize="20dp"
                                 android:typeface="sans" />

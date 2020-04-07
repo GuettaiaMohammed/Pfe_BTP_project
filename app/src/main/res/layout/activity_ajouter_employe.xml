@@ -84,7 +84,7 @@
                             android:textSize="20sp" />
 
                         <Spinner
-                            android:id="@+id/spinner"
+                            android:id="@+id/spinnerE"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
 
@@ -153,6 +153,7 @@
                             android:paddingLeft="5dp">
 
                             <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/nbr"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/nbrEmp"
