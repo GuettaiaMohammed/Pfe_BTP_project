@@ -65,7 +65,7 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.navigation_menu,menu)
+        inflater.inflate(R.menu.menu_suivi,menu)
         return true
     }
 
@@ -73,14 +73,14 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
         when{
             item!!.getItemId() == R.id.navigation_home ->
             {
-                val intent = Intent(this, MonChantier::class.java)
+                val intent = Intent(this, MainActivity::class.java)
                 // start your next activity
                 startActivity(intent)
                 return true
             }
-            item!!.getItemId() == R.id.navigation_dashboard ->
+            item!!.getItemId() == R.id.navigation_monCh->
             {
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, MonChantier::class.java)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -109,6 +109,27 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_suiviJ ->
             {
                 val intent = Intent(this, ListeEmployeSuiviActivity::class.java)
+                // start your next activity
+                startActivity(intent)
+                return true
+            }
+            item!!.getItemId() == R.id.navigation_avance ->
+            {
+                val intent = Intent(this, ListeAvanceEmployeActivity::class.java)
+                // start your next activity
+                startActivity(intent)
+                return true
+            }
+            item!!.getItemId() == R.id.navigation_ordreTravail ->
+            {
+                val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
+                // start your next activity
+                startActivity(intent)
+                return true
+            }
+            item!!.getItemId() == R.id.navigation_disco ->
+            {
+                val intent = Intent(this, LoginActivity::class.java)
                 // start your next activity
                 startActivity(intent)
                 return true

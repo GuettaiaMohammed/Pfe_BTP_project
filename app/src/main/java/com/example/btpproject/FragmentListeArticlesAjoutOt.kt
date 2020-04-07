@@ -25,7 +25,7 @@ class FragmentListeArticlesAjoutOt : Fragment() {
         articleOT = ArrayList()
 
 
-
+        articleOT!!.add(ArticleOT("Ligne","Article", "Unité","Quantité consommé"))
         articleOT!!.add(ArticleOT("Remblais de fouilles après exécution des ouvrages en béton armé.","Béton", "m3","300"))
 
         articleAdapter!!.addAll(articleOT)

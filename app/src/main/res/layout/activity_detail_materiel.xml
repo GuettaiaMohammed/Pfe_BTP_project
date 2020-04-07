@@ -26,7 +26,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="350dp"
-            android:background="@drawable/gardien_background2"
+            android:background="@drawable/gardien_background"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -128,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Date"
+                    android:text="Date de damande"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
 
@@ -156,7 +156,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="70dp">
+            android:paddingLeft="50dp">
 
             <ImageView
                 android:id="@+id/imageView5"
@@ -164,6 +164,14 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
                 app:srcCompat="@drawable/ic_date_range_orange_24dp" />
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="30dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Début" />
 
             <TextView
                 android:id="@+id/textView39"
@@ -181,7 +189,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="70dp"
+            android:paddingLeft="50dp"
             android:paddingTop="15dp">
 
             <ImageView
@@ -190,6 +198,14 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
                 app:srcCompat="@drawable/ic_date_range_orange_24dp" />
+
+            <TextView
+                android:id="@+id/textView33"
+                android:layout_width="30dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Fin" />
 
             <TextView
                 android:id="@+id/textView37"
@@ -207,7 +223,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="70dp"
+            android:paddingLeft="50dp"
             android:paddingTop="15dp">
 
             <ImageView
@@ -216,6 +232,14 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
                 app:srcCompat="@drawable/ic_update_black_24dp" />
+
+            <TextView
+                android:id="@+id/textView34"
+                android:layout_width="30dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Durée" />
 
             <TextView
                 android:id="@+id/textView38"

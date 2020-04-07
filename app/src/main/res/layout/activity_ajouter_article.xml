@@ -29,7 +29,7 @@
             android:layout_marginStart="30dp"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="10dp"
-            android:text="@string/demandeDapproArticle"
+            android:text="Demander un article"
             android:textColor="@color/design_default_color_background"
             android:textSize="24sp"
             android:textStyle="bold"

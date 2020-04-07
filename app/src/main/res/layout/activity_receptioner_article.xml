@@ -28,9 +28,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:layout_marginTop="10dp"
-            android:text="Quantité Réceptionné"
+            android:text="Ajouter une quantité"
             android:textColor="@color/design_default_color_background"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:fontFamily="sans-serif"
             app:layout_constraintStart_toStartOf="parent"
@@ -89,7 +89,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="30dp"
                                 android:layout_marginRight="30dp"
-                                android:hint="@string/quantiteReceptionne"
+                                android:hint="Quantité réceptionnée"
                                 android:textSize="20dp" />
                         </com.google.android.material.textfield.TextInputLayout>
 

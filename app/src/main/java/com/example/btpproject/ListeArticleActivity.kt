@@ -25,17 +25,17 @@ class ListeArticleActivity : AppCompatActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar!!.setTitle("Articles")
+        supportActionBar!!.setTitle("Demandes article")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         listView = findViewById(R.id.articleListe)
         articleAdapter = ArticleAdapter(applicationContext, 0)
         mesArticles = ArrayList();
 
-        mesArticles!!.add(Article("Béton",  "100", "01/03/2020"))
-        mesArticles!!.add(Article("Ciment",  "1000", "01/03/2020"))
-        mesArticles!!.add(Article("Brique",  "200","11/03/2020"))
-        mesArticles!!.add(Article("Gravier",  "300","21/03/2020"))
+        mesArticles!!.add(Article("Béton",  "100 m3", "01/03/2020"))
+        mesArticles!!.add(Article("Ciment",  "1000 unités", "01/03/2020"))
+        mesArticles!!.add(Article("Brique",  "200 unités","11/03/2020"))
+        mesArticles!!.add(Article("Gravier",  "300 unités","21/03/2020"))
 
         articleAdapter!!.addAll(mesArticles)
         listView!!.adapter = articleAdapter
@@ -68,7 +68,7 @@ class ListeArticleActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.navigation_menu,menu)
+        inflater.inflate(R.menu.menu_article,menu)
         return true
     }
 
@@ -76,14 +76,14 @@ class ListeArticleActivity : AppCompatActivity() {
         when{
             item!!.getItemId() == R.id.navigation_home ->
             {
-                val intent = Intent(this, MonChantier::class.java)
+                val intent = Intent(this, MainActivity::class.java)
                 // start your next activity
                 startActivity(intent)
                 return true
             }
-            item!!.getItemId() == R.id.navigation_dashboard ->
+            item!!.getItemId() == R.id.navigation_monCh->
             {
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, MonChantier::class.java)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -116,8 +116,28 @@ class ListeArticleActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
+            item!!.getItemId() == R.id.navigation_avance ->
+            {
+                val intent = Intent(this, ListeAvanceEmployeActivity::class.java)
+                // start your next activity
+                startActivity(intent)
+                return true
+            }
+            item!!.getItemId() == R.id.navigation_ordreTravail ->
+            {
+                val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
+                // start your next activity
+                startActivity(intent)
+                return true
+            }
+            item!!.getItemId() == R.id.navigation_disco ->
+            {
+                val intent = Intent(this, LoginActivity::class.java)
+                // start your next activity
+                startActivity(intent)
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
-
 }

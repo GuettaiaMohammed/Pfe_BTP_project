@@ -22,15 +22,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView10"
             android:layout_width="wrap_content"
 
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:text="Ajouter Quantité Réaliseée"
+            android:text="Ajouter une quantité réalisée"
             android:textColor="@color/design_default_color_background"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:fontFamily="sans-serif"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +80,7 @@
                             <com.google.android.material.textfield.TextInputEditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/qteRealise"
+                                android:hint="Quantité réalisée"
                                 android:textSize="20dp" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,7 +94,7 @@
                             <com.google.android.material.textfield.TextInputEditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/nbHTravaille"
+                                android:hint="Nb heures travaillées"
                                 android:textSize="20dp" />
                         </com.google.android.material.textfield.TextInputLayout>
 

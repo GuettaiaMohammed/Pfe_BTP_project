@@ -30,9 +30,9 @@
             android:layout_marginStart="50dp"
             android:layout_marginLeft="50dp"
             android:layout_marginTop="10dp"
-            android:text="Avance Employé"
+            android:text="Demander une avance"
             android:textColor="@color/design_default_color_background"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:fontFamily="sans-serif"
             app:layout_constraintStart_toStartOf="parent"
@@ -132,7 +132,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
                                 android:layout_marginRight="20dp"
-                                android:hint="@string/prixDemande"
+                                android:hint="Montant demandé"
                                 android:textSize="20sp" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>

@@ -30,7 +30,7 @@ class ListeEmployeActivity : AppCompatActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar!!.setTitle("Employés demandé")
+        supportActionBar!!.setTitle("Demandes personnel")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         listView = findViewById(R.id.empl)
@@ -63,7 +63,7 @@ class ListeEmployeActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.navigation_menu,menu)
+        inflater.inflate(R.menu.menu_personel,menu)
         return true
     }
 
@@ -71,14 +71,14 @@ class ListeEmployeActivity : AppCompatActivity() {
         when{
             item!!.getItemId() == R.id.navigation_home ->
             {
-                val intent = Intent(this, MonChantier::class.java)
+                val intent = Intent(this, MainActivity::class.java)
                 // start your next activity
                 startActivity(intent)
                 return true
             }
-            item!!.getItemId() == R.id.navigation_dashboard ->
+            item!!.getItemId() == R.id.navigation_monCh->
             {
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, MonChantier::class.java)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -90,13 +90,7 @@ class ListeEmployeActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
-            item!!.getItemId() == R.id.navigation_employe ->
-            {
-                val intent = Intent(this, ListeEmployeActivity::class.java)
-                // start your next activity
-                startActivity(intent)
-                return true
-            }
+
             item!!.getItemId() == R.id.navigation_article ->
             {
                 val intent = Intent(this, ListeArticleActivity::class.java)
@@ -107,6 +101,27 @@ class ListeEmployeActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_suiviJ ->
             {
                 val intent = Intent(this, ListeEmployeSuiviActivity::class.java)
+                // start your next activity
+                startActivity(intent)
+                return true
+            }
+            item!!.getItemId() == R.id.navigation_avance ->
+            {
+                val intent = Intent(this, ListeAvanceEmployeActivity::class.java)
+                // start your next activity
+                startActivity(intent)
+                return true
+            }
+            item!!.getItemId() == R.id.navigation_ordreTravail ->
+            {
+                val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
+                // start your next activity
+                startActivity(intent)
+                return true
+            }
+            item!!.getItemId() == R.id.navigation_disco ->
+            {
+                val intent = Intent(this, LoginActivity::class.java)
                 // start your next activity
                 startActivity(intent)
                 return true

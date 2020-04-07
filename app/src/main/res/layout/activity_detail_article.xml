@@ -27,7 +27,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="350dp"
-            android:background="@drawable/gardien_background2"
+            android:background="@drawable/gardien_background"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -101,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Quantité demandé"
+                    android:text="Quantité demandée"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
 
@@ -129,7 +129,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Date"
+                    android:text="Date de damande"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
 
