@@ -12,11 +12,14 @@ import android.widget.AdapterView
 import android.widget.ListView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import kotlinx.android.synthetic.main.activity_ajouter_qte_realise.view.*
 import kotlinx.android.synthetic.main.activity_detail_suivi.*
 import kotlinx.android.synthetic.main.activity_liste_materiels.*
 import kotlinx.android.synthetic.main.activity_liste_employes_suivi.*
-
-import java.util.ArrayList
+import kotlinx.android.synthetic.main.activity_receptioner_article.view.*
+import kotlinx.android.synthetic.main.activity_receptioner_article.view.valider
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
@@ -44,8 +47,7 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
 
         (mesQtes as ArrayList<QuantiteRealise>).add(QuantiteRealise("13/03/2020", "50", "20:00", "5000.00" ))
 
-        qteAdapter!!.addAll(mesQtes)
-        listView!!.adapter = qteAdapter
+
 
 
       ajouterQteRealiserBtn.setOnClickListener {
@@ -57,7 +59,19 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
             //.setTitle("Login Form")
             //show dialog
             mBuilder.show()
+          mDialogView.valider.setOnClickListener{
+              //pour ajouter la quantité receptionné et la date
+              val c: SimpleDateFormat = SimpleDateFormat("dd/M/yyyy")
+              var d=c.format((Date()))
+              qteAdapter!!.add(QuantiteRealise(d,""+mDialogView.qteR.text.toString(),""+mDialogView.nbH.text.toString(),""+mDialogView.pu.text.toString()))
+
+
+          }
+
+
         }
+        qteAdapter!!.addAll(mesQtes)
+        listView!!.adapter = qteAdapter
 
 
 

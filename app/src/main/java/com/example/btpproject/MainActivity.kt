@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar!!.setTitle("")
+        supportActionBar!!.setTitle("BTP")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         chantier.setOnClickListener {

@@ -9,10 +9,12 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.AdapterView
-import android.widget.ListView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import kotlinx.android.synthetic.main.activity_ajouter_article.view.*
+import kotlinx.android.synthetic.main.activity_ajouter_article.view.button
+import kotlinx.android.synthetic.main.activity_ajouter_employe_suivi.view.*
 
 import kotlinx.android.synthetic.main.activity_liste_employes_suivi.*
 
@@ -25,6 +27,13 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
     private var listView: ListView? = null
     private var employeAdapter: EmployeSuiviAdapter? = null
 
+    //les listes des spinner
+    private val listEmployes = arrayListOf<String>()
+    private val listUnites = arrayListOf<String>()
+    private val listTypes = arrayListOf<String>()
+    private val listLots = arrayListOf<String>()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liste_employes_suivi)
@@ -33,6 +42,13 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Suivi Employés")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+
+        //remplire les listes de spinner
+        listEmployes.addAll(listOf("","Employé 1", "Employé 2", "Employé 3"))
+        listUnites.addAll(listOf("","m3","m2"))
+        listTypes.addAll(listOf("","type1","type2"))
+        listLots.addAll(listOf("","Ligne1","Ligne2"))
 
         listView = findViewById(R.id.empl)
         employeAdapter = EmployeSuiviAdapter(applicationContext, 0)
@@ -66,6 +82,40 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             //.setTitle("Login Form")
             //show dialog
             mBuilder.show()
+
+
+            //Spinner
+            val spinnerE = mDialogView.findViewById <Spinner>(R.id.spinnerEmploye)
+            val spinnerU = mDialogView.findViewById <Spinner>(R.id.spinnerUnite)
+            val spinnerT = mDialogView.findViewById <Spinner>(R.id.spinnerTypeInt)
+            val spinnerL = mDialogView.findViewById <Spinner>(R.id.spinnerLigneLot)
+
+            //Remplire Spinner
+            val  adapter : ArrayAdapter<String> = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listEmployes)
+            val  adapter1 : ArrayAdapter<String> = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listUnites)
+            val  adapter2 : ArrayAdapter<String> = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listTypes)
+            val  adapter3 : ArrayAdapter<String> = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listLots)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerE.setAdapter(adapter)
+            adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerU.setAdapter(adapter1)
+
+            adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerT.setAdapter(adapter2)
+            adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerL.setAdapter(adapter3)
+
+
+            //button valider
+            mDialogView.button.setOnClickListener{
+                Toast.makeText(this,"ajout de : "+mDialogView.qteP.text.toString()+" , "+ mDialogView.nbH.text.toString()+" , "+mDialogView.pu.text.toString(), Toast.LENGTH_SHORT).show()
+
+
+            }
+
+
+
+
         }
     }
 

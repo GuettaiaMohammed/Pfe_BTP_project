@@ -7,9 +7,13 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import kotlinx.android.synthetic.main.activity_ajouter_article.view.*
+import kotlinx.android.synthetic.main.activity_detail_article.*
 import kotlinx.android.synthetic.main.activity_detail_materiel.*
+import kotlinx.android.synthetic.main.activity_receptioner_materiel.view.*
 
 class DetailMaterielActivity : AppCompatActivity() {
 
@@ -28,8 +32,17 @@ class DetailMaterielActivity : AppCompatActivity() {
                   val mBuilder = AlertDialog.Builder(this)
                       .setView(mDialogView)
                   //.setTitle("Login Form")
-                  //show dialog
-                  mBuilder.show()
+             //show dialog
+             mBuilder.show()
+             mDialogView.validerNote.setOnClickListener{
+                 if(mDialogView.note.text.toString()!="") {
+                     Toast.makeText(this, "Votre note est envoyée !!", Toast.LENGTH_SHORT).show()
+                 }
+mBuilder.setCancelable(true)
+             }
+
+
+             receptionMateriel.setEnabled(false)
               }
 
     }

@@ -104,7 +104,7 @@
 
                             android:layout_weight="1"
                             android:hint="Date Début"
-                            android:inputType="date"
+                            android:inputType="datetime"
                             android:textSize="20dp"
                             tools:layout_marginRight="20dp" />
                     </LinearLayout>

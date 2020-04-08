@@ -10,20 +10,28 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.AdapterView
 import android.widget.ListView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import kotlinx.android.synthetic.main.activity_ajouter_article.*
+import kotlinx.android.synthetic.main.activity_ajouter_article.view.*
 import kotlinx.android.synthetic.main.activity_detail_article.*
 import kotlinx.android.synthetic.main.activity_liste_materiels.*
-
-import java.util.ArrayList
+import kotlinx.android.synthetic.main.activity_receptioner_article.view.*
+import java.sql.Date
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class DetailArticleQuantiteActivity : AppCompatActivity() {
 
-    private var mesQtes: ArrayList<QuantiteArticle>? = null
-    private var listView: ListView? = null
-    private var qteAdapter: QuantiteArticleAdapter? = null
+    public var mesQtes: ArrayList<QuantiteArticle>? = null
+    public var listView: ListView? = null
+    public var qteAdapter: QuantiteArticleAdapter? = null
+      var qteRecu : String?=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,11 +48,8 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
 
 
         (mesQtes as ArrayList<QuantiteArticle>).add(QuantiteArticle("Quantité ",  "Date réception"))
+        //qteAdapter!!.addAll(mesQtes)
 
-        (mesQtes as ArrayList<QuantiteArticle>).add(QuantiteArticle("50",  "13/03/2020"))
-
-       qteAdapter!!.addAll(mesQtes)
-        listView!!.adapter = qteAdapter
 
         receptionArticle.setOnClickListener {
             //Inflate the dialog with custom view
@@ -53,9 +58,26 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
             val mBuilder = AlertDialog.Builder(this)
                 .setView(mDialogView)
             //.setTitle("Login Form")
-            //show dialog
             mBuilder.show()
+            mDialogView.valider.setOnClickListener{
+                //pour ajouter la quantité receptionné et la date
+                val c: SimpleDateFormat =SimpleDateFormat("dd/M/yyyy")
+                var d=c.format((Date()))
+               qteAdapter!!.add(QuantiteArticle(""+mDialogView.qteRecep.text.toString(),d))
+
+qteRecu=mDialogView.qteRecep.text.toString()
+            }
+//pour désactiver le button receptionner
+            if(qteDemand.getText()==qteRecu)
+                receptionArticle.setEnabled(false)
+
+
         }
+        qteAdapter!!.addAll(mesQtes)
+        listView!!.adapter = qteAdapter
+
+
+
 
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -134,3 +156,5 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
     }
 
 }
+
+

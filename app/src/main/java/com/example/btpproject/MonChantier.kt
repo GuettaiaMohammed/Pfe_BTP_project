@@ -62,6 +62,8 @@ class MonChantier : AppCompatActivity() {
             val mBuilder = AlertDialog.Builder(this)
                 .setView(mDialogView)
             //.setTitle("Login Form")
+            //show dialog
+            val  mAlertDialog = mBuilder.show()
             //Spinner
             val spinnerA = mDialogView.findViewById <Spinner>(R.id.spinnerA)
             val spinnerU = mDialogView.findViewById <Spinner>(R.id.spinnerUniteDMesure)
@@ -81,8 +83,7 @@ class MonChantier : AppCompatActivity() {
             }
 
 
-            //show dialog
-            val  mAlertDialog = mBuilder.show()
+
 
         }
 
@@ -94,7 +95,8 @@ class MonChantier : AppCompatActivity() {
             val mBuilder = AlertDialog.Builder(this)
                 .setView(mDialogView)
             //.setTitle("Login Form")
-
+//show dialog
+            val  mAlertDialog = mBuilder.show()
 
             //Spinner
             val spinnerE = mDialogView.findViewById <Spinner>(R.id.spinnerE)
@@ -113,12 +115,6 @@ class MonChantier : AppCompatActivity() {
 
             }
 
-
-
-
-
-            //show dialog
-            val  mAlertDialog = mBuilder.show()
         }
 
         //button click to show dialog
@@ -130,7 +126,8 @@ class MonChantier : AppCompatActivity() {
                 .setView(mDialogView)
             //.setTitle("Login Form")
 
-
+            //show dialog
+            val  mAlertDialog = mBuilder.show()
 
 
 
@@ -157,8 +154,7 @@ class MonChantier : AppCompatActivity() {
 
 
 
-            //show dialog
-            val  mAlertDialog = mBuilder.show()
+
         }
 
 

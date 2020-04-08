@@ -138,6 +138,7 @@
                                 android:layout_marginRight="20dp"
 
                                 android:hint="@string/quantite"
+                                android:inputType="number"
                                 android:paddingLeft="5dp"
                                 android:textSize="20dp"
                                 android:typeface="sans" />
