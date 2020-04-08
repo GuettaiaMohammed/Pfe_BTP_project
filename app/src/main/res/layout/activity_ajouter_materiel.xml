@@ -90,44 +90,54 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="10dp"
-                        app:layout_constraintTop_toBottomOf="@+id/l1">
+                        android:padding="10dp">
 
-                        <EditText
-                            android:id="@+id/dateD"
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="18dp"
-
-
                             android:layout_weight="1"
-                            android:hint="Date Début"
-                            android:inputType="datetime"
-                            android:textSize="20dp"
-                            tools:layout_marginRight="20dp" />
+                            android:paddingLeft="20dp"
+                            android:text="@string/dateD"
+                            android:textSize="20sp" />
+
+                        <Button
+                            android:id="@+id/dateDMatBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableLeft="@drawable/ic_date_black"
+                            android:text="Séléctionner une date"
+                            android:textSize="8sp" />
+
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp">
+                        android:padding="10dp">
 
-                        <EditText
-                            android:id="@+id/dateF"
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="18dp"
-
-
                             android:layout_weight="1"
-                            android:hint="Date Fin"
-                            android:inputType="date"
-                            android:textSize="20dp"
-                            tools:layout_marginRight="20dp" />
+                            android:paddingLeft="20dp"
+                            android:text="@string/dateF"
+                            android:textSize="20sp" />
+
+                        <Button
+                            android:id="@+id/dateFMatBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableLeft="@drawable/ic_date_black"
+                            android:text="@string/selectionDate"
+                            android:textSize="8sp" />
+
                     </LinearLayout>
 
                     <LinearLayout

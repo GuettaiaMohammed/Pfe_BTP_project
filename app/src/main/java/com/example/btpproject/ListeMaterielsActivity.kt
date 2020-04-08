@@ -1,5 +1,6 @@
 package com.example.btpproject
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 
@@ -9,13 +10,13 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.ListView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import kotlinx.android.synthetic.main.activity_cellule_materiel.*
 import kotlinx.android.synthetic.main.activity_liste_materiels.*
-
-import java.util.ArrayList
+import java.util.*
 
 
 class ListeMaterielsActivity : AppCompatActivity() {
@@ -23,6 +24,9 @@ class ListeMaterielsActivity : AppCompatActivity() {
     private var mesMateriels: ArrayList<Materiel>? = null
     private var listView: ListView? = null
     private var materielAdapter: MaterielAdapter? = null
+
+    var mDatepickerD: DatePickerDialog? = null
+    var mDatepickerF: DatePickerDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +71,51 @@ class ListeMaterielsActivity : AppCompatActivity() {
             val mBuilder = AlertDialog.Builder(this)
                 .setView(mDialogView)
             //.setTitle("Login Form")
+
+            //date Début Picker Btn
+            val dateDBtn = mDialogView.findViewById<Button>(R.id.dateDMatBtn)
+            // affichage de calendrier lors de la clique
+            dateDBtn!!.setOnClickListener {
+                val cldr = Calendar.getInstance()
+                val day = cldr.get(Calendar.DAY_OF_MONTH)
+                val month = cldr.get(Calendar.MONTH)
+                val year = cldr.get(Calendar.YEAR)
+                // date picker dialog
+                mDatepickerD = DatePickerDialog(
+                    this,
+                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                        //affichage de la date selectionné
+                        dateDBtn.setText(
+                            dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+                        )
+                        dateDBtn.textSize = 12F
+                    }, year, month, day
+                )
+                mDatepickerD!!.show()
+            }
+
+            //date fin Picker Btn
+            val dateFBtn = mDialogView.findViewById<Button>(R.id.dateFMatBtn)
+            // affichage de calendrier lors de la clique
+            dateFBtn!!.setOnClickListener {
+                val cldr = Calendar.getInstance()
+                val day = cldr.get(Calendar.DAY_OF_MONTH)
+                val month = cldr.get(Calendar.MONTH)
+                val year = cldr.get(Calendar.YEAR)
+                // date picker dialog
+                mDatepickerF = DatePickerDialog(
+                    this,
+                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                        //affichage de la date selectionné
+                        dateFBtn.setText(
+                            dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+                        )
+                        dateFBtn.textSize = 12F
+                    }, year, month, day
+                )
+                mDatepickerF!!.show()
+            }
+
             //show dialog
             mBuilder.show()
         }

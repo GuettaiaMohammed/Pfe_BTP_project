@@ -1,18 +1,12 @@
 package com.example.btpproject
 
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import kotlinx.android.synthetic.main.activity_ajouter_article.view.*
@@ -20,8 +14,14 @@ import kotlinx.android.synthetic.main.activity_ajouter_article.view.button
 import kotlinx.android.synthetic.main.activity_ajouter_employe.view.*
 
 import kotlinx.android.synthetic.main.activity_liste_employe.*
+import java.util.*
+import android.content.DialogInterface
+import android.view.*
+import android.widget.Toast
+import android.widget.DatePicker
+import android.widget.EditText
 
-import java.util.ArrayList
+
 
 
 class ListeEmployeActivity : AppCompatActivity() {
@@ -32,6 +32,9 @@ class ListeEmployeActivity : AppCompatActivity() {
 
     private val listMetiers = arrayListOf<String>()
 
+    var mDatepickerD: DatePickerDialog? = null
+    var mDatepickerF: DatePickerDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liste_employe)
@@ -40,6 +43,7 @@ class ListeEmployeActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Demandes personnel")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
 
 
         listMetiers.addAll(listOf("","Architecte","Maçon"))
@@ -77,16 +81,55 @@ class ListeEmployeActivity : AppCompatActivity() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerE.setAdapter(adapter)
 
-
             //button valider
             mDialogView.button.setOnClickListener{
                 Toast.makeText(this,spinnerE.selectedItem.toString()+" "+" Le nombre : "+mDialogView.nbr.text ,
                     Toast.LENGTH_SHORT).show()
-
-
             }
 
+            //date Début Picker Btn
+            val dateDBtn = mDialogView.findViewById<Button>(R.id.dateDEmpBtn)
+            // affichage de calendrier lors de la clique
+            dateDBtn!!.setOnClickListener {
+                val cldr = Calendar.getInstance()
+                val day = cldr.get(Calendar.DAY_OF_MONTH)
+                val month = cldr.get(Calendar.MONTH)
+                val year = cldr.get(Calendar.YEAR)
+                // date picker dialog
+                mDatepickerD = DatePickerDialog(
+                    this,
+                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                        //affichage de la date selectionné
+                        dateDBtn.setText(
+                            dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+                        )
+                        dateDBtn.textSize = 12F
+                    }, year, month, day
+                )
+                mDatepickerD!!.show()
+            }
 
+            //date fin Picker Btn
+            val dateFBtn = mDialogView.findViewById<Button>(R.id.dateFEmpBtn)
+            // affichage de calendrier lors de la clique
+            dateFBtn!!.setOnClickListener {
+                val cldr = Calendar.getInstance()
+                val day = cldr.get(Calendar.DAY_OF_MONTH)
+                val month = cldr.get(Calendar.MONTH)
+                val year = cldr.get(Calendar.YEAR)
+                // date picker dialog
+                mDatepickerF = DatePickerDialog(
+                    this,
+                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                        //affichage de la date selectionné
+                        dateFBtn.setText(
+                            dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+                        )
+                        dateFBtn.textSize = 12F
+                    }, year, month, day
+                )
+                mDatepickerF!!.show()
+            }
 
             //show dialog
             mBuilder.show()
@@ -162,4 +205,5 @@ class ListeEmployeActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
 }
