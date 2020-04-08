@@ -9,11 +9,10 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.AdapterView
-import android.widget.Button
-import android.widget.ListView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import kotlinx.android.synthetic.main.activity_ajouter_article.view.*
 import kotlinx.android.synthetic.main.activity_cellule_materiel.*
 import kotlinx.android.synthetic.main.activity_liste_materiels.*
 import java.util.*
@@ -24,6 +23,9 @@ class ListeMaterielsActivity : AppCompatActivity() {
     private var mesMateriels: ArrayList<Materiel>? = null
     private var listView: ListView? = null
     private var materielAdapter: MaterielAdapter? = null
+
+    //liste de spinner
+    private val listMateriels = arrayListOf<String>()
 
     var mDatepickerD: DatePickerDialog? = null
     var mDatepickerF: DatePickerDialog? = null
@@ -36,6 +38,8 @@ class ListeMaterielsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Demandes matériel")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        listMateriels.addAll(listOf("","Gru","Mini Pele"))
 
         listView = findViewById(R.id.materielsListe)
         materielAdapter = MaterielAdapter(applicationContext, 0)
@@ -115,6 +119,26 @@ class ListeMaterielsActivity : AppCompatActivity() {
                 )
                 mDatepickerF!!.show()
             }
+
+
+
+
+            //Spinner
+            val spinnerM = mDialogView.findViewById <Spinner>(R.id.spinnerM)
+
+            //Remplire Spinner
+            val  adapter : ArrayAdapter<String> = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listMateriels)
+
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerM.setAdapter(adapter)
+
+
+            //button valider
+            mDialogView.button.setOnClickListener{
+                Toast.makeText(this,spinnerM.selectedItem.toString() , Toast.LENGTH_SHORT).show()
+            }
+
+
 
             //show dialog
             mBuilder.show()

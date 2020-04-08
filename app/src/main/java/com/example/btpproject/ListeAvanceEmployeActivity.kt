@@ -5,14 +5,15 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
-import android.widget.AdapterView
-import android.widget.Button
-import android.widget.ListView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_ajouter_article.view.*
+import kotlinx.android.synthetic.main.activity_ajouter_article.view.button
+import kotlinx.android.synthetic.main.activity_ajouter_avance_employe.view.*
+import kotlinx.android.synthetic.main.activity_ajouter_employe.view.*
 import kotlinx.android.synthetic.main.activity_liste_avance_employe.*
 import kotlinx.android.synthetic.main.activity_liste_materiels.*
 import java.util.*
@@ -22,6 +23,11 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
     private var listAvance: MutableList<AvanceEmploye>? = null
     private var avanceAdapter: AvanceEmployeAdapter? = null
     private var listView: ListView? = null
+
+    //liste spinner
+    private val listEmployes = arrayListOf<String>()
+
+
     var mDatepicker: DatePickerDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +38,10 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Demandes avance")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+
+        // replire la liste de spinner
+        listEmployes.addAll(listOf("","Architecte","Maçon"))
 
         listAvance = ArrayList<AvanceEmploye>()
         avanceAdapter = AvanceEmployeAdapter(applicationContext, 0)
@@ -65,6 +75,23 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
             val mBuilder = AlertDialog.Builder(this)
                 .setView(mDialogView)
             //.setTitle("Login Form")
+
+
+
+            //Spinner
+            val spinnerE = mDialogView.findViewById <Spinner>(R.id.spinnerEmploye)
+
+            //Remplire Spinner
+            val  adapter : ArrayAdapter<String> = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listEmployes)
+
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerE.setAdapter(adapter)
+
+
+            //button valider
+            mDialogView.button.setOnClickListener{
+                Toast.makeText(this,spinnerE.selectedItem.toString()+" "+" Le montant: "+mDialogView.montant.text ,Toast.LENGTH_SHORT).show()
+            }
 
             //date Début Picker Btn
             val dateBtn = mDialogView.findViewById<Button>(R.id.dateDAvBtn)

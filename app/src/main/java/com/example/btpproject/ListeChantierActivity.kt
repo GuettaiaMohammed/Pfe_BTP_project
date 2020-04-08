@@ -20,7 +20,7 @@ class ListeChantierActivity : AppCompatActivity(), ChantierAdapter.OnNoteListene
         recyclerView = findViewById(R.id.listeChantier)
 
         listeCh = ArrayList()
-        listeCh!!.add(Chantier("PISCINE SEMI OLYMPIQUE REGHAIA", 90, "En coure"))
+        listeCh!!.add(Chantier("PISCINE SEMI OLYMPIQUE REGHAIA", 90, "En cours"))
         listeCh!!.add(Chantier("MODIFCATION DE LYCEE BOUAZZA MILOUD", 100, "Terminé"))
 
         chantierAdapter = ChantierAdapter(this.applicationContext, listeCh!!, this)

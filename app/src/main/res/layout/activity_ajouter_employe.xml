@@ -110,9 +110,12 @@
                             android:id="@+id/dateDEmpBtn"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+
                             android:layout_weight="1"
-                            android:drawableLeft="@drawable/ic_date_black"
-                            android:text="Séléctionner une date"
+                            android:layout_marginRight="20dp"
+                            android:background="@color/design_default_color_background"
+                            android:drawableRight="@drawable/ic_date_range_orange_24dp"
+                            android:text="Choisir une date"
                             android:textSize="8sp" />
 
                     </LinearLayout>
@@ -137,8 +140,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:drawableLeft="@drawable/ic_date_black"
-                            android:text="@string/selectionDate"
+                            android:layout_marginRight="20dp"
+                            android:background="@color/design_default_color_background"
+                            android:drawableRight="@drawable/ic_date_range_orange_24dp"
+                            android:text="Choisir une date"
                             android:textSize="8sp" />
 
                     </LinearLayout>

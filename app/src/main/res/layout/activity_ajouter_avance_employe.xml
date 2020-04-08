@@ -85,7 +85,7 @@
                             app:fontFamily="sans-serif" />
 
                         <Spinner
-                            android:id="@+id/spinnerDate"
+                            android:id="@+id/spinnerEmploye"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
 
@@ -111,9 +111,11 @@
                             android:id="@+id/dateDAvBtn"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginRight="20dp"
                             android:layout_weight="1"
-                            android:drawableLeft="@drawable/ic_date_black"
-                            android:text="Séléctionner une date"
+                            android:background="@color/design_default_color_background"
+                            android:drawableRight="@drawable/ic_date_range_orange_24dp"
+                            android:text="Choisir une date"
                             android:textSize="8sp" />
 
                     </LinearLayout>
@@ -130,6 +132,7 @@
                             android:layout_height="match_parent">
 
                             <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/montant"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
