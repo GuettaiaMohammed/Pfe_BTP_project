@@ -1,7 +1,8 @@
-package com.example .btpproject
+package com.example  .btpproject
 
 
-import android.app.DatePickerDialog
+
+import android. app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 
@@ -32,6 +33,8 @@ class ListeEmployeActivity : AppCompatActivity() {
     private var employeAdapter: EmployeAdapter? = null
 
 
+    private var  check: CheckBox? = null
+
     private val listMetiers = arrayListOf<String>()
 
     var mDatepickerD: DatePickerDialog? = null
@@ -57,9 +60,9 @@ class ListeEmployeActivity : AppCompatActivity() {
         mesEmployes = ArrayList()
 
 
-        (mesEmployes as ArrayList<Employe>).add(Employe( "Employé1", "Architecte"))
-        (mesEmployes as ArrayList<Employe>).add(Employe("Employé2", "Maçon"))
-        (mesEmployes as ArrayList<Employe>).add(Employe( "Employé3", "Maçon"))
+        (mesEmployes as ArrayList<Employe>).add(Employe( check,"Employé1", "Architecte"))
+        (mesEmployes as ArrayList<Employe>).add(Employe(check,"Employé2", "Maçon"))
+        (mesEmployes as ArrayList<Employe>).add(Employe( check,"Employé3", "Maçon"))
 
         employeAdapter!!.addAll(mesEmployes)
         listView!!.adapter = employeAdapter
@@ -140,8 +143,14 @@ class ListeEmployeActivity : AppCompatActivity() {
         }
 
 
-        receptioner.setOnClickListener {}
-    }
+        receptioner.setOnClickListener {
+
+            if (employeAdapter!!.getItem(1).checkBox!!.isChecked){
+            employeAdapter!!.remove(employeAdapter!!.getItem(1))
+        }
+
+
+        }    }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_personel,menu)

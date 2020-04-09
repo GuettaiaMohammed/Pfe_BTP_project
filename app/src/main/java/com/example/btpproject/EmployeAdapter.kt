@@ -24,12 +24,12 @@ class EmployeAdapter(context: Context, resource: Int) : ArrayAdapter<Employe>(co
 
         val nom = v.findViewById<TextView>(R.id.nom)
         val metier = v.findViewById<TextView>(R.id.lotSuiviTV)
-        val check=v.findViewById<CheckBox>(R.id.checkBox)
+        var check=v.findViewById<CheckBox>(R.id.checkBox)
 
 
         nom.text = employe.nom
         metier.text = employe.metier
-        check.isEnabled?:true
+        check=employe.checkBox
 
 
 
