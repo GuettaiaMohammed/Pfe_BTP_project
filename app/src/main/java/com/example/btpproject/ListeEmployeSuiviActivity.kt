@@ -27,6 +27,8 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
     private var listView: ListView? = null
     private var employeAdapter: EmployeSuiviAdapter? = null
 
+    private var  check: CheckBox? = null
+
     //les listes des spinner
     private val listEmployes = arrayListOf<String>()
     private val listUnites = arrayListOf<String>()

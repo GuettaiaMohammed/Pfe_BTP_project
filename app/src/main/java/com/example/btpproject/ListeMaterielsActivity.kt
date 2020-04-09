@@ -87,6 +87,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
                 // date picker dialog
                 mDatepickerD = DatePickerDialog(
                     this,
+                        R.style.DialogTheme,
                     DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                         //affichage de la date selectionné
                         dateDBtn.setText(
@@ -109,6 +110,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
                 // date picker dialog
                 mDatepickerF = DatePickerDialog(
                     this,
+                        R.style.DialogTheme,
                     DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                         //affichage de la date selectionné
                         dateFBtn.setText(

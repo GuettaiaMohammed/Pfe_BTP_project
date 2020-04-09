@@ -104,6 +104,7 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
                 // date picker dialog
                 mDatepicker = DatePickerDialog(
                     this,
+                        R.style.DialogTheme,
                     DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                         //affichage de la date selectionné
                         dateBtn.setText(
@@ -112,6 +113,7 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
                         dateBtn.textSize = 12F
                     }, year, month, day
                 )
+
                 mDatepicker!!.show()
             }
 

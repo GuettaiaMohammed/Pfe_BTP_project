@@ -1,4 +1,4 @@
-package com.example.btpproject
+package com.example .btpproject
 
 
 import android.app.DatePickerDialog
@@ -24,11 +24,13 @@ import android.widget.EditText
 
 
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class ListeEmployeActivity : AppCompatActivity() {
 
     private var mesEmployes: ArrayList<Employe>? = null
     private var listView: ListView? = null
     private var employeAdapter: EmployeAdapter? = null
+
 
     private val listMetiers = arrayListOf<String>()
 
@@ -46,21 +48,21 @@ class ListeEmployeActivity : AppCompatActivity() {
 
 
 
-        listMetiers.addAll(listOf("","Architecte","Maçon"))
+        listMetiers.addAll(listOf("", "Architecte", "Maçon"))
 
 
         listView = findViewById(R.id.empl)
         employeAdapter = EmployeAdapter(applicationContext, 0)
 
-        mesEmployes= ArrayList();
+        mesEmployes = ArrayList();
 
-        (mesEmployes as ArrayList<Employe>).add(Employe("Employé1", "Architecte"))
+
+        (mesEmployes as ArrayList<Employe>).add(Employe( "Employé1", "Architecte"))
         (mesEmployes as ArrayList<Employe>).add(Employe("Employé2", "Maçon"))
-        (mesEmployes as ArrayList<Employe>).add(Employe("Employé3", "Maçon"))
+        (mesEmployes as ArrayList<Employe>).add(Employe( "Employé3", "Maçon"))
 
         employeAdapter!!.addAll(mesEmployes)
         listView!!.adapter = employeAdapter
-
 
 
         //button click to show dialog
@@ -69,22 +71,22 @@ class ListeEmployeActivity : AppCompatActivity() {
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_employe, null)
             //AlertDialogBuilder
             val mBuilder = AlertDialog.Builder(this)
-                .setView(mDialogView)
+                    .setView(mDialogView)
             //.setTitle("Login Form")
 
             //Spinner
-            val spinnerE = mDialogView.findViewById <Spinner>(R.id.spinnerE)
+            val spinnerE = mDialogView.findViewById<Spinner>(R.id.spinnerE)
 
             //Remplire Spinner
-            val  adapter : ArrayAdapter<String> = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listMetiers)
+            val adapter: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listMetiers)
 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerE.setAdapter(adapter)
 
             //button valider
-            mDialogView.button.setOnClickListener{
-                Toast.makeText(this,spinnerE.selectedItem.toString()+" "+" Le nombre : "+mDialogView.nbr.text ,
-                    Toast.LENGTH_SHORT).show()
+            mDialogView.button.setOnClickListener {
+                Toast.makeText(this, spinnerE.selectedItem.toString() + " " + " Le nombre : " + mDialogView.nbr.text,
+                        Toast.LENGTH_SHORT).show()
             }
 
             //date Début Picker Btn
@@ -97,14 +99,15 @@ class ListeEmployeActivity : AppCompatActivity() {
                 val year = cldr.get(Calendar.YEAR)
                 // date picker dialog
                 mDatepickerD = DatePickerDialog(
-                    this,
-                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                        //affichage de la date selectionné
-                        dateDBtn.setText(
-                            dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
-                        )
-                        dateDBtn.textSize = 12F
-                    }, year, month, day
+                        this,
+                        R.style.DialogTheme,
+                        DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                            //affichage de la date selectionné
+                            dateDBtn.setText(
+                                    dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+                            )
+                            dateDBtn.textSize = 12F
+                        }, year, month, day
                 )
                 mDatepickerD!!.show()
             }
@@ -119,14 +122,15 @@ class ListeEmployeActivity : AppCompatActivity() {
                 val year = cldr.get(Calendar.YEAR)
                 // date picker dialog
                 mDatepickerF = DatePickerDialog(
-                    this,
-                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                        //affichage de la date selectionné
-                        dateFBtn.setText(
-                            dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
-                        )
-                        dateFBtn.textSize = 12F
-                    }, year, month, day
+                        this,
+                        R.style.DialogTheme,
+                        DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                            //affichage de la date selectionné
+                            dateFBtn.setText(
+                                    dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+                            )
+                            dateFBtn.textSize = 12F
+                        }, year, month, day
                 )
                 mDatepickerF!!.show()
             }
@@ -135,8 +139,9 @@ class ListeEmployeActivity : AppCompatActivity() {
             mBuilder.show()
         }
 
-    }
 
+        receptioner.setOnClickListener {}
+    }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_personel,menu)

@@ -125,6 +125,7 @@ class MonChantier : AppCompatActivity() {
                 // date picker dialog
                 mDatepickerDEmp = DatePickerDialog(
                     this,
+                        R.style.DialogTheme,
                     DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                         //affichage de la date selectionné
                         dateDBtn.setText(
@@ -147,6 +148,7 @@ class MonChantier : AppCompatActivity() {
                 // date picker dialog
                 mDatepickerFEmp = DatePickerDialog(
                     this,
+                        R.style.DialogTheme,
                     DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                         //affichage de la date selectionné
                         dateFBtn.setText(
@@ -199,6 +201,7 @@ class MonChantier : AppCompatActivity() {
                 // date picker dialog
                 mDatepickerDMat = DatePickerDialog(
                     this,
+                        R.style.DialogTheme,
                     DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                         //affichage de la date selectionné
                         dateDBtn.setText(
@@ -221,6 +224,7 @@ class MonChantier : AppCompatActivity() {
                 // date picker dialog
                 mDatepickerFMat = DatePickerDialog(
                     this,
+                        R.style.DialogTheme,
                     DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                         //affichage de la date selectionné
                         dateFBtn.setText(
