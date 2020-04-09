@@ -54,7 +54,7 @@ class ListeEmployeActivity : AppCompatActivity() {
         listView = findViewById(R.id.empl)
         employeAdapter = EmployeAdapter(applicationContext, 0)
 
-        mesEmployes = ArrayList();
+        mesEmployes = ArrayList()
 
 
         (mesEmployes as ArrayList<Employe>).add(Employe( "Employé1", "Architecte"))
@@ -145,6 +145,32 @@ class ListeEmployeActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_personel,menu)
+        var menuItem: MenuItem = menu!!.findItem(R.id.app_bar_search)
+        var searchView: SearchView = menuItem.actionView as SearchView
+        searchView.queryHint = "Rechercher ici"
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if(newText!!.isNotEmpty()){
+                    employeAdapter!!.clear()
+                    val search = newText.toLowerCase()
+                    mesEmployes!!.forEach {
+                        if((it.metier!!.toLowerCase().contains(newText))|| (it.nom!!.toLowerCase().contains(newText))){
+                            employeAdapter!!.add(it)
+                        }
+                    }
+                }else{
+                    employeAdapter!!.clear()
+                    employeAdapter!!.addAll(mesEmployes)
+                }
+                return true
+            }
+
+        })
         return true
     }
 
