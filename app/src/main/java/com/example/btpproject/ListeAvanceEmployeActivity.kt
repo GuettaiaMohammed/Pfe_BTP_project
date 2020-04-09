@@ -125,6 +125,34 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_avance,menu)
+        var menuItem: MenuItem = menu!!.findItem(R.id.app_bar_search_avance)
+        var searchView: SearchView = menuItem.actionView as SearchView
+        searchView.queryHint = "Rechercher ici"
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if(newText!!.isNotEmpty()){
+                    avanceAdapter!!.clear()
+                    val search = newText.toLowerCase()
+                    listAvance!!.forEach {
+                        if((it.employe!!.toLowerCase().contains(newText))
+                            ||(it.dateAvance!!.toLowerCase().contains(newText))
+                            ||(it.prix!!.toLowerCase().contains(newText))){
+                            avanceAdapter!!.add(it)
+                        }
+                    }
+                }else{
+                    avanceAdapter!!.clear()
+                    avanceAdapter!!.addAll(listAvance)
+                }
+                return true
+            }
+
+        })
         return true
     }
 

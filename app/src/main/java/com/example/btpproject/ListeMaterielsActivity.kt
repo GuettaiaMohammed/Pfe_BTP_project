@@ -151,6 +151,34 @@ class ListeMaterielsActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_materiel,menu)
+        var menuItem: MenuItem = menu!!.findItem(R.id.app_bar_search_materiel)
+        var searchView: SearchView = menuItem.actionView as SearchView
+        searchView.queryHint = "Rechercher ici"
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if(newText!!.isNotEmpty()){
+                    materielAdapter!!.clear()
+                    val search = newText.toLowerCase()
+                    mesMateriels!!.forEach {
+                        if((it.nom!!.toLowerCase().contains(newText))
+                            ||(it.type!!.toLowerCase().contains(newText))
+                            ||(it.dateDemande!!.toLowerCase().contains(newText))){
+                            materielAdapter!!.add(it)
+                        }
+                    }
+                }else{
+                    materielAdapter!!.clear()
+                    materielAdapter!!.addAll(mesMateriels)
+                }
+                return true
+            }
+
+        })
         return true
     }
 

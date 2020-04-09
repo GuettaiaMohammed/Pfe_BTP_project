@@ -124,6 +124,33 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_suivi,menu)
+        var menuItem: MenuItem = menu!!.findItem(R.id.app_bar_search_suivi)
+        var searchView: SearchView = menuItem.actionView as SearchView
+        searchView.queryHint = "Rechercher ici"
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if(newText!!.isNotEmpty()){
+                    employeAdapter!!.clear()
+                    val search = newText.toLowerCase()
+                    mesEmployes!!.forEach {
+                        if((it.nom!!.toLowerCase().contains(newText))
+                            ||(it.metier!!.toLowerCase().contains(newText))){
+                            employeAdapter!!.add(it)
+                        }
+                    }
+                }else{
+                    employeAdapter!!.clear()
+                    employeAdapter!!.addAll(mesEmployes)
+                }
+                return true
+            }
+
+        })
         return true
     }
 

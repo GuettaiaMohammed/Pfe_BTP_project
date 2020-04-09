@@ -8,6 +8,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.AdapterView
 import android.widget.ListView
+import android.widget.SearchView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -69,6 +70,34 @@ class ListeArticleActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_article,menu)
+        var menuItem: MenuItem = menu!!.findItem(R.id.app_bar_search_article)
+        var searchView: SearchView = menuItem.actionView as SearchView
+        searchView.queryHint = "Rechercher ici"
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if(newText!!.isNotEmpty()){
+                    articleAdapter!!.clear()
+                    val search = newText.toLowerCase()
+                    mesArticles!!.forEach {
+                        if((it.nom!!.toLowerCase().contains(newText))
+                            ||(it.qteDemande!!.toLowerCase().contains(newText))
+                            ||(it.date!!.toLowerCase().contains(newText))){
+                            articleAdapter!!.add(it)
+                        }
+                    }
+                }else{
+                    articleAdapter!!.clear()
+                    articleAdapter!!.addAll(mesArticles)
+                }
+                return true
+            }
+
+        })
         return true
     }
 

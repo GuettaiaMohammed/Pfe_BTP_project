@@ -7,6 +7,12 @@
         android:icon="@drawable/ic_home_black_24dp"
         android:title="Mon chantier"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/app_bar_search_article"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="Search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/navigation_monCh"

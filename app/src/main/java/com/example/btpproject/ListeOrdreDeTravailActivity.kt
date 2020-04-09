@@ -9,6 +9,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.AdapterView
 import android.widget.ListView
+import android.widget.SearchView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import kotlinx.android.synthetic.main.activity_liste_ordre_de_travail.*
@@ -66,6 +67,34 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_ordre,menu)
+        var menuItem: MenuItem = menu!!.findItem(R.id.app_bar_search_ordre)
+        var searchView: SearchView = menuItem.actionView as SearchView
+        searchView.queryHint = "Rechercher ici"
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if(newText!!.isNotEmpty()){
+                    ordreTravailAdapter!!.clear()
+                    val search = newText.toLowerCase()
+                    listOT!!.forEach {
+                        if((it.nom!!.toLowerCase().contains(newText))
+                            ||(it.lot!!.toLowerCase().contains(newText))
+                            ||(it.date!!.toLowerCase().contains(newText))){
+                            ordreTravailAdapter!!.add(it)
+                        }
+                    }
+                }else{
+                    ordreTravailAdapter!!.clear()
+                    ordreTravailAdapter!!.addAll(listOT)
+                }
+                return true
+            }
+
+        })
         return true
     }
 
