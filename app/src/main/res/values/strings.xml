@@ -40,4 +40,5 @@
     <string name="meschantier">Mes Chantiers</string>
     <string name="Avancement" >Avancement :</string>
     <string name="selectionDate">Selectionner une date</string>
+    <string name="login">Login</string>
 </resources>

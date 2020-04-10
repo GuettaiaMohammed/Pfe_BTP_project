@@ -138,6 +138,7 @@
                                 android:layout_marginLeft="15dp"
                                 android:layout_marginRight="20dp"
                                 android:hint="Montant demandé"
+                                android:inputType="number"
                                 android:textSize="20sp" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
