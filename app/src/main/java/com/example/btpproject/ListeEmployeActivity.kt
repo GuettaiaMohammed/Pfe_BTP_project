@@ -75,7 +75,7 @@ class ListeEmployeActivity : AppCompatActivity() {
             for (i in 0..mesEmployes!!.size) {
                 if (position == i) {
                     var text:TextView = view.findViewById(R.id.receptioner)
-                    text.setText("Receptioné")
+                    text.setText("Employé Receptionné")
                     text.setTextColor(Color.DKGRAY)
                     text.setBackgroundColor(Color.WHITE)
 
