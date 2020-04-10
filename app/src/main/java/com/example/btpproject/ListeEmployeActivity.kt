@@ -76,7 +76,7 @@ class ListeEmployeActivity : AppCompatActivity() {
                 if (position == i) {
                     var text:TextView = view.findViewById(R.id.receptioner)
                     text.setText("Employé Receptionné")
-                    text.setTextColor(Color.DKGRAY)
+                    text.setTextColor(Color.GRAY)
                     text.setBackgroundColor(Color.WHITE)
 
                     // Item(i).receptionner.replace("Clique pour receptionner","receptionné")
