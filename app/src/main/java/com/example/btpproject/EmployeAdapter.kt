@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.CheckBox
 
 import android.widget.TextView
@@ -24,12 +25,13 @@ class EmployeAdapter(context: Context, resource: Int) : ArrayAdapter<Employe>(co
 
         val nom = v.findViewById<TextView>(R.id.nom)
         val metier = v.findViewById<TextView>(R.id.lotSuiviTV)
-        var check=v.findViewById<CheckBox>(R.id.checkBox)
+        val r=v.findViewById<TextView>(R.id.receptioner)
 
 
         nom.text = employe.nom
         metier.text = employe.metier
-        check=employe.checkBox
+
+
 
 
 

@@ -91,38 +91,6 @@
 
             </ListView>
 
-            <LinearLayout
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-
-                android:layout_marginTop="1040dp"
-                android:gravity="center|center_horizontal|center_vertical"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/empl"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="6dp">
-
-                <Button
-                    android:id="@+id/receptioner"
-                    android:layout_width="120dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/button"
-                    android:text="Receptionner"
-                    android:textColor="@android:color/background_light"
-                    android:textSize="14sp" />
-
-                <Button
-                    android:id="@+id/mettreR"
-                    android:layout_width="120dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/button"
-                    android:text="Mettre en reserve"
-                    android:textColor="@android:color/background_light"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

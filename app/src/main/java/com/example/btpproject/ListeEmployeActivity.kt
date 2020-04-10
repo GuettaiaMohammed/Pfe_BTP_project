@@ -17,12 +17,14 @@ import kotlinx.android.synthetic.main.activity_ajouter_employe.view.*
 import kotlinx.android.synthetic.main.activity_liste_employe.*
 import java.util.*
 import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.*
 import android.widget.Toast
 import android.widget.DatePicker
 import android.widget.EditText
-
-
+import androidx.core.view.get
+import com.example.btpproject.R.layout.activity_cellule_employe
 
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
@@ -60,12 +62,30 @@ class ListeEmployeActivity : AppCompatActivity() {
         mesEmployes = ArrayList()
 
 
-        (mesEmployes as ArrayList<Employe>).add(Employe( check,"Employé1", "Architecte"))
-        (mesEmployes as ArrayList<Employe>).add(Employe(check,"Employé2", "Maçon"))
-        (mesEmployes as ArrayList<Employe>).add(Employe( check,"Employé3", "Maçon"))
+        (mesEmployes as ArrayList<Employe>).add(Employe( "Employé1", "Architecte"))
+        (mesEmployes as ArrayList<Employe>).add(Employe("Employé2", "Maçon"))
+        (mesEmployes as ArrayList<Employe>).add(Employe( "Employé3", "Maçon"))
 
         employeAdapter!!.addAll(mesEmployes)
         listView!!.adapter = employeAdapter
+
+
+        var i:Int = 0
+        listView!!.setOnItemClickListener(AdapterView.OnItemClickListener { adapterView, view, position, l ->
+            for (i in 0..mesEmployes!!.size) {
+                if (position == i) {
+                    var text:TextView = view.findViewById(R.id.receptioner)
+                    text.setText("Receptioné")
+                    text.setTextColor(Color.DKGRAY)
+                    text.setBackgroundColor(Color.WHITE)
+
+                    // Item(i).receptionner.replace("Clique pour receptionner","receptionné")
+                  //  employeAdapter!!.remove(employeAdapter!!.getItem(i))
+                }
+            }
+
+        })
+
 
 
         //button click to show dialog
@@ -143,14 +163,9 @@ class ListeEmployeActivity : AppCompatActivity() {
         }
 
 
-        receptioner.setOnClickListener {
-
-            if (employeAdapter!!.getItem(1).checkBox!!.isChecked){
-            employeAdapter!!.remove(employeAdapter!!.getItem(1))
-        }
 
 
-        }    }
+           }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_personel,menu)
