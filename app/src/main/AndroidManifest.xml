@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.btpproject">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -42,16 +46,13 @@
             android:parentActivityName=".MainActivity" />
         <activity android:name=".AjouterMaterielActivity" />
         <activity android:name=".AjouterEmployeActivity" />
-        <activity android:name=".AjouterArticleActivity" />
         <activity
             android:name=".ListeEmployeActivity"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".DetailArticleQuantiteActivity"
             android:parentActivityName=".ListeArticleActivity" />
-        <activity
-            android:name=".DetailArticle"
-            android:parentActivityName=".ListeArticleActivity" />
+
         <activity android:name=".AjouterQteRealiseActivity" />
         <activity
             android:name=".MonChantier"
