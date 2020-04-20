@@ -270,12 +270,12 @@ class ListeMaterielsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    class Connexion : AsyncTask<String, Void, ArrayList<Any>?>() {
+    class Connexion : AsyncTask<String, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
 
-        override fun doInBackground(vararg url: String?): ArrayList<Any>? {
+        override fun doInBackground(vararg url: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
@@ -323,7 +323,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
                     }
                 )) as Array<Any>)
                 println("**************************  champs chantier = $list")
-                return list as ArrayList<Any>
+                return list
 
             }catch (e: MalformedURLException) {
                 Log.d("MalformedURLException", "*********************************************************")
