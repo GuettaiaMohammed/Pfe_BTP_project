@@ -13,9 +13,24 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import kotlinx.android.synthetic.main.activity_ajouter_article.view.*
-import kotlinx.android.synthetic.main.activity_cellule_materiel.*
 import kotlinx.android.synthetic.main.activity_liste_materiels.*
 import java.util.*
+import android.os.AsyncTask
+import android.util.Log
+import androidx.annotation.IntegerRes
+import org.apache.xmlrpc.XmlRpcException
+import org.apache.xmlrpc.client.XmlRpcClient
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
+import java.net.MalformedURLException
+import java.net.URL
+import java.util.Arrays.asList
+import kotlin.collections.ArrayList
+import java.util.Collections.emptyMap
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
 
 
 class ListeMaterielsActivity : AppCompatActivity() {
@@ -23,6 +38,11 @@ class ListeMaterielsActivity : AppCompatActivity() {
     private var mesMateriels: ArrayList<Materiel>? = null
     private var listView: ListView? = null
     private var materielAdapter: MaterielAdapter? = null
+
+    val db = "BTP_pfe"
+    val username = "admin"
+    val password = "pfe_chantier"
+    val url = "http://sogesi.hopto.org:7013"
 
     //liste de spinner
     private val listMateriels = arrayListOf<String>()
@@ -44,7 +64,12 @@ class ListeMaterielsActivity : AppCompatActivity() {
         listView = findViewById(R.id.materielsListe)
         materielAdapter = MaterielAdapter(applicationContext, 0)
 
-        mesMateriels = ArrayList();
+        //Faire la connexion avec le serveur
+
+
+
+         Connexion().execute(url)
+        mesMateriels = ArrayList()
 
         (mesMateriels as ArrayList<Materiel>).add(Materiel("Grue", "Interne", "21/03/2020"))
         (mesMateriels as ArrayList<Materiel>).add(Materiel("JCB/Mini-pelles", "Interne", "17/03/2020"))
@@ -244,4 +269,72 @@ class ListeMaterielsActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    class Connexion : AsyncTask<String, Void, ArrayList<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg url: String?): ArrayList<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                        common_config, "authenticate", asList(
+                db, username, password, emptyMap<Any, Any>()
+                    )
+                ) as Int
+                Log.d(
+                    "result",
+                    "*******************************************************************"
+                );
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des chantier
+                val list = asList(*models.execute("execute_kw", asList(
+                    db, uid, password,
+                    "demande.appro_mat", "search_read",
+                    asList(
+                        asList(
+                            asList("chantier_id", "=", 2)
+                        )
+                    ),
+                    object : HashMap<Any,Any>() {
+                        init {
+                            put(
+                                "fields",
+                                asList("type_materiel_id", "date_debut", "date_fin")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+                println("**************************  champs chantier = $list")
+                return list as ArrayList<Any>
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
+    }
+
 }
