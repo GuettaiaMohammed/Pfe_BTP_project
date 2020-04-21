@@ -18,6 +18,7 @@ import java.util.*
 import android.os.AsyncTask
 import android.util.Log
 import androidx.annotation.IntegerRes
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.xmlrpc.XmlRpcException
 import org.apache.xmlrpc.client.XmlRpcClient
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
@@ -26,11 +27,11 @@ import java.net.URL
 import java.util.Arrays.asList
 import kotlin.collections.ArrayList
 import java.util.Collections.emptyMap
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
-
+import org.json.JSONArray
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
+import kotlin.collections.HashMap
 
 
 class ListeMaterielsActivity : AppCompatActivity() {
@@ -38,6 +39,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
     private var mesMateriels: ArrayList<Materiel>? = null
     private var listView: ListView? = null
     private var materielAdapter: MaterielAdapter? = null
+
 
     val db = "BTP_pfe"
     val username = "admin"
@@ -68,8 +70,10 @@ class ListeMaterielsActivity : AppCompatActivity() {
 
 
 
-         Connexion().execute(url)
+        Connexion().execute(url)
+
         mesMateriels = ArrayList()
+
 
         (mesMateriels as ArrayList<Materiel>).add(Materiel("Grue", "Interne", "21/03/2020"))
         (mesMateriels as ArrayList<Materiel>).add(Materiel("JCB/Mini-pelles", "Interne", "17/03/2020"))
@@ -274,6 +278,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
+        private var mesMateriels: ArrayList<Materiel>? = null
 
         override fun doInBackground(vararg url: String?): List<Any>? {
             var client =  XmlRpcClient()
@@ -304,7 +309,9 @@ class ListeMaterielsActivity : AppCompatActivity() {
                     }
                 }
 
-                //liste des chantier
+
+
+                        //liste des chantier
                 val list = asList(*models.execute("execute_kw", asList(
                     db, uid, password,
                     "demande.appro_mat", "search_read",
@@ -323,6 +330,21 @@ class ListeMaterielsActivity : AppCompatActivity() {
                     }
                 )) as Array<Any>)
                 println("**************************  champs chantier = $list")
+
+                val jsonArray = JSONArray(list)
+
+                for(i in 0..(list.size)-1){
+                    val dateD = jsonArray.getJSONObject(i).getString("date_debut").toString()
+                    val dateF = jsonArray.getJSONObject(i).getString("date_fin").toString()
+                    var typeObj = jsonArray.getJSONObject(i).getString("type_materiel_id").toString()
+                    var type = typeObj.split("\"")[1]
+                    var type2 = type.split("\"")[0]
+
+                    println("**************************  type = $type2")
+                    println("**************************  Date debut = $dateD")
+
+                }
+
                 return list
 
             }catch (e: MalformedURLException) {

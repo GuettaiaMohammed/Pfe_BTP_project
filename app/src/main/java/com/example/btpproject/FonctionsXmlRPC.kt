@@ -18,13 +18,13 @@ class FonctionsXmlRPC
  *
  * @param serverAddress
  */
-internal constructor(serverAddress: String) {
+internal constructor() {
     private var url: URL? = null
     private var client: XMLRPCClient? = null
 
     init {
         try {
-            url = URL("$serverAddress/xmlrpc/2/common")
+            url = URL("http://sogesi.hopto.org:7013/xmlrpc/2/common")
             client = XMLRPCClient(url)
         } catch (ex: Exception) {
             Log.e("ODOO UTILITY: ", ex.message)
