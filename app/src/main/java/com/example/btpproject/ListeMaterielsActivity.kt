@@ -21,7 +21,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.IntegerRes
 import androidx.annotation.RequiresApi
-import com.fasterxml.jackson.databind.ObjectMapper
+
 import org.apache.xmlrpc.XmlRpcException
 import org.apache.xmlrpc.client.XmlRpcClient
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
@@ -31,8 +31,7 @@ import java.util.Arrays.asList
 import kotlin.collections.ArrayList
 import java.util.Collections.emptyMap
 import org.json.JSONArray
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+
 import java.lang.reflect.Type
 import kotlin.collections.HashMap
 

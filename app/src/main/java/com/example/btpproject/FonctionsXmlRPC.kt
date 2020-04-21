@@ -2,16 +2,19 @@ package com.example.btpproject
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 
 
 import java.net.URL
-import java.util.ArrayList
-import java.util.HashMap
 
 import de.timroes.axmlrpc.XMLRPCCallback
 import de.timroes.axmlrpc.XMLRPCClient
+import java.lang.reflect.Array
+import java.util.*
+import kotlin.Any as Any1
+import kotlin.Array as Array1
 
 class FonctionsXmlRPC
 /********************************************************************************************
@@ -48,7 +51,7 @@ internal constructor() {
         password: String
     ): Long {
 
-        val emptyMap = HashMap<String, Any>()
+        val emptyMap = HashMap<String, Any1>()
         return client!!.callAsync(listener, "authenticate", db, username, password, emptyMap)
     }
 
@@ -162,13 +165,14 @@ internal constructor() {
          * @return
          */
 
-        fun getMany2One(classObj: Map<String, Any>, fieldName: String): M2OField {
+        @RequiresApi(Build.VERSION_CODES.KITKAT)
+        fun getMany2One(classObj: Map<String, Objects>, fieldName: String): M2OField {
 
             var fieldId: Int? = 0
             var fieldValue = ""
             val res = M2OField()
-            if (classObj[fieldName] is Array<*>) {
-                val field = classObj[fieldName] as Array<Any>?
+            if (classObj[fieldName] is Objects) {
+                val field = classObj[fieldName] as Array1<Any1>?
                 if (field!!.size > 0) {
                     fieldId = field[0] as Int
                     fieldValue = field[1] as String
@@ -187,9 +191,9 @@ internal constructor() {
          * @return
          */
 
-        fun getOne2Many(classObj: Map<String, Any>, fieldName: String): List<*> {
-            val res = ArrayList<Any>()
-            val field = classObj[fieldName] as Array<Any>?
+        fun getOne2Many(classObj: Map<Any1,String>, fieldName: String): List<*> {
+            val res = ArrayList<Any1>()
+            val field = classObj[fieldName] as Array1<Any1>?
 
             for (i in field!!.indices) {
                 res.add(i, field[i])
@@ -203,7 +207,7 @@ internal constructor() {
          * @param fieldName
          * @return
          */
-        fun getString(classObj: Map<String, Any>, fieldName: String): String {
+        fun getString(classObj: Map<String, Any1>, fieldName: String): String {
             var res = ""
             if (classObj[fieldName] is String) {
                 res = classObj[fieldName] as String
@@ -217,7 +221,7 @@ internal constructor() {
          * @param fieldName
          * @return
          */
-        fun getDouble(classObj: Map<String, Any>, fieldName: String): Double? {
+        fun getDouble(classObj: Map<String, Any1>, fieldName: String): Double? {
             var res: Double? = 0.0
             if (classObj[fieldName] is Double) {
                 res = classObj[fieldName] as Double?
@@ -231,7 +235,7 @@ internal constructor() {
          * @param fieldName
          * @return
          */
-        fun getInteger(classObj: Map<String, Any>, fieldName: String): Int? {
+        fun getInteger(classObj: Map<String, Any1>, fieldName: String): Int? {
             var res: Int? = 0
             if (classObj[fieldName] is Double) {
                 res = classObj[fieldName] as Int?

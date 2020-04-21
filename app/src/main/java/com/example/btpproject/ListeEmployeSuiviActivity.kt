@@ -2,9 +2,11 @@ package com.example.btpproject
 
 
 import android.content.Intent
+import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -17,13 +19,30 @@ import kotlinx.android.synthetic.main.activity_ajouter_article.view.button
 import kotlinx.android.synthetic.main.activity_ajouter_employe_suivi.view.*
 
 import kotlinx.android.synthetic.main.activity_liste_employes_suivi.*
-
-import java.util.ArrayList
+import org.apache.xmlrpc.XmlRpcException
+import org.apache.xmlrpc.client.XmlRpcClient
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
+import org.json.JSONArray
+import java.net.MalformedURLException
+import java.net.URL
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ListeEmployeSuiviActivity : AppCompatActivity() {
 
+    //
+    internal val url = "http://sogesi.hopto.org:7013/"
+    internal val db = "BTP_pfe"
+    internal val username = "admin"
+    internal val password = "pfe_chantier"
+
+
+
+
+
     private var mesEmployes: ArrayList<Employe>? = null
+    private var infoSuivi:ArrayList<EmployeSuivi>?=null
     private var listView: ListView? = null
     private var employeAdapter: EmployeSuiviAdapter? = null
 
@@ -52,12 +71,41 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
         listTypes.addAll(listOf("","type1","type2"))
         listLots.addAll(listOf("","Ligne1","Ligne2"))
 
+
+        //
+        val conn = Connexion().execute(url)
+
         listView = findViewById(R.id.empl)
         employeAdapter = EmployeSuiviAdapter(applicationContext, 0)
 
         mesEmployes= ArrayList();
+        val list = conn.get()
+        //recupéré l'objet JSON
+        val jsonArray = JSONArray(list)
 
-        (mesEmployes as ArrayList<Employe>).add(Employe("Employé1", "Transport à la décharge publique de l’EPIC ASROUT"))
+        //récupéré lles données de l'objet JSON
+        for (i in 0..(list!!.size) - 1) {
+            var Obj =
+                    jsonArray.getJSONObject(i).getString("employee_id").toString()
+            var nom = Obj.split("\"")[1]
+            var nom2 = nom.split("\"")[0]
+
+            var Obj1 =
+                    jsonArray.getJSONObject(i).getString("ligne_lot_id").toString()
+            var lot = Obj1.split("\"")[1]
+            var lot2 = lot.split("\"")[0]
+
+
+            val qtePrev = jsonArray.getJSONObject(i).getString("qte_prev").toString()
+            val qteRealise = jsonArray.getJSONObject(i).getString("qte_realise").toString()
+            val nbHprev = jsonArray.getJSONObject(i).getString("nb_h_prevu").toString()
+            val nbHtravail = jsonArray.getJSONObject(i).getString("nb_h_travail").toString()
+
+           //infoSuivi!!.add(EmployeSuivi(nom2,qtePrev,qteRealise,nbHprev,nbHtravail))
+            mesEmployes!!.add(Employe(nom2, lot2))
+        }
+
+
 
         employeAdapter!!.addAll(mesEmployes)
         listView!!.adapter = employeAdapter
@@ -67,6 +115,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             for (i in 0..mesEmployes!!.size) {
                 if (position == i) {
                     val intent = Intent(this, DetailSuiviEmployeQteRealiseActivity::class.java)
+
                     // start your next activity
                     startActivity(intent)
                 }
@@ -215,5 +264,80 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+
+
+
+
+
+
+
+    class Connexion : AsyncTask<String, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg url: String?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                        common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                )
+                ) as Int
+                Log.d(
+                        "result",
+                        "*******************************************************************"
+                );
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des chantier
+                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                        db, uid, password,
+                        "reglement.employe", "search_read",
+                        Arrays.asList(
+                                Arrays.asList(
+                                        Arrays.asList("chantier_id","=",2)
+                                )
+                        ),
+                        object : HashMap<Any, Any>() {
+                            init {
+                                put(
+                                        "fields",
+                                        Arrays.asList("employee_id","ligne_lot_id","qte_prev","qte_realise","nb_h_prevu","nb_h_travail")
+                                )
+                            }
+                        }
+                )) as Array<Any>)
+                println("**************************  champs chantier = $list")
+                return list
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
     }
 }

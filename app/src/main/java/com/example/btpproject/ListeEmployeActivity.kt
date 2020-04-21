@@ -19,16 +19,31 @@ import java.util.*
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.AsyncTask
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import android.widget.DatePicker
 import android.widget.EditText
 import androidx.core.view.get
 import com.example.btpproject.R.layout.activity_cellule_employe
+import org.apache.xmlrpc.XmlRpcException
+import org.apache.xmlrpc.client.XmlRpcClient
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
+import org.json.JSONArray
+import java.net.MalformedURLException
+import java.net.URL
+import java.util.Arrays.asList
 
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class ListeEmployeActivity : AppCompatActivity() {
+
+    //
+    internal val url = "http://sogesi.hopto.org:7013/"
+    internal val db = "BTP_pfe"
+    internal val username = "admin"
+    internal val password = "pfe_chantier"
 
     private var mesEmployes: ArrayList<Employe>? = null
     private var listView: ListView? = null
@@ -51,7 +66,7 @@ class ListeEmployeActivity : AppCompatActivity() {
         supportActionBar!!.setTitle("Demandes personnel")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-
+  Connexion().execute(url)
 
         listMetiers.addAll(listOf("", "Architecte", "Maçon"))
 
@@ -79,7 +94,7 @@ class ListeEmployeActivity : AppCompatActivity() {
                     text.setTextColor(Color.GRAY)
                     text.setBackgroundColor(Color.WHITE)
 
-                    // Item(i).receptionner.replace("Clique pour receptionner","receptionné")
+
                   //  employeAdapter!!.remove(employeAdapter!!.getItem(i))
                 }
             }
@@ -259,6 +274,99 @@ class ListeEmployeActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+
+
+
+
+
+
+    class Connexion : AsyncTask<String, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg url: String?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                        common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                )
+                ) as Int
+                Log.d(
+                        "result",
+                        "*******************************************************************"
+                );
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des chantier
+                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                        db, uid, password,
+                        "ligne.demande.appro_personnel", "search_read",
+                        Arrays.asList(
+                                Arrays.asList(
+                                        Arrays.asList("demande_appro_personnel_id", "=", "PISCINE SEMI OLYMPIQUE REGHAIA")
+                                )
+                        ),
+                        object : HashMap<Any, Any>() {
+                            init {
+                                put(
+                                        "fields",
+                                        Arrays.asList("job_id","employee_ids")
+
+                                )
+                            }
+                        }
+                )) as Array<Any>)
+                println("**************************  champs chantier = $list")
+
+
+                val jsonArray = JSONArray(list)
+
+                for(i in 0..(list.size)-1){
+                    var typeObj = jsonArray.getJSONObject(i).getString("job_id").toString()
+                  var typeObj1 = jsonArray.getJSONObject(i).getString("employee_ids").toString()
+                    var type = typeObj.split("\"")[1]
+                    var type2 = type.split("\"")[0]
+
+
+
+
+//
+                    println("**************************  metier = $type2")
+                   println("**************************  nom employé = $typeObj1")
+
+                }
+                return list
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
     }
 
 }
