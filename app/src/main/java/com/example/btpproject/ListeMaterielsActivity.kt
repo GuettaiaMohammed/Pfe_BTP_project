@@ -1,5 +1,6 @@
 package com.example.btpproject
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -16,8 +17,10 @@ import kotlinx.android.synthetic.main.activity_ajouter_article.view.*
 import kotlinx.android.synthetic.main.activity_liste_materiels.*
 import java.util.*
 import android.os.AsyncTask
+import android.os.Build
 import android.util.Log
 import androidx.annotation.IntegerRes
+import androidx.annotation.RequiresApi
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.xmlrpc.XmlRpcException
 import org.apache.xmlrpc.client.XmlRpcClient
@@ -52,6 +55,8 @@ class ListeMaterielsActivity : AppCompatActivity() {
     var mDatepickerD: DatePickerDialog? = null
     var mDatepickerF: DatePickerDialog? = null
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liste_materiels)
@@ -65,24 +70,33 @@ class ListeMaterielsActivity : AppCompatActivity() {
 
         listView = findViewById(R.id.materielsListe)
         materielAdapter = MaterielAdapter(applicationContext, 0)
-
+        mesMateriels = ArrayList()
         //Faire la connexion avec le serveur
 
 
+        val conn = Connexion().execute(url)
+        val list = conn.get()
 
-        Connexion().execute(url)
+        //recupéré l'objet JSON
+        val jsonArray = JSONArray(list)
 
-        mesMateriels = ArrayList()
+        //récupéré lles données de l'objet JSON
+        for (i in 0..(list!!.size) - 1) {
+            val dateD = jsonArray.getJSONObject(i).getString("date_debut").toString()
+            val dateF = jsonArray.getJSONObject(i).getString("date_fin").toString()
+            var typeObj =
+                jsonArray.getJSONObject(i).getString("type_materiel_id").toString()
+            var type = typeObj.split("\"")[1]
+            var type2 = type.split("\"")[0]
 
+            println("**************************  type = $type2")
+            println("**************************  Date debut = $dateD")
 
-        (mesMateriels as ArrayList<Materiel>).add(Materiel("Grue", "Interne", "21/03/2020"))
-        (mesMateriels as ArrayList<Materiel>).add(Materiel("JCB/Mini-pelles", "Interne", "17/03/2020"))
-        (mesMateriels as ArrayList<Materiel>).add(Materiel("JCB/Chargeuse-pelleteuse 3CX ECO", "Interne", "11/02/2020"))
-        (mesMateriels as ArrayList<Materiel>).add(Materiel("BELL/tombereau articulé B25E", "Interne", "01/01/2020"))
+            mesMateriels!!.add(Materiel(type2, dateD, dateF))
+        }
 
         materielAdapter!!.addAll(mesMateriels)
         listView!!.adapter = materielAdapter
-
         var i:Int = 0
         listView!!.setOnItemClickListener(AdapterView.OnItemClickListener { adapterView, view, position, l ->
             for (i in 0..mesMateriels!!.size) {
@@ -194,9 +208,10 @@ class ListeMaterielsActivity : AppCompatActivity() {
                     materielAdapter!!.clear()
                     val search = newText.toLowerCase()
                     mesMateriels!!.forEach {
-                        if((it.nom!!.toLowerCase().contains(newText))
+                        if((it.type!!.toLowerCase().contains(newText))
                             ||(it.type!!.toLowerCase().contains(newText))
-                            ||(it.dateDemande!!.toLowerCase().contains(newText))){
+                            ||(it.dateD!!.toLowerCase().contains(newText))
+                            ||(it.dateF!!.toLowerCase().contains(newText))){
                             materielAdapter!!.add(it)
                         }
                     }
@@ -278,7 +293,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
-        private var mesMateriels: ArrayList<Materiel>? = null
+
 
         override fun doInBackground(vararg url: String?): List<Any>? {
             var client =  XmlRpcClient()
@@ -311,7 +326,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
 
 
 
-                        //liste des chantier
+                //liste des demandes matériels
                 val list = asList(*models.execute("execute_kw", asList(
                     db, uid, password,
                     "demande.appro_mat", "search_read",
@@ -331,19 +346,6 @@ class ListeMaterielsActivity : AppCompatActivity() {
                 )) as Array<Any>)
                 println("**************************  champs chantier = $list")
 
-                val jsonArray = JSONArray(list)
-
-                for(i in 0..(list.size)-1){
-                    val dateD = jsonArray.getJSONObject(i).getString("date_debut").toString()
-                    val dateF = jsonArray.getJSONObject(i).getString("date_fin").toString()
-                    var typeObj = jsonArray.getJSONObject(i).getString("type_materiel_id").toString()
-                    var type = typeObj.split("\"")[1]
-                    var type2 = type.split("\"")[0]
-
-                    println("**************************  type = $type2")
-                    println("**************************  Date debut = $dateD")
-
-                }
 
                 return list
 
@@ -357,6 +359,13 @@ class ListeMaterielsActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    class doAsync(val handler: () -> Unit) : AsyncTask<Void, Void, Void>() {
+        override fun doInBackground(vararg params: Void?): Void? {
+            handler()
+            return null
+        }
     }
 
 }

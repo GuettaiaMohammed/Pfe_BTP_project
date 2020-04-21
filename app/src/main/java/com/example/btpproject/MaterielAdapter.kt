@@ -22,9 +22,9 @@ class MaterielAdapter(context: Context, resource: Int) : ArrayAdapter<Materiel>(
         val type = v.findViewById<TextView>(R.id.type)
         val date = v.findViewById<TextView>(R.id.date)
 
-        nom.text = materiel!!.nom
-        type.text = materiel!!.type
-       date.text = materiel!!.dateDemande
+        nom.text = materiel!!.type
+        type.text = materiel!!.dateD
+       date.text = materiel!!.dateF
 
 
         return v
