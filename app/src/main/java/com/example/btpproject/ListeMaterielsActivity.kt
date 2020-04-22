@@ -72,9 +72,8 @@ class ListeMaterielsActivity : AppCompatActivity() {
         mesMateriels = ArrayList()
         //Faire la connexion avec le serveur
 
-
+        //liste des demandes matériels
         val conn = Connexion().execute(url)
-
         val list = conn.get()
 
         val conn2= MonChantier.Materiel().execute(url)

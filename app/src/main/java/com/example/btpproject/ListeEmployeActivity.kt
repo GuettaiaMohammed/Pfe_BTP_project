@@ -78,6 +78,7 @@ class ListeEmployeActivity : AppCompatActivity() {
 
         mesEmployes = ArrayList()
 
+        // Liste des employées
         val conn = Connexion().execute(url)
         mesEmployes = conn.get() as ArrayList<Employe>
 
