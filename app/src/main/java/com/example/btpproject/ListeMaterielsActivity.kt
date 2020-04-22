@@ -65,7 +65,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
         supportActionBar!!.setTitle("Demandes matériel")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        listMateriels.addAll(listOf("","Gru","Mini Pele"))
+        listMateriels.add("")
 
         listView = findViewById(R.id.materielsListe)
         materielAdapter = MaterielAdapter(applicationContext, 0)
@@ -74,7 +74,25 @@ class ListeMaterielsActivity : AppCompatActivity() {
 
 
         val conn = Connexion().execute(url)
+
         val list = conn.get()
+
+        val conn2= MonChantier.Materiel().execute(url)
+        //liste type matériels
+        val listM =conn2.get()
+
+
+        val jsonArray3 = JSONArray(listM)
+
+        //récupéré lles données de l'objet JSON
+        for (i in 0..(listM!!.size) - 1) {
+
+            val name = jsonArray3.getJSONObject(i).getString("name").toString()
+
+
+            listMateriels.add(name)
+
+        }
 
         //recupéré l'objet JSON
         val jsonArray = JSONArray(list)
