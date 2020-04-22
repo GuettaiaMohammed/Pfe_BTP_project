@@ -39,11 +39,21 @@
 
         <TextView
             android:id="@+id/prixTV"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|center_horizontal|center_vertical"
-            android:gravity="center|center_horizontal|center_vertical"
+            android:gravity="center_vertical"
             android:text="TextView"
+            android:textSize="18sp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/textView32"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            android:paddingLeft="5dp"
+            android:text="DA"
             android:textSize="18sp"
             android:textStyle="bold|italic" />
 
