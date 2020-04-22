@@ -34,6 +34,8 @@ import org.json.JSONArray
 import java.net.MalformedURLException
 import java.net.URL
 import java.util.Arrays.asList
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
@@ -66,7 +68,7 @@ class ListeEmployeActivity : AppCompatActivity() {
         supportActionBar!!.setTitle("Demandes personnel")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-  Connexion().execute(url)
+
 
         listMetiers.addAll(listOf("", "Architecte", "Maçon"))
 
@@ -76,10 +78,9 @@ class ListeEmployeActivity : AppCompatActivity() {
 
         mesEmployes = ArrayList()
 
+        val conn = Connexion().execute(url)
+        mesEmployes = conn.get() as ArrayList<Employe>
 
-        (mesEmployes as ArrayList<Employe>).add(Employe( "Employé1", "Architecte"))
-        (mesEmployes as ArrayList<Employe>).add(Employe("Employé2", "Maçon"))
-        (mesEmployes as ArrayList<Employe>).add(Employe( "Employé3", "Maçon"))
 
         employeAdapter!!.addAll(mesEmployes)
         listView!!.adapter = employeAdapter
@@ -340,22 +341,48 @@ class ListeEmployeActivity : AppCompatActivity() {
 
 
                 val jsonArray = JSONArray(list)
+                var listeEmp = ArrayList<Employe>()
 
                 for(i in 0..(list.size)-1){
-                    var typeObj = jsonArray.getJSONObject(i).getString("job_id").toString()
-                  var typeObj1 = jsonArray.getJSONObject(i).getString("employee_ids").toString()
-                    var type = typeObj.split("\"")[1]
-                    var type2 = type.split("\"")[0]
+                    var metierObj = jsonArray.getJSONObject(i).getString("job_id").toString()
+                    var empIdObj = jsonArray.getJSONObject(i).getString("employee_ids").toString()
+
+                    var met = metierObj.split("\"")[1]
+                    var met2 = met.split("\"")[0]
+
+                    var emp = empIdObj.split("[")[1]
+                    var emp2 = emp.split("]")[0]
+                    var empId = emp2.toInt()
+
+                    var nomJson = asList(models.execute("execute_kw", asList(
+                        db, uid, password,
+                        "hr.employee", "read",
+                        asList(empId),
+                        object : HashMap<Any, Any>() {
+                            init {
+                                put(
+                                    "fields",
+                                        asList("name")
+
+                                )
+                            }
+                        }
+                    ))as Array<Any>)
+
+                    val jsonArray2 = JSONArray(nomJson)
 
 
+                    var nomEmpObj = jsonArray2.getJSONArray(0).getString(0).toString()
+                    var nomEmp = nomEmpObj.split("\"")[3]
 
 
-//
-                    println("**************************  metier = $type2")
-                   println("**************************  nom employé = $typeObj1")
+                    println("**************************  metier = $met2")
+                    println("**************************  nom employé = $nomEmp")
+
+                    listeEmp!!.add(Employe(nomEmp, met2))
 
                 }
-                return list
+                return listeEmp
 
             }catch (e: MalformedURLException) {
                 Log.d("MalformedURLException", "*********************************************************")
