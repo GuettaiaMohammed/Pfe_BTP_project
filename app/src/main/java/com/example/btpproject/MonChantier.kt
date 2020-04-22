@@ -61,7 +61,13 @@ class MonChantier : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mon_chantier2)
 
+           val nomChantier = findViewById<TextView>(R.id.nomChantier)
 
+        val date_debut = findViewById<TextView>(R.id.date_debut)
+
+        val date_fin_prev = findViewById<TextView>(R.id.date_fin_prev)
+
+        val date_fin_reel = findViewById<TextView>(R.id.date_fin_reel)
 
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar2)
@@ -72,10 +78,12 @@ class MonChantier : AppCompatActivity() {
 
 
         //remplire les listes de spinner
-        listArticles.addAll(listOf("", "Article 1", "Article 2", "Article 3"))
-        listUnites.addAll(listOf("", "m3", "m2", "Kg"))
-        listMetiers.addAll(listOf("", "Architecte", "Maçon"))
-        listMateriels.addAll(listOf("", "Gru", "Mini Pele"))
+
+
+        listArticles.add("")
+        listUnites.add("")
+        listMetiers.add("")
+        listMateriels.add("")
 
 
 
@@ -86,7 +94,26 @@ class MonChantier : AppCompatActivity() {
         //
         val conn = Connexion().execute(url)
         val conn1 = DetailChantier().execute(url)
+        val conn2=Materiel().execute(url)
+        //liste type matériels
+       val listM =conn2.get()
+        //liste de lots
         val list = conn.get()
+        //liste info chantier
+        val list2 = conn1.get()
+
+
+        val jsonArray3 = JSONArray(listM)
+
+        //récupéré lles données de l'objet JSON
+        for (i in 0..(listM!!.size) - 1) {
+
+            val name = jsonArray3.getJSONObject(i).getString("name").toString()
+
+
+            listMateriels.add(name)
+
+        }
 
         //recupéré l'objet JSON
         val jsonArray = JSONArray(list)
@@ -95,24 +122,41 @@ class MonChantier : AppCompatActivity() {
         for (i in 0..(list!!.size) - 1) {
             val num = jsonArray.getJSONObject(i).getString("num").toString()
             val name = jsonArray.getJSONObject(i).getString("name").toString()
-            var state = jsonArray.getJSONObject(i).getString("state").toString()
+            val state = jsonArray.getJSONObject(i).getString("state").toString()
 
 
 
 
             mesLots!!.add(Lot(num, name, state))
         }
-
-
-
-
-
         lotAdapter!!.addAll(mesLots)
         listView!!.adapter = lotAdapter
 
 
+        val jsonArray2 = JSONArray(list2)
 
-        //button click to show dialog ajout d'article
+        for (i in 0..(list2!!.size) - 1) {
+
+            val name = jsonArray2.getJSONObject(i).getString("name").toString()
+            val dateD = jsonArray2.getJSONObject(i).getString("date_debut").toString()
+            val dateFprev = jsonArray2.getJSONObject(i).getString("date_fin_prev").toString()
+            val dateFreel = jsonArray2.getJSONObject(i).getString("date_fin_reel").toString()
+
+            nomChantier.setText(name)
+            date_debut.setText(dateD)
+            date_fin_prev.setText(dateFprev)
+            date_fin_reel.setText(dateFreel)
+
+
+        }
+
+
+
+
+
+
+
+            //button click to show dialog ajout d'article
         ajoutArticle.setOnClickListener {
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_article, null)
@@ -497,6 +541,18 @@ class MonChantier : AppCompatActivity() {
                         })
                     }
                 }
+                // récupérer détails de chantier
+                val record = (models.execute(
+                        "execute_kw", asList(
+                        *arrayOf(db, uid, password, "project.chantier", "read", asList(2),
+                                object : java.util.HashMap<Any,Any>() {
+                            init {
+                                put("fields", asList("name", "date_debut", "date_fin_prev", "date_fin_reel"))
+                            }
+                        }))
+                ) as Array<Any>)[0] as Map<Any, String>
+                System.out.println("detail : $record")
+                return listOf(record)
 
 
 
@@ -517,6 +573,76 @@ class MonChantier : AppCompatActivity() {
 
     }
 
+    class Materiel : AsyncTask<String, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg url: String?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                        common_config, "authenticate", asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                )
+                ) as Int
+                Log.d(
+                        "result",
+                        "*******************************************************************"
+                )
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des chantier
+                var liste: List<*> = java.util.ArrayList<Any>()
+
+                liste = asList(*models.execute("execute_kw", asList(
+                        db, uid, password,
+                        "type.materiel", "search_read",
+                        asList(asList(
+                                asList("id", "!=", 0)
+
+                        )
+                        ),
+                        object : java.util.HashMap<Any,Any>() {
+                            init {
+                                put("fields", asList("name"))
+                                //put("limit", 5);
+                            }
+                        }
+                )) as Array<Any>)
+
+                println("************************  liste des champs = $liste")
+
+
+
+                return liste
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
+    }
 
 
 }
