@@ -1,8 +1,10 @@
 package com.example.btpproject
 
 import android.content.Intent
+import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,13 +15,24 @@ import android.widget.SearchView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import kotlinx.android.synthetic.main.activity_liste_ordre_de_travail.*
-import java.util.ArrayList
+import org.apache.xmlrpc.XmlRpcException
+import org.apache.xmlrpc.client.XmlRpcClient
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
+import org.json.JSONArray
+import java.net.MalformedURLException
+import java.net.URL
+import java.util.*
+import kotlin.collections.HashMap
 
 class ListeOrdreDeTravailActivity : AppCompatActivity() {
 
     private var listOT: MutableList<OrdreDeTravail>? = null
     private var listView: ListView? = null
     private var ordreTravailAdapter: OrdreDeTravailAdapter? = null
+    val db = "BTP_pfe"
+    val username = "admin"
+    val password = "pfe_chantier"
+    val url = "http://sogesi.hopto.org:7013"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,9 +46,28 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
         listView = findViewById(R.id.ordreDeTravailListe)
         listOT = ArrayList()
 
-        listOT!!.add(OrdreDeTravail("Ordre de travail 1", "TERRASSEMENT","24/02/2020"))
-        listOT!!.add(OrdreDeTravail("Ordre de travail 2", "TRAVEAUX EN INFRASTRUCTURE","24/02/2020"))
-        listOT!!.add(OrdreDeTravail("Ordre de travail 3", "TRAVEAUX EN INFRASTRUCTURE","25/02/2020"))
+        //liste des demandes matériels
+        val conn = ListeOrdre().execute(url)
+        val list = conn.get()
+
+        //recupéré l'objet JSON
+        val jsonArray = JSONArray(list)
+
+        //récupéré lles données de l'objet JSON
+        for (i in 0..(list!!.size) - 1) {
+            val nom = jsonArray.getJSONObject(i).getString("name").toString()
+            val date = jsonArray.getJSONObject(i).getString("date_debut").toString()
+            var lotObj =
+                jsonArray.getJSONObject(i).getString("lot_id").toString()
+            var lot = lotObj.split("\"")[1]
+            var lot2 = lot.split("\"")[0]
+
+            println("**************************  lot = $lot2")
+            println("**************************  nom = $nom")
+
+            listOT!!.add(OrdreDeTravail(nom, lot2,date))
+        }
+
 
 
         ordreTravailAdapter = OrdreDeTravailAdapter(applicationContext, 0)
@@ -159,5 +191,77 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    class ListeOrdre : AsyncTask<String, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+
+        override fun doInBackground(vararg url: String?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+                Log.d(
+                    "result",
+                    "*******************************************************************"
+                );
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+
+
+                //liste des demandes matériels
+                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "ordre.travail", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("chantier_id", "=", 2)
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("name", "date_debut", "lot_id")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+                println("**************************  champs chantier = $list")
+
+
+                return list
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
     }
 }
