@@ -8,12 +8,11 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.AdapterView
-import android.widget.ListView
-import android.widget.SearchView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import kotlinx.android.synthetic.main.activity_ajouter_article.view.*
 
 import kotlinx.android.synthetic.main.activity_liste_articles.*
 import org.apache.xmlrpc.XmlRpcException
@@ -31,7 +30,10 @@ class ListeArticleActivity : AppCompatActivity() {
     internal val db = "BTP_pfe"
     internal val username = "admin"
     internal val password = "pfe_chantier"
+    //
 
+    private val listArticles = arrayListOf<String>()
+    private val listUnites = arrayListOf<String>()
     //
     private var mesArticles: ArrayList<Article>? = null
     private var listView: ListView? = null
@@ -46,7 +48,41 @@ class ListeArticleActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
 
+        listArticles.add("")
+        listUnites.add("")
+
+
+
+
         Connexion().execute(url)
+
+        val conn4= MonChantier.Article().execute(url)
+        val conn5= MonChantier.Unite().execute(url)
+        val listArticle=conn4.get()
+        //liste des unités
+        val listU=conn5.get()
+
+        val jsonArray5 = JSONArray(listArticle)
+
+        //récupéré lles données de l'objet JSON
+        for (i in 0..(listArticle!!.size) - 1) {
+
+            val name = jsonArray5.getJSONObject(i).getString("name").toString()
+
+
+            listArticles.add(name)
+
+        }
+        val jsonArray6 = JSONArray(listU)
+
+        //récupéré lles données de l'objet JSON
+        for (i in 0..(listU!!.size) - 1) {
+
+            val name = jsonArray6.getJSONObject(i).getString("name").toString()
+
+            listUnites.add(name)
+
+        }
 
         listView = findViewById(R.id.articleListe)
         articleAdapter = ArticleAdapter(applicationContext, 0)
@@ -80,6 +116,25 @@ class ListeArticleActivity : AppCompatActivity() {
             val mBuilder = AlertDialog.Builder(this)
                 .setView(mDialogView)
             //.setTitle("Login Form")
+
+            //Spinner
+            val spinnerA = mDialogView.findViewById<Spinner>(R.id.spinnerA)
+            val spinnerU = mDialogView.findViewById<Spinner>(R.id.spinnerUniteDMesure)
+            //Remplire Spinner
+            val adapter: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listArticles)
+            val adapter1: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listUnites)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerA.adapter = adapter
+            adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerU.adapter = adapter1
+
+            //button valider
+            mDialogView.button.setOnClickListener {
+                Toast.makeText(this, spinnerA.selectedItem.toString() + " " + " La quantité : " + mDialogView.qte.text + " " + spinnerU.selectedItem.toString(), Toast.LENGTH_SHORT).show()
+
+
+            }
+
             //show dialog
             mBuilder.show()
         }

@@ -95,8 +95,18 @@ class MonChantier : AppCompatActivity() {
         val conn = Connexion().execute(url)
         val conn1 = DetailChantier().execute(url)
         val conn2=Materiel().execute(url)
+        val conn3=Metier().execute(url)
+        val conn4=Article().execute(url)
+        val conn5=Unite().execute(url)
+
         //liste type matériels
        val listM =conn2.get()
+        //liste métiers
+        val listMetier=conn3.get()
+        //liste articles
+        val listArticle=conn4.get()
+        //liste des unités
+        val listU=conn5.get()
         //liste de lots
         val list = conn.get()
         //liste info chantier
@@ -112,6 +122,41 @@ class MonChantier : AppCompatActivity() {
 
 
             listMateriels.add(name)
+
+        }
+
+
+        val jsonArray4 = JSONArray(listMetier)
+
+        //récupéré lles données de l'objet JSON
+        for (i in 0..(listMetier!!.size) - 1) {
+
+            val name = jsonArray4.getJSONObject(i).getString("name").toString()
+
+
+            listMetiers.add(name)
+
+        }
+        val jsonArray8: JSONArray
+        jsonArray8 = JSONArray(listArticle)
+
+        //récupéré lles données de l'objet JSON
+        for (i in 0..(listArticle!!.size) - 1) {
+
+            val name = jsonArray8.getJSONObject(i).getString("name").toString()
+
+
+            listArticles.add(name)
+
+        }
+        val jsonArray6 = JSONArray(listU)
+
+        //récupéré lles données de l'objet JSON
+        for (i in 0..(listU!!.size) - 1) {
+
+            val name = jsonArray6.getJSONObject(i).getString("name").toString()
+
+            listUnites.add(name)
 
         }
 
@@ -643,6 +688,215 @@ class MonChantier : AppCompatActivity() {
 
 
     }
+    class Metier : AsyncTask<String, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg url: String?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                        common_config, "authenticate", asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                )
+                ) as Int
+                Log.d(
+                        "result",
+                        "*******************************************************************"
+                )
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des chantier
+                var liste: List<*> = java.util.ArrayList<Any>()
+
+                liste = asList(*models.execute("execute_kw", asList(
+                        db, uid, password,
+                        "hr.job", "search_read",
+                        asList(asList(
+                                asList("id", "!=", 0)
+                        )
+                        ),
+                        object : java.util.HashMap<Any,Any>() {
+                            init {
+                                put("fields", asList("name"))
+                                //put("limit", 5);
+                            }
+                        }
+                )) as Array<Any>)
+
+                println("************************  liste des champs = $liste")
+
+
+
+                return liste
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
+    }
+    class Article : AsyncTask<String, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg url: String?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                        common_config, "authenticate", asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                )
+                ) as Int
+                Log.d(
+                        "result",
+                        "*******************************************************************"
+                )
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des chantier
+                var liste: List<*> = java.util.ArrayList<Any>()
+
+                liste = asList(*models.execute("execute_kw", asList(
+                        db, uid, password,
+                        "product.product", "search_read",
+                        asList(asList(
+                                asList("id", "!=", 0)
+                        )
+                        ),
+                        object : java.util.HashMap<Any,Any>() {
+                            init {
+                                put("fields", asList("name"))
+                                //put("limit", 5);
+                            }
+                        }
+                )) as Array<Any>)
+
+                println("************************  liste des champs = $liste")
+
+
+
+                return liste
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
+    }
+    class Unite : AsyncTask<String, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg url: String?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                        common_config, "authenticate", asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                )
+                ) as Int
+                Log.d(
+                        "result",
+                        "*******************************************************************"
+                )
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des chantier
+                var liste: List<*> = java.util.ArrayList<Any>()
+
+                liste = asList(*models.execute("execute_kw", asList(
+                        db, uid, password,
+                        "uom.uom", "search_read",
+                        asList(asList(
+                                asList("id", "!=", 0)
+                        )
+                        ),
+                        object : java.util.HashMap<Any,Any>() {
+                            init {
+                                put("fields", asList("name"))
+                                //put("limit", 5);
+                            }
+                        }
+                )) as Array<Any>)
+
+                println("************************  liste des champs = $liste")
+
+
+
+                return liste
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
+    }
+
+
 
 
 }
