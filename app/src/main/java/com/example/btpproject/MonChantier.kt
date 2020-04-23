@@ -141,7 +141,7 @@ class MonChantier : AppCompatActivity() {
         jsonArray8 = JSONArray(listArticle)
 
         //récupéré lles données de l'objet JSON
-        for (i in 0..(listArticle!!.size) - 1) {
+       for (i in 0..(listArticle!!.size) - 1) {
 
             val name = jsonArray8.getJSONObject(i).getString("name").toString()
 
