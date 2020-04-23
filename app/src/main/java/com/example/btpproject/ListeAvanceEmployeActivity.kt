@@ -2,8 +2,10 @@ package com.example.btpproject
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -16,6 +18,12 @@ import kotlinx.android.synthetic.main.activity_ajouter_avance_employe.view.*
 import kotlinx.android.synthetic.main.activity_ajouter_employe.view.*
 import kotlinx.android.synthetic.main.activity_liste_avance_employe.*
 import kotlinx.android.synthetic.main.activity_liste_materiels.*
+import org.apache.xmlrpc.XmlRpcException
+import org.apache.xmlrpc.client.XmlRpcClient
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
+import org.json.JSONArray
+import java.net.MalformedURLException
+import java.net.URL
 import java.util.*
 
 class ListeAvanceEmployeActivity : AppCompatActivity() {
@@ -26,7 +34,10 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
 
     //liste spinner
     private val listEmployes = arrayListOf<String>()
-
+    val db = "BTP_pfe"
+    val username = "admin"
+    val password = "pfe_chantier"
+    val url = "http://sogesi.hopto.org:7013"
 
     var mDatepicker: DatePickerDialog? = null
 
@@ -47,11 +58,27 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
         avanceAdapter = AvanceEmployeAdapter(applicationContext, 0)
         listView = findViewById(R.id.AvanceEmpListe)
 
-        listAvance!!.add(AvanceEmploye("Guettaia Mohammed", "20000.00 DA", "10/01/2020"))
-        listAvance!!.add(AvanceEmploye("Benabed Oussama", "5000.00 DA", "12/02/2020"))
-        listAvance!!.add(AvanceEmploye("Bensaber Ikram", "15000.00 DA", "21/03/2020"))
-        listAvance!!.add(AvanceEmploye("Guettaia Houcine", "10000.00 DA", "21/03/2020"))
-        listAvance!!.add(AvanceEmploye("Fakir Abdelkrim", "20000.00 DA", "30/03/2020"))
+        //liste des demandes matériels
+        val conn = ListeAvance().execute(url)
+        val list = conn.get()
+
+        //recupéré l'objet JSON
+        val jsonArray = JSONArray(list)
+
+        //récupéré lles données de l'objet JSON
+        for (i in 0..(list!!.size) - 1) {
+            val montant = jsonArray.getJSONObject(i).getString("mantant_demande").toString()
+            val date = jsonArray.getJSONObject(i).getString("date").toString()
+            var empObj =
+                jsonArray.getJSONObject(i).getString("employee_id").toString()
+            var emp = empObj.split("\"")[1]
+            var emp2 = emp.split("\"")[0]
+
+            println("**************************  employé = $emp2")
+            println("**************************  montant = $montant")
+
+            listAvance!!.add(AvanceEmploye(emp2, montant, date))
+        }
 
 
         listView!!.adapter = avanceAdapter
@@ -104,7 +131,7 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
                 // date picker dialog
                 mDatepicker = DatePickerDialog(
                     this,
-                        R.style.DialogTheme,
+                    R.style.DialogTheme,
                     DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                         //affichage de la date selectionné
                         dateBtn.setText(
@@ -217,5 +244,77 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    class ListeAvance : AsyncTask<String, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+
+        override fun doInBackground(vararg url: String?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+                Log.d(
+                    "result",
+                    "*******************************************************************"
+                );
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+
+
+                //liste des demandes avance
+                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "demande.avance", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("chantier_id", "=", 2)
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("employee_id", "mantant_demande", "date")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+                println("**************************  champs chantier = $list")
+
+
+                return list
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
     }
 }
