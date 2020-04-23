@@ -384,15 +384,6 @@ class MonChantier : AppCompatActivity() {
     ///////////
 
 
-
-
-
-
-
-
-
-
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.navigation_menu,menu)

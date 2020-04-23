@@ -34,6 +34,9 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
     val password = "pfe_chantier"
     val url = "http://sogesi.hopto.org:7013"
 
+    //liste spinner
+    private val listlot = arrayListOf<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liste_ordre_de_travail)
@@ -252,6 +255,76 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
 
 
                 return list
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+    }
+
+    class ListeLot : AsyncTask<String, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg url: String?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+                Log.d(
+                    "result",
+                    "*******************************************************************"
+                )
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des chantier
+                var liste: List<*> = java.util.ArrayList<Any>()
+
+                liste = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "hr.employee", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("id", "!=", 0)
+
+                        )
+                    ),
+                    object : java.util.HashMap<Any, Any>() {
+                        init {
+                            put("fields", Arrays.asList("name"))
+                            //put("limit", 5);
+                        }
+                    }
+                )) as Array<Any>)
+
+                println("************************  liste des champs = $liste")
+
+
+
+                return liste
 
             }catch (e: MalformedURLException) {
                 Log.d("MalformedURLException", "*********************************************************")
