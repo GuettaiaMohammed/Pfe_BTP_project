@@ -51,7 +51,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
     //les listes des spinner
     private val listEmployes = arrayListOf<String>()
     private val listUnites = arrayListOf<String>()
-    private val listTypes = arrayListOf<String>()
+
     private val listLots = arrayListOf<String>()
 
 
@@ -66,14 +66,58 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
 
         //remplire les listes de spinner
-        listEmployes.addAll(listOf("","Employé 1", "Employé 2", "Employé 3"))
-        listUnites.addAll(listOf("","m3","m2"))
-        listTypes.addAll(listOf("","type1","type2"))
-        listLots.addAll(listOf("","Ligne1","Ligne2"))
+        listEmployes.add("")
+        listUnites.add("")
+
+        listLots.add("")
 
 
         //
         val conn = Connexion().execute(url)
+        val conn1=Employee().execute(url)
+        val conn2= MonChantier.Unite().execute(url)
+        val conn3=LignesLots().execute(url)
+
+        //liste des employés
+        val listE=conn1.get()
+        val jsonArray1 = JSONArray(listE)
+        for (i in 0..(listE!!.size) - 1) {
+
+            val name = jsonArray1.getJSONObject(i).getString("name").toString()
+
+
+            listEmployes.add(name)
+
+        }
+        //liste des unités
+        val listU=conn2.get()
+        val jsonArray6 = JSONArray(listU)
+
+        //récupéré lles données de l'objet JSON
+        for (i in 0..(listU!!.size) - 1) {
+
+            val name = jsonArray6.getJSONObject(i).getString("name").toString()
+
+            listUnites.add(name)
+
+        }
+
+
+///liste lignes lots
+        val listLigne=conn3.get()
+        val jsonArray2 = JSONArray(listLigne)
+        for (i in 0..(listLigne!!.size) - 1){
+        var Obj1 =
+            jsonArray2.getJSONObject(i).getString("name").toString()
+      //  var lot = Obj1.split("\"")[1]
+        //var lot2 = lot.split("\"")[0]
+
+        listLots.add(Obj1)
+
+        }
+
+
+
 
         listView = findViewById(R.id.empl)
         employeAdapter = EmployeSuiviAdapter(applicationContext, 0)
@@ -96,12 +140,14 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             var lot2 = lot.split("\"")[0]
 
 
+
             val qtePrev = jsonArray.getJSONObject(i).getString("qte_prev").toString()
             val qteRealise = jsonArray.getJSONObject(i).getString("qte_realise").toString()
             val nbHprev = jsonArray.getJSONObject(i).getString("nb_h_prevu").toString()
             val nbHtravail = jsonArray.getJSONObject(i).getString("nb_h_travail").toString()
 
            //infoSuivi!!.add(EmployeSuivi(nom2,qtePrev,qteRealise,nbHprev,nbHtravail))
+
             mesEmployes!!.add(Employe(nom2, lot2))
         }
 
@@ -138,21 +184,19 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             //Spinner
             val spinnerE = mDialogView.findViewById <Spinner>(R.id.spinnerEmploye)
             val spinnerU = mDialogView.findViewById <Spinner>(R.id.spinnerUnite)
-            val spinnerT = mDialogView.findViewById <Spinner>(R.id.spinnerTypeInt)
+
             val spinnerL = mDialogView.findViewById <Spinner>(R.id.spinnerLigneLot)
 
             //Remplire Spinner
             val  adapter : ArrayAdapter<String> = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listEmployes)
             val  adapter1 : ArrayAdapter<String> = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listUnites)
-            val  adapter2 : ArrayAdapter<String> = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listTypes)
             val  adapter3 : ArrayAdapter<String> = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listLots)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerE.setAdapter(adapter)
             adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerU.setAdapter(adapter1)
 
-            adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerT.setAdapter(adapter2)
+
             adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerL.setAdapter(adapter3)
 
@@ -340,4 +384,145 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
 
     }
+
+    class Employee : AsyncTask<String, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg url: String?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+                Log.d(
+                    "result",
+                    "*******************************************************************"
+                )
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des chantier
+                var liste: List<*> = java.util.ArrayList<Any>()
+
+                liste = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "hr.employee", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("id", ">", 1)
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put("fields", Arrays.asList("name","job_title"))
+                            //put("limit", 5);
+                        }
+                    }
+                )) as Array<Any>)
+
+                println("************************  liste des champs = $liste")
+
+
+
+                return liste
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
+    }
+    class LignesLots : AsyncTask<String, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg url: String?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+                Log.d(
+                    "result",
+                    "*******************************************************************"
+                );
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des chantier
+                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "ligne.lot", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("id","!=",0)
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("name")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+                println("**************************  champs chantier = $list")
+                return list
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
+    }
+
+
+
+
 }
