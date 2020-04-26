@@ -4,6 +4,8 @@ import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.widget.Toolbar
@@ -68,13 +70,37 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
 
         val adapter: ViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
 
-        //Ajouter les fragments
-        adapter.addFragment(FragmentListeLigneLotAjouteOt(), "Lignes")
-        adapter.addFragment(FragmentListeArticlesAjoutOt(), "Articles")
+        spinnerE.onItemSelectedListener = object:  AdapterView.OnItemSelectedListener{
 
-        //Adapter setup
-        viewPager.setAdapter(adapter)
-        tabLayout.setupWithViewPager(viewPager)
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+
+                val nomLot: String = parent!!.getItemAtPosition(position).toString()
+
+                if(nomLot != ""){
+                    val idLot = jsonArray3.getJSONObject(position-1).getString("id").toString()
+                    val nameLot = jsonArray3.getJSONObject(position-1).getString("name").toString()
+
+
+
+                    //Ajouter les fragments
+                    adapter.addFragment(FragmentListeLigneLotAjouteOt(idLot.toInt()), "Lignes")
+
+
+                    //Adapter setup
+                    viewPager.setAdapter(adapter)
+                    tabLayout.setupWithViewPager(viewPager)
+
+                }
+
+
+            }
+        }
+
+
     }
 
     class ListeLotSpinner : AsyncTask<String, Void, List<Any>?>() {
@@ -94,12 +120,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                         db, username, password, Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
-                Log.d(
-                    "result",
-                    "*******************************************************************"
-                )
-                Log.d("uid = ", Integer.toString(uid))
-                System.out.println("************************************    UID = " + uid)
+
 
                 val models = object : XmlRpcClient() {
                     init {
@@ -117,7 +138,8 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                     "project.lot", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("chantier_id", "=", 2)
+                            Arrays.asList("chantier_id", "=", 2),
+                            Arrays.asList("state", "=", "en_cour")
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -129,7 +151,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                         }
                     }
                 )) as Array<Any>)
-                println("**************************  champs chantier = $list")
+
                 return list
 
             }catch (e: MalformedURLException) {
