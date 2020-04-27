@@ -68,7 +68,8 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerE.setAdapter(adapter2)
 
-        val adapter: ViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
+        val adapter = ViewPagerAdapter(supportFragmentManager)
+
 
         spinnerE.onItemSelectedListener = object:  AdapterView.OnItemSelectedListener{
 
@@ -79,27 +80,23 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
                 val nomLot: String = parent!!.getItemAtPosition(position).toString()
+                adapter.clear()
 
                 if(nomLot != ""){
+
                     val idLot = jsonArray3.getJSONObject(position-1).getString("id").toString()
-                    val nameLot = jsonArray3.getJSONObject(position-1).getString("name").toString()
-
-
-
                     //Ajouter les fragments
                     adapter.addFragment(FragmentListeLigneLotAjouteOt(idLot.toInt()), "Lignes")
 
-
-                    //Adapter setup
-                    viewPager.setAdapter(adapter)
-                    tabLayout.setupWithViewPager(viewPager)
-
                 }
+                //Adapter setup
 
+                viewPager.setAdapter(adapter)
+                viewPager.setSaveFromParentEnabled(false)
+                tabLayout.setupWithViewPager(viewPager)
 
             }
         }
-
 
     }
 
