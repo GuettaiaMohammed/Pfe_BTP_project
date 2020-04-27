@@ -31,7 +31,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView28"
+                android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -67,62 +67,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView22"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Référence"
-                    android:textSize="14sp"
-                    app:fontFamily="sans-serif" />
-
-                <TextView
-                    android:id="@+id/textView23"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="252622"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
-                    app:fontFamily="sans-serif" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView24"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Lot"
-                    android:textSize="14sp"
-                    app:fontFamily="sans-serif" />
-
-                <TextView
-                    android:id="@+id/textView25"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="2"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
-                    app:fontFamily="sans-serif" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
                     android:id="@+id/textView26"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -133,7 +77,7 @@
                     app:fontFamily="sans-serif" />
 
                 <TextView
-                    android:id="@+id/textView27"
+                    android:id="@+id/dateD"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -174,7 +118,7 @@
                 android:text="Début" />
 
             <TextView
-                android:id="@+id/textView39"
+                android:id="@+id/date_debut"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -208,7 +152,7 @@
                 android:text="Fin" />
 
             <TextView
-                android:id="@+id/textView37"
+                android:id="@+id/date_fin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -242,7 +186,7 @@
                 android:text="Durée" />
 
             <TextView
-                android:id="@+id/textView38"
+                android:id="@+id/duree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

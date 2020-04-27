@@ -42,16 +42,13 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
 
     private var mesEmployes: ArrayList<Employe>? = null
-    private var infoSuivi:ArrayList<EmployeSuivi>?=null
     private var listView: ListView? = null
     private var employeAdapter: EmployeSuiviAdapter? = null
 
-    private var  check: CheckBox? = null
 
     //les listes des spinner
     private val listEmployes = arrayListOf<String>()
     private val listUnites = arrayListOf<String>()
-
     private val listLots = arrayListOf<String>()
 
 
@@ -140,14 +137,6 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             var lot2 = lot.split("\"")[0]
 
 
-
-            val qtePrev = jsonArray.getJSONObject(i).getString("qte_prev").toString()
-            val qteRealise = jsonArray.getJSONObject(i).getString("qte_realise").toString()
-            val nbHprev = jsonArray.getJSONObject(i).getString("nb_h_prevu").toString()
-            val nbHtravail = jsonArray.getJSONObject(i).getString("nb_h_travail").toString()
-
-           //infoSuivi!!.add(EmployeSuivi(nom2,qtePrev,qteRealise,nbHprev,nbHtravail))
-
             mesEmployes!!.add(Employe(nom2, lot2))
         }
 
@@ -161,7 +150,9 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             for (i in 0..mesEmployes!!.size) {
                 if (position == i) {
                     val intent = Intent(this, DetailSuiviEmployeQteRealiseActivity::class.java)
+                    val id = jsonArray.getJSONObject(i).getString("id").toString()
 
+                    intent.putExtra("id",id.toInt())
                     // start your next activity
                     startActivity(intent)
                 }
@@ -335,12 +326,8 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                         db, username, password, Collections.emptyMap<Any, Any>()
                 )
                 ) as Int
-                Log.d(
-                        "result",
-                        "*******************************************************************"
-                );
-                Log.d("uid = ", Integer.toString(uid))
-                System.out.println("************************************    UID = " + uid)
+
+
 
                 val models = object : XmlRpcClient() {
                     init {
@@ -365,12 +352,12 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                             init {
                                 put(
                                         "fields",
-                                        Arrays.asList("employee_id","ligne_lot_id","qte_prev","qte_realise","nb_h_prevu","nb_h_travail")
+                                        Arrays.asList("id","employee_id","ligne_lot_id","qte_prev","qte_realise","nb_h_prevu","nb_h_travail")
                                 )
                             }
                         }
                 )) as Array<Any>)
-                println("**************************  champs chantier = $list")
+
                 return list
 
             }catch (e: MalformedURLException) {
@@ -402,12 +389,8 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                         db, username, password, Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
-                Log.d(
-                    "result",
-                    "*******************************************************************"
-                )
-                Log.d("uid = ", Integer.toString(uid))
-                System.out.println("************************************    UID = " + uid)
+
+
 
                 val models = object : XmlRpcClient() {
                     init {
@@ -438,7 +421,6 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                     }
                 )) as Array<Any>)
 
-                println("************************  liste des champs = $liste")
 
 
 
@@ -472,12 +454,8 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                         db, username, password, Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
-                Log.d(
-                    "result",
-                    "*******************************************************************"
-                );
-                Log.d("uid = ", Integer.toString(uid))
-                System.out.println("************************************    UID = " + uid)
+
+
 
                 val models = object : XmlRpcClient() {
                     init {
@@ -507,7 +485,6 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                         }
                     }
                 )) as Array<Any>)
-                println("**************************  champs chantier = $list")
                 return list
 
             }catch (e: MalformedURLException) {

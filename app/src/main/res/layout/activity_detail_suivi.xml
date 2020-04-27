@@ -38,7 +38,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView28"
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -85,7 +85,7 @@
                         app:fontFamily="sans-serif" />
 
                     <TextView
-                        android:id="@+id/textView25"
+                        android:id="@+id/qteP"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -113,7 +113,7 @@
                         app:fontFamily="sans-serif" />
 
                     <TextView
-                        android:id="@+id/textView23"
+                        android:id="@+id/qteR"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -141,7 +141,7 @@
                         app:fontFamily="sans-serif" />
 
                     <TextView
-                        android:id="@+id/textView27"
+                        android:id="@+id/nbHp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -169,6 +169,7 @@
                         app:fontFamily="sans-serif" />
 
                     <TextView
+                        android:id="@+id/nbHt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

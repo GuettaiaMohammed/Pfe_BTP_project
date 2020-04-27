@@ -31,6 +31,7 @@ import java.util.Arrays.asList
 import kotlin.collections.ArrayList
 import java.util.Collections.emptyMap
 import org.json.JSONArray
+import java.io.Serializable
 
 import java.lang.reflect.Type
 import kotlin.collections.HashMap
@@ -104,7 +105,6 @@ class ListeMaterielsActivity : AppCompatActivity() {
                 jsonArray.getJSONObject(i).getString("type_materiel_id").toString()
             var type = typeObj.split("\"")[1]
             var type2 = type.split("\"")[0]
-
             println("**************************  type = $type2")
             println("**************************  Date debut = $dateD")
 
@@ -118,6 +118,9 @@ class ListeMaterielsActivity : AppCompatActivity() {
             for (i in 0..mesMateriels!!.size) {
                 if (position == i) {
                     val intent = Intent(this, DetailMaterielActivity::class.java)
+                    val id = jsonArray.getJSONObject(i).getString("id").toString()
+
+                    intent.putExtra("id",id.toInt())
                     // start your next activity
                     startActivity(intent)
                 }
@@ -323,12 +326,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
                 db, username, password, emptyMap<Any, Any>()
                     )
                 ) as Int
-                Log.d(
-                    "result",
-                    "*******************************************************************"
-                );
-                Log.d("uid = ", Integer.toString(uid))
-                System.out.println("************************************    UID = " + uid)
+
 
                 val models = object : XmlRpcClient() {
                     init {
@@ -348,19 +346,20 @@ class ListeMaterielsActivity : AppCompatActivity() {
                     "demande.appro_mat", "search_read",
                     asList(
                         asList(
-                            asList("chantier_id", "=", 2)
+                            asList("chantier_id", "=", 2),
+                            asList("state","=","valide")
                         )
                     ),
                     object : HashMap<Any,Any>() {
                         init {
                             put(
                                 "fields",
-                                asList("type_materiel_id", "date_debut", "date_fin")
+                                asList("id","type_materiel_id", "date_debut", "date_fin")
                             )
                         }
                     }
                 )) as Array<Any>)
-                println("**************************  champs chantier = $list")
+
 
 
                 return list

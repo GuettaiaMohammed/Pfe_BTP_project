@@ -1,3 +1,5 @@
 package com.example.btpproject
 
-class Materiel(var type: String?, var dateD: String?, var dateF: String?)
+import java.io.Serializable
+
+class Materiel(var type: String?, var dateD: String?, var dateF: String?) : Serializable
