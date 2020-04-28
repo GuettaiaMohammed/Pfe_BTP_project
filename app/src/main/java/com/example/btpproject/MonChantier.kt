@@ -3,7 +3,7 @@ package com.example.btpproject
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.AsyncTask
-import android.os.Build
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -29,7 +29,6 @@ import java.net.URL
 import java.util.*
 import java.util.Arrays.asList
 import kotlin.collections.ArrayList
-import java.util.HashMap as HashMap1
 
 class MonChantier : AppCompatActivity() {
     //
@@ -49,6 +48,7 @@ class MonChantier : AppCompatActivity() {
     private val listUnites = arrayListOf<String>()
     private val listMetiers = arrayListOf<String>()
     private val listMateriels = arrayListOf<String>()
+    private val listInfosEmpl = arrayListOf<String>()
 
     //datePicker Dialog
     var mDatepickerDEmp: DatePickerDialog? = null
@@ -234,6 +234,12 @@ class MonChantier : AppCompatActivity() {
 
         //button click to show dialog ajout de matériel
         ajoutEmploye.setOnClickListener {
+            var dateD:String=""
+            var dateF:String=""
+            var nbr:Int=0
+            var n:String=""
+            var metier:String=""
+
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_employe, null)
             //AlertDialogBuilder
@@ -252,10 +258,8 @@ class MonChantier : AppCompatActivity() {
             spinnerE.adapter = adapter
 
 
-            //button valider
-            mDialogView.button.setOnClickListener {
-                Toast.makeText(this, spinnerE.selectedItem.toString() + " " + " Le nombre : " + mDialogView.nbr.text, Toast.LENGTH_SHORT).show()
-            }
+
+
 
             //date Début Picker Btn
             val dateDBtn = mDialogView.findViewById<Button>(R.id.dateDEmpBtn)
@@ -272,6 +276,7 @@ class MonChantier : AppCompatActivity() {
                         DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                             //affichage de la date selectionné
                             dateDBtn.text = dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+                            dateD = dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
                             dateDBtn.textSize = 12F
                         }, year, month, day
                 )
@@ -293,11 +298,50 @@ class MonChantier : AppCompatActivity() {
                         DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                             //affichage de la date selectionné
                             dateFBtn.text = dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+                            dateF= dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
                             dateFBtn.textSize = 12F
                         }, year, month, day
                 )
                 mDatepickerFEmp!!.show()
             }
+
+
+            //button valider
+            mDialogView.button.setOnClickListener {
+
+                //récupérer les données saisis
+                n= mDialogView.nbr.text.toString()
+                nbr=n.toInt()
+                metier=spinnerE.selectedItem.toString()
+                // récupérer l 'id de métier
+                var id:Int=0
+                for (i in 0..(listMetier!!.size) - 1) {
+
+                    val name = jsonArray4.getJSONObject(i).getString("name").toString()
+                    if(name==metier)
+                    {
+                        id=jsonArray4.getJSONObject(i).getString("id").toInt()
+                       // Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
+
+                    }
+
+
+
+                }
+
+              //  Toast.makeText(this, "id = "+id.toString()+"metier ="+metier+" \n le nombre "+nbr.toString()+"\n date début ="+dateD+"\n date fin = "+dateF, Toast.LENGTH_SHORT).show()
+
+                listInfosEmpl!!.add(0,id.toString())
+                listInfosEmpl!!.add(1,dateD)
+                listInfosEmpl!!.add(2,dateF)
+                listInfosEmpl!!.add(3,nbr.toString())
+
+
+               val conn =AjouterEmploye().execute(listInfosEmpl)
+
+            }
+
+
 
             //show dialog
             val mAlertDialog = mBuilder.show()
@@ -696,12 +740,7 @@ class MonChantier : AppCompatActivity() {
                         db, username, password, Collections.emptyMap<Any, Any>()
                 )
                 ) as Int
-                Log.d(
-                        "result",
-                        "*******************************************************************"
-                )
-                Log.d("uid = ", Integer.toString(uid))
-                System.out.println("************************************    UID = " + uid)
+
 
                 val models = object : XmlRpcClient() {
                     init {
@@ -725,7 +764,7 @@ class MonChantier : AppCompatActivity() {
                         ),
                         object : java.util.HashMap<Any,Any>() {
                             init {
-                                put("fields", asList("name"))
+                                put("fields", asList("name","id"))
                                 //put("limit", 5);
                             }
                         }
@@ -889,5 +928,71 @@ class MonChantier : AppCompatActivity() {
 
 
 
+    class AjouterEmploye : AsyncTask<ArrayList<String>, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
 
-}
+        override fun doInBackground(vararg infos: ArrayList<String>?): List<Any>? {
+            var client = XmlRpcClient()
+            var common_config = XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL =
+                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int = client.execute(
+                    common_config, "authenticate", asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(
+                                    String.format(
+                                        "%s/xmlrpc/2/object",
+                                        "http://sogesi.hopto.org:7013"
+                                    )
+                                )
+                            }
+                        })
+                    }
+                }
+                for ( i in  infos) {
+
+                println("**************************  champs chantier =  $i ")}
+                /*var id: Int = models.execute(
+                    "execute_kw", asList(
+                        db, uid, password,
+                        "res.partner", "create",
+                        asList(object : java.util.HashMap<Any, Any>() {
+                            init {
+                                put("name", "New Partner")
+                            }
+                        })
+                    )
+                ) as Int*/
+
+            } catch (e: MalformedURLException) {
+                Log.d(
+                    "MalformedURLException",
+                    "*********************************************************"
+                )
+                Log.d("MalformedURLException", e.toString())
+            } catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+    }
+
+    }
+
+
+
+
+
