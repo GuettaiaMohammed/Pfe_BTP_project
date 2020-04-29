@@ -1,13 +1,23 @@
 package com.example.btpproject
 
+import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import androidx.fragment.app.Fragment
+import org.apache.xmlrpc.XmlRpcException
+import org.apache.xmlrpc.client.XmlRpcClient
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
+import org.json.JSONArray
+import java.net.MalformedURLException
+import java.net.URL
+import java.util.*
+import kotlin.collections.ArrayList
 
-class FragmentListeLigneLotDetailOt : Fragment() {
+class FragmentListeLigneLotDetailOt(var idLot: Int): Fragment() {
     internal lateinit var view: View
     private var lignes: ArrayList<LigneLotOT>? = null
     private var listView: ListView? = null
@@ -23,20 +33,136 @@ class FragmentListeLigneLotDetailOt : Fragment() {
         listView = view.findViewById(R.id.ListLigneLotDetailOT)
         ligneLotAdapter = FragmentLigneLotAdapterDetailOt(view.context,0)
 
-        lignes = ArrayList()
+        val conn = ListeLigneOtt().execute(idLot)
+        lignes = conn.get() as ArrayList<LigneLotOT>?
 
-        lignes!!.add(LigneLotOT("N°","Désignation","Unité","Quantité réalisé"))
+        if(lignes != null) {
+            ligneLotAdapter!!.addAll(lignes)
+        }
 
-
-        lignes!!.add(LigneLotOT("2.01.a","Déblais en tranchée et en puits :a) tranche comprise entre 0,00 et 1,50m","m3","490,00"))
-        lignes!!.add(LigneLotOT("2.01.b","Déblais en tranchée et en puits :b) tranche comprise entre 1,50 et 3,00m","m3","490,00"))
-        lignes!!.add(LigneLotOT("2.03","Transport des terres à la décharge publique, quelque soit la distance parcourue","m3","1000,00"))
-        lignes!!.add(LigneLotOT("2.06.a","Béton armé pour ouvrage en infrastructure :b) Béton dosé à 350Kg/m3 pour a/poteaux et voiles","m3","35,00"))
-
-        ligneLotAdapter!!.addAll(lignes)
         listView!!.adapter = ligneLotAdapter
 
-
         return view
+    }
+
+    class ListeLigneOtt : AsyncTask<Int, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg id: Int?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des id des lignes
+                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "ordre.travail", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("id", "=", id)
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("ligne_ordre_travail_ids")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+
+                System.out.println("********************************* ${list.toString()}")
+
+                val listLigneOt = ArrayList<LigneLotOT>()
+                listLigneOt!!.add(LigneLotOT("N°", "Designation", "Unité", "Quantité réalisé"))
+
+                if(list != null) {
+                    val jsonArray3 = JSONArray(list)
+                    val ligneIds =
+                        jsonArray3.getJSONObject(0).toString()
+
+                    val ids = ligneIds.split("[")[1]
+                    val ids2 = ids.split("]")[0]
+                    //liste final des ids
+                    val id: List<String> = ids2.split(",")
+
+
+
+                    if(id != null) {
+
+
+                        // recupéré les champ nom unite num des ligne par chaque Id
+                        for (i in 0..(id!!.size) - 1) {
+                            val idInt = id[i].toInt()
+                            val listLigne = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                                db, uid, password,
+                                "ligne.ordre.travail", "search_read",
+                                Arrays.asList(
+                                    Arrays.asList(
+                                        Arrays.asList("ligne_lot_id", "=", idInt)
+                                    )
+                                ),
+                                object : HashMap<Any, Any>() {
+                                    init {
+                                        put(
+                                            "fields",
+                                            Arrays.asList("name","num", "unite", "qte_realis")
+                                        )
+                                    }
+                                }
+                            )) as Array<Any>)
+
+                            //liste des champs
+                            val jsonArray4 = JSONArray(listLigne)
+                            System.out.println("*************************** $list")
+                            val unite =
+                                jsonArray4.getJSONObject(0).getString("unite").toString()
+                            var unit = unite.split("\"")[1]
+                            var unit2 = unit.split("\"")[0]
+
+                            val num = jsonArray4.getJSONObject(0).getString("num").toString()
+                            val name = jsonArray4.getJSONObject(0).getString("name").toString()
+                            val qte = jsonArray4.getJSONObject(0).getString("qte_realis").toString()
+
+                            listLigneOt.add(LigneLotOT(num, name, unit2, qte))
+
+                        }
+
+                    }
+                }
+                return listLigneOt
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
     }
 }

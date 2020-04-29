@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ListView
 import androidx.fragment.app.Fragment
 
-class FragmentListeArticlesDetailOt : Fragment() {
+class FragmentListeArticlesDetailOt(var idLot: Int) : Fragment() {
     internal lateinit var view: View
     private var articleOT: ArrayList<ArticleOT>? = null
     private var listView: ListView? = null

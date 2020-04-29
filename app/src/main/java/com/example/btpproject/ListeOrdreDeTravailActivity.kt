@@ -82,6 +82,9 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
             for (i in 0..listOT!!.size) {
                 if (position == i) {
                     val intent = Intent(this, DetailOrdreDeTravailActivity::class.java)
+
+                    val id = jsonArray.getJSONObject(i).getString("id").toString()
+                    intent.putExtra("id",id.toInt())
                     // start your next activity
                     startActivity(intent)
                 }
