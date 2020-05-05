@@ -77,7 +77,7 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
             val id = jsonArray.getJSONObject(i).getString("id").toString()
             //Ajouter les fragments
             adapter.addFragment(FragmentListeLigneLotDetailOt(id.toInt()), "Lignes")
-            //adapter.addFragment(FragmentListeArticlesDetailOt(id.toInt()), "Articles")
+            adapter.addFragment(FragmentListeArticlesDetailOt(id.toInt()), "Articles")
 
 
         }

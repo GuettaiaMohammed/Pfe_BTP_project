@@ -98,7 +98,6 @@ class FragmentListeLigneLotDetailOt(var idLot: Int): Fragment() {
                     }
                 )) as Array<Any>)
 
-                System.out.println("********************************* ${list.toString()}")
 
                 val listLigneOt = ArrayList<LigneLotOT>()
                 listLigneOt!!.add(LigneLotOT("N°", "Designation", "Unité", "Quantité réalisé"))
@@ -112,7 +111,7 @@ class FragmentListeLigneLotDetailOt(var idLot: Int): Fragment() {
                     val ids2 = ids.split("]")[0]
                     //liste final des ids
                     val id: List<String> = ids2.split(",")
-                    System.out.println("********************************* id =  ${id.toString()}")
+
 
                     if(id != null) {
 
@@ -140,7 +139,7 @@ class FragmentListeLigneLotDetailOt(var idLot: Int): Fragment() {
 
                             //liste des champs
                             val jsonArray4 = JSONArray(listLigne)
-                            System.out.println("*************************** $jsonArray4")
+
                             val unite =
                                 jsonArray4.getJSONObject(0).getString("unite").toString()
                             var unit = unite.split("\"")[1]

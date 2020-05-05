@@ -87,6 +87,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                     val idLot = jsonArray3.getJSONObject(position-1).getString("id").toString()
                     //Ajouter les fragments
                     adapter.addFragment(FragmentListeLigneLotAjouteOt(idLot.toInt()), "Lignes")
+                    adapter.addFragment(FragmentListeArticlesAjoutOt(idLot.toInt()), "Articles")
 
                 }
                 //Adapter setup
