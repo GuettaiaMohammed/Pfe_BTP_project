@@ -129,7 +129,7 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                             "ligne.ordre.travail", "search_read",
                             Arrays.asList(
                                 Arrays.asList(
-                                    Arrays.asList("ligne_lot_id", "=", idInt)
+                                    Arrays.asList("id", "=", idInt)
                                 )
                             ),
                             object : HashMap<Any, Any>() {

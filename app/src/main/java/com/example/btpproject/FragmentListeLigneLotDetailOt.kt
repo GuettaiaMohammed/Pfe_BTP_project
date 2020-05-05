@@ -1,12 +1,15 @@
 package com.example.btpproject
 
+import android.annotation.TargetApi
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import org.apache.xmlrpc.XmlRpcException
 import org.apache.xmlrpc.client.XmlRpcClient
@@ -50,6 +53,8 @@ class FragmentListeLigneLotDetailOt(var idLot: Int): Fragment() {
         val username = "admin"
         val password = "pfe_chantier"
 
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        @RequiresApi(Build.VERSION_CODES.KITKAT)
         override fun doInBackground(vararg id: Int?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
@@ -107,8 +112,7 @@ class FragmentListeLigneLotDetailOt(var idLot: Int): Fragment() {
                     val ids2 = ids.split("]")[0]
                     //liste final des ids
                     val id: List<String> = ids2.split(",")
-
-
+                    System.out.println("********************************* id =  ${id.toString()}")
 
                     if(id != null) {
 
@@ -121,7 +125,7 @@ class FragmentListeLigneLotDetailOt(var idLot: Int): Fragment() {
                                 "ligne.ordre.travail", "search_read",
                                 Arrays.asList(
                                     Arrays.asList(
-                                        Arrays.asList("ligne_lot_id", "=", idInt)
+                                        Arrays.asList("id", "=", idInt)
                                     )
                                 ),
                                 object : HashMap<Any, Any>() {
@@ -136,7 +140,7 @@ class FragmentListeLigneLotDetailOt(var idLot: Int): Fragment() {
 
                             //liste des champs
                             val jsonArray4 = JSONArray(listLigne)
-                            System.out.println("*************************** $list")
+                            System.out.println("*************************** $jsonArray4")
                             val unite =
                                 jsonArray4.getJSONObject(0).getString("unite").toString()
                             var unit = unite.split("\"")[1]

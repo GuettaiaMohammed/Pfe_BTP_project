@@ -52,46 +52,48 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
         //liste des demandes matériels
         val conn = ListeOrdre().execute(url)
         val list = conn.get()
-
-        //recupéré l'objet JSON
         val jsonArray = JSONArray(list)
 
-        //récupéré lles données de l'objet JSON
-        for (i in 0..(list!!.size) - 1) {
-            val nom = jsonArray.getJSONObject(i).getString("name").toString()
-            val date = jsonArray.getJSONObject(i).getString("date_debut").toString()
-            var lotObj =
-                jsonArray.getJSONObject(i).getString("lot_id").toString()
-            var lot = lotObj.split("\"")[1]
-            var lot2 = lot.split("\"")[0]
-
-            println("**************************  lot = $lot2")
-            println("**************************  nom = $nom")
-
-            listOT!!.add(OrdreDeTravail(nom, lot2,date))
-        }
+        //recupéré l'objet JSON
+        if(list != null) {
 
 
+            //récupéré lles données de l'objet JSON
+            for (i in 0..(list!!.size) - 1) {
+                val nom = jsonArray.getJSONObject(i).getString("name").toString()
+                val date = jsonArray.getJSONObject(i).getString("date_debut").toString()
+                var lotObj =
+                    jsonArray.getJSONObject(i).getString("lot_id").toString()
+                var lot = lotObj.split("\"")[1]
+                var lot2 = lot.split("\"")[0]
 
-        ordreTravailAdapter = OrdreDeTravailAdapter(applicationContext, 0)
-        listView!!.adapter = ordreTravailAdapter
-        ordreTravailAdapter!!.addAll(listOT)
+                println("**************************  lot = $lot2")
+                println("**************************  nom = $nom")
 
-        var i:Int = 0
-        listView!!.setOnItemClickListener(AdapterView.OnItemClickListener { adapterView, view, position, l ->
-            for (i in 0..listOT!!.size) {
-                if (position == i) {
-                    val intent = Intent(this, DetailOrdreDeTravailActivity::class.java)
-
-                    val id = jsonArray.getJSONObject(i).getString("id").toString()
-                    intent.putExtra("id",id.toInt())
-                    // start your next activity
-                    startActivity(intent)
-                }
+                listOT!!.add(OrdreDeTravail(nom, lot2, date))
             }
 
-        })
 
+
+            ordreTravailAdapter = OrdreDeTravailAdapter(applicationContext, 0)
+            listView!!.adapter = ordreTravailAdapter
+            ordreTravailAdapter!!.addAll(listOT)
+
+            var i: Int = 0
+            listView!!.setOnItemClickListener(AdapterView.OnItemClickListener { adapterView, view, position, l ->
+                for (i in 0..listOT!!.size) {
+                    if (position == i) {
+                        val intent = Intent(this, DetailOrdreDeTravailActivity::class.java)
+
+                        val id = jsonArray.getJSONObject(i).getString("id").toString()
+                        intent.putExtra("id", id.toInt())
+                        // start your next activity
+                        startActivity(intent)
+                    }
+                }
+
+            })
+        }
         //button click to show dialog
         fabOrdreDeTravail.setOnClickListener {
             val intent = Intent(this, AjouterOrdreDeTravailActivity::class.java)
