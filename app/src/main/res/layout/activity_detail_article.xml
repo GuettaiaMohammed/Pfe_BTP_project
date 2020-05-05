@@ -32,7 +32,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView28"
+                android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -61,33 +61,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textView22"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Référence"
-                    android:textSize="14sp"
-                    app:fontFamily="sans-serif" />
-
-                <TextView
-                    android:id="@+id/textView23"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="A25677"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
-                    app:fontFamily="sans-serif" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -134,7 +108,7 @@
                     app:fontFamily="sans-serif" />
 
                 <TextView
-                    android:id="@+id/textView27"
+                    android:id="@+id/date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"

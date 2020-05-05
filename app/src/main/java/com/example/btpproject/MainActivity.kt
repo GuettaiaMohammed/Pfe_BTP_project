@@ -20,11 +20,22 @@ import android.widget.TextView
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
-
+import android.os.AsyncTask
+import android.util.Log
+import org.apache.xmlrpc.XmlRpcException
+import org.apache.xmlrpc.client.XmlRpcClient
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
+import java.net.MalformedURLException
+import java.net.URL
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
+
+    internal val url = "http://sogesi.hopto.org:7013/"
+    internal val db = "BTP_pfe"
+    internal val username = "admin"
+    internal val password = "pfe_chantier"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("BTP")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
 
         chantier.setOnClickListener {
             val intent = Intent(this, MonChantier::class.java)
@@ -79,6 +91,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+       // val conn = Connexion().execute(url)
 
         notification.setOnClickListener {
             val myBuilder = AlertDialog.Builder(this)
@@ -116,6 +129,74 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+
+  /*  class Connexion : AsyncTask<String, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg url: String?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+                Log.d(
+                    "result",
+                    "*******************************************************************"
+                )
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des chantier
+                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "mail.activity", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("id", "!=", 0)
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("activity_type_id","name","state")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+                println("**************************  champs chantier = $list")
+                return list
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
+    }*/
 
 }
 

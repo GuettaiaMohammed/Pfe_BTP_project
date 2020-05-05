@@ -54,7 +54,7 @@ class ListeArticleActivity : AppCompatActivity() {
 
 
 
-        Connexion().execute(url)
+        val conn=Connexion().execute(url)
 
         val conn4= MonChantier.Article().execute(url)
         val conn5= MonChantier.Unite().execute(url)
@@ -84,14 +84,10 @@ class ListeArticleActivity : AppCompatActivity() {
 
         }
 
-        listView = findViewById(R.id.articleListe)
+        listView =findViewById(R.id.articleListe)
         articleAdapter = ArticleAdapter(applicationContext, 0)
-        mesArticles = ArrayList();
+        mesArticles = conn.get() as ArrayList<Article>
 
-        mesArticles!!.add(Article("Béton",  "100 m3", "01/03/2020"))
-        mesArticles!!.add(Article("Ciment",  "1000 unités", "01/03/2020"))
-        mesArticles!!.add(Article("Brique",  "200 unités","11/03/2020"))
-        mesArticles!!.add(Article("Gravier",  "300 unités","21/03/2020"))
 
         articleAdapter!!.addAll(mesArticles)
         listView!!.adapter = articleAdapter
@@ -100,9 +96,12 @@ class ListeArticleActivity : AppCompatActivity() {
         listView!!.setOnItemClickListener(AdapterView.OnItemClickListener { adapterView, view, position, l ->
             for (_i in 0..mesArticles!!.size) {
                 if (position == _i) {
-                  //val intent = Intent(this, DetailArticleQuantiteActivity::class.java)
+                  val intent = Intent(this, DetailArticleQuantiteActivity::class.java)
+                    val article = mesArticles!!.get(_i)
+                   val idA=article.id
+                    intent.putExtra("id",idA)
                     // start your next activity
-                   startActivity(Intent(this, DetailArticleQuantiteActivity::class.java))
+                   startActivity(intent)
                 }
             }
 
@@ -280,40 +279,79 @@ class ListeArticleActivity : AppCompatActivity() {
                         })
                     }
                 }
-
-                //liste des chantier
-                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                        db, uid, password,
-                        "demande.appro.article", "search_read",
+                val list1 = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "purchase.order", "search_read",
+                    Arrays.asList(
                         Arrays.asList(
-                                Arrays.asList(
-                                        Arrays.asList("chantier_id", "=", 2)
-                                )
+                            Arrays.asList("origin", "=", "piscine_semi_olympique_ref")
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("id")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+                println("**************************  champs chantier = $list1")
+                //liste des chantier
+                val jsonArray = JSONArray(list1)
+                var listeArticleDem = ArrayList<Article>()
+
+                for(i in 0..(list1.size)-1) {
+
+                    var id = jsonArray.getJSONObject(i).getString("id").toInt()
+
+
+                    val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                        db, uid, password,
+                        "purchase.order.line", "search_read",
+                        Arrays.asList(
+                            Arrays.asList(
+                                Arrays.asList("order_id", "=", id)
+                            )
                         ),
                         object : HashMap<Any, Any>() {
                             init {
                                 put(
-                                        "fields",
-                                        Arrays.asList("ligne_demande_appro_article_ids")
+                                    "fields",
+                                    Arrays.asList("id","product_id","product_qty","date_planned","product_uom")
                                 )
                             }
                         }
-                )) as Array<Any>)
-                println("**************************  champs chantier = $list")
+                    )) as Array<Any>)
+                    println("**************************  champs chantier = $list")
+                    val jsonArray2 = JSONArray(list)
 
-                val jsonArray = JSONArray(list)
+                    for(i1 in 0..(list.size)-1) {
+                        var date= jsonArray2.getJSONObject(i1).getString("date_planned").toString()
+                        var qte= jsonArray2.getJSONObject(i1).getString("product_qty").toString()
+                        var id= jsonArray2.getJSONObject(i1).getString("id").toInt()
 
-                for(i in 0..(list.size)-1) {
-                    var typeObj = jsonArray.getJSONObject(i).getString("ligne_demande_appro_article_ids").toString()
-                    // var typeObj1 = jsonArray.getJSONObject(i).getString("employee_ids").toString()
-                  //  var type = typeObj.split("\"")[1]
-                  //  var type2 = type.split("\"")[0]
+                        var typeObj =
+                        jsonArray2.getJSONObject(i1).getString("product_id").toString()
+                    var type = typeObj.split("\"")[1]
+                    var type2 = type.split("\"")[0]
+                        var typeObj2 =
+                            jsonArray2.getJSONObject(i1).getString("product_uom").toString()
+                        var u = typeObj2.split("\"")[1]
+                        var u2 = u.split("\"")[0]
 
-                    println("**************************  type = $typeObj")
-                    // println("**************************  Date debut = $typeObj1")
+                   // println("**************************  article = $type2")
+
+                        listeArticleDem!!.add(Article(id,type2,qte+u2,date))
+                    }
+
+
                 }
 
-                    return list
+
+
+              //  println("**************************  article = $listeArticleDem ")
+                    return listeArticleDem
 
             }catch (e: MalformedURLException) {
                 Log.d("MalformedURLException", "*********************************************************")

@@ -1,3 +1,3 @@
 package com.example.btpproject
 
-class Article(var nom: String?, var qteDemande: String?,var date: String?)
+class Article(var id: Int?,var nom: String?, var qteDemande: String?,var date: String?)

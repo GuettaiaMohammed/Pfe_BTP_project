@@ -248,6 +248,7 @@ class MonChantier : AppCompatActivity() {
             //.setTitle("Login Form")
 
 
+
             //Spinner
             val spinnerE = mDialogView.findViewById<Spinner>(R.id.spinnerE)
 
@@ -325,8 +326,6 @@ class MonChantier : AppCompatActivity() {
 
                     }
 
-
-
                 }
 
               //  Toast.makeText(this, "id = "+id.toString()+"metier ="+metier+" \n le nombre "+nbr.toString()+"\n date début ="+dateD+"\n date fin = "+dateF, Toast.LENGTH_SHORT).show()
@@ -336,15 +335,21 @@ class MonChantier : AppCompatActivity() {
                 listInfosEmpl!!.add(2,dateF)
                 listInfosEmpl!!.add(3,nbr.toString())
 
+                  Toast.makeText(this, "id = "+listInfosEmpl[0]+"metier ="+metier+" \n le nombre "+listInfosEmpl[3]+"\n date début ="+listInfosEmpl[1]+"\n date fin = "+listInfosEmpl[2], Toast.LENGTH_SHORT).show()
 
-               val conn =AjouterEmploye().execute(listInfosEmpl)
+               val demandeE =AjouterEmploye()
+                   demandeE.execute(listInfosEmpl)
+
 
             }
 
 
 
+
+
+
             //show dialog
-            val mAlertDialog = mBuilder.show()
+            val mAlertDialog = mBuilder.run { show() }
 
         }
 
@@ -605,12 +610,6 @@ class MonChantier : AppCompatActivity() {
                         db, username, password, Collections.emptyMap<Any, Any>()
                 )
                 ) as Int
-                Log.d(
-                        "result",
-                        "*******************************************************************"
-                )
-                Log.d("uid = ", Integer.toString(uid))
-                System.out.println("************************************    UID = " + uid)
 
                 val models = object : XmlRpcClient() {
                     init {
@@ -631,15 +630,14 @@ class MonChantier : AppCompatActivity() {
                             }
                         }))
                 ) as Array<Any>)[0] as Map<Any, String>
-                System.out.println("detail : $record")
+
                 return listOf(record)
 
 
 
 
 
-                //   println("**************************  champs chantier = $record")
-               // return
+
 
             }catch (e: MalformedURLException) {
                 Log.d("MalformedURLException", "*********************************************************")
@@ -670,12 +668,6 @@ class MonChantier : AppCompatActivity() {
                         db, username, password, Collections.emptyMap<Any, Any>()
                 )
                 ) as Int
-                Log.d(
-                        "result",
-                        "*******************************************************************"
-                )
-                Log.d("uid = ", Integer.toString(uid))
-                System.out.println("************************************    UID = " + uid)
 
                 val models = object : XmlRpcClient() {
                     init {
@@ -706,7 +698,7 @@ class MonChantier : AppCompatActivity() {
                         }
                 )) as Array<Any>)
 
-                println("************************  liste des champs = $liste")
+
 
 
 
@@ -723,6 +715,8 @@ class MonChantier : AppCompatActivity() {
 
 
     }
+
+
     class Metier : AsyncTask<String, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
@@ -770,7 +764,7 @@ class MonChantier : AppCompatActivity() {
                         }
                 )) as Array<Any>)
 
-                println("************************  liste des champs = $liste")
+
 
 
 
@@ -787,6 +781,9 @@ class MonChantier : AppCompatActivity() {
 
 
     }
+
+
+
     class Article : AsyncTask<String, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
@@ -804,12 +801,6 @@ class MonChantier : AppCompatActivity() {
                         db, username, password, Collections.emptyMap<Any, Any>()
                 )
                 ) as Int
-                Log.d(
-                        "result",
-                        "*******************************************************************"
-                )
-                Log.d("uid = ", Integer.toString(uid))
-                System.out.println("************************************    UID = " + uid)
 
                 val models = object : XmlRpcClient() {
                     init {
@@ -839,7 +830,6 @@ class MonChantier : AppCompatActivity() {
                         }
                 )) as Array<Any>)
 
-                println("************************  liste des champs = $liste")
 
 
 
@@ -856,6 +846,9 @@ class MonChantier : AppCompatActivity() {
 
 
     }
+
+
+
     class Unite : AsyncTask<String, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
@@ -873,12 +866,7 @@ class MonChantier : AppCompatActivity() {
                         db, username, password, Collections.emptyMap<Any, Any>()
                 )
                 ) as Int
-                Log.d(
-                        "result",
-                        "*******************************************************************"
-                )
-                Log.d("uid = ", Integer.toString(uid))
-                System.out.println("************************************    UID = " + uid)
+
 
                 val models = object : XmlRpcClient() {
                     init {
@@ -908,7 +896,7 @@ class MonChantier : AppCompatActivity() {
                         }
                 )) as Array<Any>)
 
-                println("************************  liste des champs = $liste")
+
 
 
 
@@ -962,21 +950,43 @@ class MonChantier : AppCompatActivity() {
                         })
                     }
                 }
-                for ( i in  infos) {
+                for(i in infos)
+                {
+                println("************************  liste des données = $i")}
 
-                println("**************************  champs chantier =  $i ")}
-                /*var id: Int = models.execute(
+           /*
+
+              var id1: Int = models.execute(
                     "execute_kw", asList(
                         db, uid, password,
-                        "res.partner", "create",
+                        "ligne.demande.appro_personnel", "create",
                         asList(object : java.util.HashMap<Any, Any>() {
                             init {
-                                put("name", "New Partner")
+                                put("chantier_id", 2)
+                              put("qte", "5")
+                              put("job_id","$")
+
+                            }
+                        })
+                    ))as Int
+                println("************************  liste des données = $id1")
+
+
+                var id: Int = models.execute(
+                    "execute_kw", asList(
+                        db, uid, password,
+                        "demande.appro_personnel", "create",
+                        asList(object : java.util.HashMap<Any, Any>() {
+                            init {
+                                put("chantier_id", 2)
+                                put("date_debut", "")
+                                put("date_fin", "")
+                                put("ligne_demande_appro_personnel_ids","$id1")
                             }
                         })
                     )
-                ) as Int*/
-
+                ) as Int
+                println("************************  liste des données = $id")*/
             } catch (e: MalformedURLException) {
                 Log.d(
                     "MalformedURLException",
