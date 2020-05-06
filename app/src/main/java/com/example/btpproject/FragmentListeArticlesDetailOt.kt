@@ -99,68 +99,77 @@ class FragmentListeArticlesDetailOt(var idLot: Int) : Fragment() {
                     }
                 )) as Array<Any>)
 
-                System.out.println("********************************* ${list.toString()}")
 
                 val listArticleOt = ArrayList<ArticleOT>()
                 listArticleOt!!.add(ArticleOT("Ligne","Article", "Unité","Quantité consommé"))
 
-                if(list != null) {
+                if(list.isNotEmpty()) {
                     val jsonArray3 = JSONArray(list)
                     val ligneIds =
                         jsonArray3.getJSONObject(0).toString()
 
-                    val ids = ligneIds.split("[")[1]
-                    val ids2 = ids.split("]")[0]
-                    //liste final des ids
-                    val id: List<String> = ids2.split(",")
-                    System.out.println("********************************* id =  ${id}")
-
-                    if(id != null) {
+                    if(jsonArray3.getJSONObject(0) != null) {
+                        val ids = ligneIds.split("[")[1]
+                        val ids2 = ids.split("]")[0]
+                        //liste final des ids
+                        val idd: List<String> = ids2.split(",")
 
 
-                        // recupéré les champ nom unite num des ligne par chaque Id
-                        for (i in 0..(id!!.size) - 1) {
-                            val idInt = id[i].toInt()
-                            val listLigne = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                                db, uid, password,
-                                "article.consom", "search_read",
-                                Arrays.asList(
-                                    Arrays.asList(
-                                        Arrays.asList("id", "=", idInt)
-                                    )
-                                ),
-                                object : HashMap<Any, Any>() {
-                                    init {
-                                        put(
-                                            "fields",
-                                            Arrays.asList("ligne_lot_id","name", "unite", "qte")
-                                        )
-                                    }
+                        if (idd[0] != "") {
+
+                            // recupéré les champ nom unite num des ligne par chaque Id
+                            for (i in 0..(idd!!.size) - 1) {
+                                val idInt = idd[i]!!.toInt()
+                                val listLigne =
+                                    Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                                        db, uid, password,
+                                        "article.consom", "search_read",
+                                        Arrays.asList(
+                                            Arrays.asList(
+                                                Arrays.asList("id", "=", idInt)
+                                            )
+                                        ),
+                                        object : HashMap<Any, Any>() {
+                                            init {
+                                                put(
+                                                    "fields",
+                                                    Arrays.asList(
+                                                        "ligne_lot_id",
+                                                        "name",
+                                                        "unite",
+                                                        "qte"
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    )) as Array<Any>)
+
+                                if (listLigne.isNotEmpty()) {
+                                    //liste des champs
+                                    val jsonArray4 = JSONArray(listLigne)
+
+                                    val ligneLot =
+                                        jsonArray4.getJSONObject(0).getString("ligne_lot_id")
+                                            .toString()
+                                    var ligne = ligneLot.split("\"")[1]
+                                    var ligneF = ligne.split("\"")[0]
+
+                                    val unite =
+                                        jsonArray4.getJSONObject(0).getString("unite").toString()
+                                    var unit = unite.split("\"")[1]
+                                    var unit2 = unit.split("\"")[0]
+
+                                    val name =
+                                        jsonArray4.getJSONObject(0).getString("name").toString()
+                                    val qte =
+                                        jsonArray4.getJSONObject(0).getString("qte").toString()
+
+                                    listArticleOt.add(ArticleOT(ligneF, name, unit2, qte))
                                 }
-                            )) as Array<Any>)
-
-                            //liste des champs
-                            val jsonArray4 = JSONArray(listLigne)
-                            System.out.println("*************************** $jsonArray4")
-                            val ligneLot =
-                                jsonArray4.getJSONObject(0).getString("ligne_lot_id").toString()
-                            var ligne = ligneLot.split("\"")[1]
-                            var ligneF = ligne.split("\"")[0]
-
-                            val unite =
-                                jsonArray4.getJSONObject(0).getString("unite").toString()
-                            var unit = unite.split("\"")[1]
-                            var unit2 = unit.split("\"")[0]
-
-                            val name = jsonArray4.getJSONObject(0).getString("name").toString()
-                            val qte = jsonArray4.getJSONObject(0).getString("qte").toString()
-
-                            listArticleOt.add(ArticleOT(ligneF, name, unit2, qte))
+                            }
 
                         }
-
                     }
-
                 }
                 return listArticleOt
 

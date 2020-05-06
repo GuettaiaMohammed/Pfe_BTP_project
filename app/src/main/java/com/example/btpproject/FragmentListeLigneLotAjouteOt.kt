@@ -51,11 +51,14 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
         ligneLotAdapter = FragmentLigneLotAdapterAjoutOt(view.context,0)
 
         var conn = ListeLigneOt().execute(idLot)
-        lignes = conn.get() as ArrayList<LigneLotOT>?
+        if(conn.get()!!.isNotEmpty() || conn.get() != null) {
 
-        ligneLotAdapter!!.addAll(lignes)
+            lignes = conn.get() as ArrayList<LigneLotOT>?
+            if (lignes != null) {
+                ligneLotAdapter!!.addAll(lignes)
+            }
+        }
         listView!!.adapter = ligneLotAdapter
-
 
         return view
     }
@@ -108,56 +111,67 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                     }
                 )) as Array<Any>)
 
-                val jsonArray3 = JSONArray(list)
-                val ligneIds =
-                    jsonArray3.getJSONObject(0).toString()
 
-                val ids = ligneIds.split("[")[1]
-                val ids2 = ids.split("]")[0]
-                //liste final des ids
-                val id: List<String> = ids2.split(",")
+                val listLigneOt = ArrayList<LigneLotOT>()
+                if(list.isNotEmpty()) {
+
+                    val jsonArray3 = JSONArray(list)
+                    val ligneIds =
+                        jsonArray3.getJSONObject(0).toString()
+
+                    val ids = ligneIds.split("[")[1]
+                    val ids2 = ids.split("]")[0]
+                    //liste final des ids
+                    val idd: List<String> = ids2.split(",")
 
 
-                if(id != null) {
+                    if (idd[0] != "") {
 
-                    val listLigneOt = ArrayList<LigneLotOT>()
-                    // recupéré les champ nom unite num des ligne par chaque Id
-                    for (i in 0..(id!!.size) - 1) {
-                        val idInt = id[i].toInt()
-                        val listLigne = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                            db, uid, password,
-                            "ligne.ordre.travail", "search_read",
-                            Arrays.asList(
-                                Arrays.asList(
-                                    Arrays.asList("id", "=", idInt)
-                                )
-                            ),
-                            object : HashMap<Any, Any>() {
-                                init {
-                                    put(
-                                        "fields",
-                                        Arrays.asList("name","num", "unite", "qte_realise")
-                                    )
-                                }
+                        // recupéré les champ nom unite num des ligne par chaque Id
+                        for (i in 0..(idd!!.size) - 1) {
+                            val idInt = idd[i].toInt()
+                            val listLigne =
+                                Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                                    db, uid, password,
+                                    "ligne.ordre.travail", "search_read",
+                                    Arrays.asList(
+                                        Arrays.asList(
+                                            Arrays.asList("id", "=", idInt)
+                                        )
+                                    ),
+                                    object : HashMap<Any, Any>() {
+                                        init {
+                                            put(
+                                                "fields",
+                                                Arrays.asList(
+                                                    "name",
+                                                    "num",
+                                                    "unite",
+                                                    "qte_realise"
+                                                )
+                                            )
+                                        }
+                                    }
+                                )) as Array<Any>)
+
+                            if(listLigne.isNotEmpty()) {
+                                //liste des champs
+                                val jsonArray4 = JSONArray(listLigne)
+                                val unite =
+                                    jsonArray4.getJSONObject(0).getString("unite").toString()
+                                var unit = unite.split("\"")[1]
+                                var unit2 = unit.split("\"")[0]
+
+                                val num = jsonArray4.getJSONObject(0).getString("num").toString()
+
+                                val name = jsonArray4.getJSONObject(0).getString("name").toString()
+
+                                listLigneOt.add(LigneLotOT(num, name, unit2, "0"))
                             }
-                        )) as Array<Any>)
-
-                        //liste des champs
-                        val jsonArray4 = JSONArray(listLigne)
-                        val unite =
-                            jsonArray4.getJSONObject(0).getString("unite").toString()
-                        var unit = unite.split("\"")[1]
-                        var unit2 = unit.split("\"")[0]
-
-                        val num = jsonArray4.getJSONObject(0).getString("num").toString()
-
-                        val name = jsonArray4.getJSONObject(0).getString("name").toString()
-
-                        listLigneOt.add(LigneLotOT(num, name, unit2, "0"))
-
+                        }
                     }
-                    return listLigneOt
                 }
+                return listLigneOt
 
             }catch (e: MalformedURLException) {
                 Log.d("MalformedURLException", "*********************************************************")

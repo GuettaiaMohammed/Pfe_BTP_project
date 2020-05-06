@@ -37,9 +37,13 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
         articleAdapter = FragmentArticleAdapterAjoutOt(view.context,0)
 
         var conn = ListeArticleOt().execute(idLot)
-        articleOT = conn.get() as ArrayList<ArticleOT>?
+        if(conn.get()!!.isNotEmpty() || conn.get() != null) {
+            articleOT = conn.get() as ArrayList<ArticleOT>?
 
-        articleAdapter!!.addAll(articleOT)
+            if (articleOT != null) {
+                articleAdapter!!.addAll(articleOT)
+            }
+        }
         listView!!.adapter = articleAdapter
 
         return view
@@ -95,11 +99,10 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                     }
                 )) as Array<Any>)
 
-                System.out.println("********************************* ${list.toString()}")
 
                 val listArticleOt = ArrayList<ArticleOT>()
 
-                if(list != null) {
+                if(list.isNotEmpty()) {
                     val jsonArray3 = JSONArray(list)
                     val ligneIds =
                         jsonArray3.getJSONObject(0).toString()
@@ -107,15 +110,13 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                     val ids = ligneIds.split("[")[1]
                     val ids2 = ids.split("]")[0]
                     //liste final des ids
-                    val id: List<String> = ids2.split(",")
-                    System.out.println("********************************* id =  ${id.toString()}")
+                    val idd: List<String> = ids2.split(",")
 
-                    if(id != null) {
-
+                    if(idd[0] != "") {
 
                         // recupéré les champ nom unite num des ligne par chaque Id
-                        for (i in 0..(id!!.size) - 1) {
-                            val idInt = id[i].toInt()
+                        for (i in 0..(idd!!.size) - 1) {
+                            val idInt = idd[i].toInt()
                             val listLigne = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                                 db, uid, password,
                                 "article.consom", "search_read",
@@ -134,27 +135,28 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                                 }
                             )) as Array<Any>)
 
-                            //liste des champs
-                            val jsonArray4 = JSONArray(listLigne)
-                            System.out.println("*************************** $jsonArray4")
-                            val ligneLot =
-                                jsonArray4.getJSONObject(0).getString("ligne_lot_id").toString()
-                            var ligne = ligneLot.split("\"")[1]
-                            var ligneF = ligne.split("\"")[0]
+                            if(listLigne.isNotEmpty()) {
+                                //liste des champs
+                                val jsonArray4 = JSONArray(listLigne)
+                                val ligneLot =
+                                    jsonArray4.getJSONObject(0).getString("ligne_lot_id").toString()
+                                var ligne = ligneLot.split("\"")[1]
+                                var ligneF = ligne.split("\"")[0]
 
-                            val unite =
-                                jsonArray4.getJSONObject(0).getString("unite").toString()
-                            var unit = unite.split("\"")[1]
-                            var unit2 = unit.split("\"")[0]
+                                val unite =
+                                    jsonArray4.getJSONObject(0).getString("unite").toString()
+                                var unit = unite.split("\"")[1]
+                                var unit2 = unit.split("\"")[0]
 
-                            val name = jsonArray4.getJSONObject(0).getString("name").toString()
-                            val qte = jsonArray4.getJSONObject(0).getString("qte").toString()
+                                val name = jsonArray4.getJSONObject(0).getString("name").toString()
+                                val qte = jsonArray4.getJSONObject(0).getString("qte").toString()
 
-                            listArticleOt.add(ArticleOT(ligneF, name, unit2, "0"))
-
+                                listArticleOt.add(ArticleOT(ligneF, name, unit2, "0"))
+                            }
                         }
 
                     }
+
                 }
                 return listArticleOt
 
