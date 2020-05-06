@@ -1,11 +1,13 @@
 package com.example.btpproject
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.AsyncTask
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils.indexOf
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -29,6 +31,8 @@ import java.net.URL
 import java.util.*
 import java.util.Arrays.asList
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.collections.indexOf as indexOf1
 
 class MonChantier : AppCompatActivity() {
     //
@@ -48,7 +52,8 @@ class MonChantier : AppCompatActivity() {
     private val listUnites = arrayListOf<String>()
     private val listMetiers = arrayListOf<String>()
     private val listMateriels = arrayListOf<String>()
-    private val listInfosEmpl = arrayListOf<String>()
+
+    private lateinit var listInfosEmpl:List<Any>
 
     //datePicker Dialog
     var mDatepickerDEmp: DatePickerDialog? = null
@@ -330,15 +335,12 @@ class MonChantier : AppCompatActivity() {
 
               //  Toast.makeText(this, "id = "+id.toString()+"metier ="+metier+" \n le nombre "+nbr.toString()+"\n date début ="+dateD+"\n date fin = "+dateF, Toast.LENGTH_SHORT).show()
 
-                listInfosEmpl!!.add(0,id.toString())
-                listInfosEmpl!!.add(1,dateD)
-                listInfosEmpl!!.add(2,dateF)
-                listInfosEmpl!!.add(3,nbr.toString())
+                listInfosEmpl= listOf(id,dateD,dateF,nbr)
 
-                  Toast.makeText(this, "id = "+listInfosEmpl[0]+"metier ="+metier+" \n le nombre "+listInfosEmpl[3]+"\n date début ="+listInfosEmpl[1]+"\n date fin = "+listInfosEmpl[2], Toast.LENGTH_SHORT).show()
 
-               val demandeE =AjouterEmploye()
-                   demandeE.execute(listInfosEmpl)
+//                  Toast.makeText(this, "id = "+listInfosEmpl[0]+"metier ="+metier+" \n le nombre "+listInfosEmpl[3]+"\n date début ="+listInfosEmpl[1]+"\n date fin = "+listInfosEmpl[2], Toast.LENGTH_SHORT).show()
+
+               val demandeE = AjouterEmploye().execute(listInfosEmpl)
 
 
             }
@@ -916,12 +918,19 @@ class MonChantier : AppCompatActivity() {
 
 
 
-    class AjouterEmploye : AsyncTask<ArrayList<String>, Void, List<Any>?>() {
+    class AjouterEmploye : AsyncTask<List<Any>, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
 
-        override fun doInBackground(vararg infos: ArrayList<String>?): List<Any>? {
+
+        var dateD:String=""
+        var dateF:String=""
+        var nbr:Int=0
+        var idJob:Int=0
+
+        @SuppressLint("NewApi")
+        override fun doInBackground(vararg infos: List<Any>?): List<Any>? {
             var client = XmlRpcClient()
             var common_config = XmlRpcClientConfigImpl()
             try {
@@ -950,43 +959,53 @@ class MonChantier : AppCompatActivity() {
                         })
                     }
                 }
-                for(i in infos)
-                {
-                println("************************  liste des données = $i")}
-
-           /*
-
-              var id1: Int = models.execute(
-                    "execute_kw", asList(
-                        db, uid, password,
-                        "ligne.demande.appro_personnel", "create",
-                        asList(object : java.util.HashMap<Any, Any>() {
-                            init {
-                                put("chantier_id", 2)
-                              put("qte", "5")
-                              put("job_id","$")
-
-                            }
-                        })
-                    ))as Int
-                println("************************  liste des données = $id1")
 
 
-                var id: Int = models.execute(
+for(i in infos)
+{
+    println("************************  datebbb = $i")
+
+}
+
+
+                    dateD = infos.get(1).toString()
+                println("************************  datebbb = ${infos[1]}")
+                println("************************  date = $dateD")
+
+
+
+
+             /*   var id: Int = models.execute(
                     "execute_kw", asList(
                         db, uid, password,
                         "demande.appro_personnel", "create",
                         asList(object : java.util.HashMap<Any, Any>() {
                             init {
                                 put("chantier_id", 2)
-                                put("date_debut", "")
-                                put("date_fin", "")
-                                put("ligne_demande_appro_personnel_ids","$id1")
+                                put("date_debut", infos.get(1)!!)
+                                put("date_fin", infos.get(2)!!)
+
                             }
                         })
                     )
                 ) as Int
-                println("************************  liste des données = $id")*/
+                println("************************  liste des données = $id")
+
+                var id1: Int = models.execute(
+                    "execute_kw", asList(
+                        db, uid, password,
+                        "ligne.demande.appro_personnel", "create",
+                        asList(object : java.util.HashMap<Any, Any>() {
+                            init {
+                                put("chantier_id", 2)
+                                put("demande_appro_personnel_id",id)
+                                put("qte", infos.get(3)!!)
+                                put("job_id",infos.get(0)!!)
+
+                            }
+                        })
+                    ))as Int
+                println("************************  liste des données = $id1")*/
             } catch (e: MalformedURLException) {
                 Log.d(
                     "MalformedURLException",
