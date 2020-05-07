@@ -78,11 +78,32 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:paddingLeft="20dp"
-                            android:text="@string/materiel"
+                            android:text="Type Matériel"
                             android:textSize="20sp" />
 
                         <Spinner
                             android:id="@+id/spinnerM"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="322dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingLeft="20dp"
+                            android:text="Détail Matériel"
+                            android:textSize="20sp" />
+
+                        <EditText
+                            android:id="@+id/comnt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />

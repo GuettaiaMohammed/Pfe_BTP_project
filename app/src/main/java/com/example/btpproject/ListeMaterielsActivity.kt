@@ -21,6 +21,8 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.IntegerRes
 import androidx.annotation.RequiresApi
+import kotlinx.android.synthetic.main.activity_ajouter_article.view.button
+import kotlinx.android.synthetic.main.activity_ajouter_materiel.view.*
 
 import org.apache.xmlrpc.XmlRpcException
 import org.apache.xmlrpc.client.XmlRpcClient
@@ -105,10 +107,11 @@ class ListeMaterielsActivity : AppCompatActivity() {
                 jsonArray.getJSONObject(i).getString("type_materiel_id").toString()
             var type = typeObj.split("\"")[1]
             var type2 = type.split("\"")[0]
+            var detail=jsonArray.getJSONObject(i).getString("detail_mat").toString()
             println("**************************  type = $type2")
             println("**************************  Date debut = $dateD")
 
-            mesMateriels!!.add(Materiel(type2, dateD, dateF))
+            mesMateriels!!.add(Materiel(type2,detail, dateD, dateF))
         }
 
         materielAdapter!!.addAll(mesMateriels)
@@ -131,6 +134,10 @@ class ListeMaterielsActivity : AppCompatActivity() {
 
         //button click to show dialog
         fabMateriel.setOnClickListener {
+            var dateD:String=""
+            var dateF:String=""
+            var type:String=""
+            var detail:String=""
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_materiel, null)
             //AlertDialogBuilder
@@ -155,6 +162,8 @@ class ListeMaterielsActivity : AppCompatActivity() {
                         dateDBtn.setText(
                             dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
                         )
+                        dateD = dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+
                         dateDBtn.textSize = 12F
                     }, year, month, day
                 )
@@ -178,6 +187,8 @@ class ListeMaterielsActivity : AppCompatActivity() {
                         dateFBtn.setText(
                             dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
                         )
+                        dateF = dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+
                         dateFBtn.textSize = 12F
                     }, year, month, day
                 )
@@ -199,7 +210,30 @@ class ListeMaterielsActivity : AppCompatActivity() {
 
             //button valider
             mDialogView.button.setOnClickListener{
-                Toast.makeText(this,spinnerM.selectedItem.toString() , Toast.LENGTH_SHORT).show()
+
+                type=spinnerM.selectedItem.toString()
+                detail= mDialogView.comnt.text.toString()
+
+
+                var id:Int=0
+                for (i in 0..(listM!!.size) - 1) {
+
+                    val name = jsonArray3.getJSONObject(i).getString("name").toString()
+
+                    if(name==type)
+                    {
+                        id=jsonArray3.getJSONObject(i).getString("id").toInt()
+                        // Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
+
+                    }
+
+                }
+
+                val demandeM = MonChantier.AjouterMateriel()
+                    .execute(id.toString(),dateD,dateF,detail)
+
+
+
             }
 
 
@@ -354,7 +388,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
                         init {
                             put(
                                 "fields",
-                                asList("id","type_materiel_id", "date_debut", "date_fin")
+                                asList("id","type_materiel_id", "date_debut", "date_fin","detail_mat")
                             )
                         }
                     }

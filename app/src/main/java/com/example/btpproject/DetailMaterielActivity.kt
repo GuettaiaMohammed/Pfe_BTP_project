@@ -55,6 +55,7 @@ class DetailMaterielActivity : AppCompatActivity() {
         val date_debut=findViewById<TextView>(R.id.date_debut)
         val date_fin=findViewById<TextView>(R.id.date_fin)
         val duree=findViewById<TextView>(R.id.duree)
+        val detailM=findViewById<TextView>(R.id.detail)
 
 
 
@@ -75,9 +76,12 @@ val i=intent
                 jsonArray.getJSONObject(i).getString("type_materiel_id").toString()
             var type = typeObj.split("\"")[1]
             var type2 = type.split("\"")[0]
+            var detail=jsonArray.getJSONObject(i).getString("detail_mat").toString()
+
 
             val date = LocalDate.parse(dateD, DateTimeFormatter.ISO_DATE)
             val date1 = LocalDate.parse(dateF, DateTimeFormatter.ISO_DATE)
+
 
 
              val CONST_DURATION_OF_DAY = 1000L * 60 * 60 * 24
@@ -102,6 +106,7 @@ val i=intent
             date_debut.setText(dateD)
             date_fin.setText(dateF)
             duree.setText(numberOfDay.toString()+" jours")
+            detailM.setText(detail)
 
 
 
@@ -261,7 +266,8 @@ mBuilder.setCancelable(true)
                                     "type_materiel_id",
                                     "date_debut",
                                     "date_fin",
-                                    "create_date"
+                                    "create_date",
+                                    "detail_mat"
                                 )
                             )
                         }

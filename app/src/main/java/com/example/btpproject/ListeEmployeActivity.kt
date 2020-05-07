@@ -111,6 +111,7 @@ class ListeEmployeActivity : AppCompatActivity() {
 
                   //  employeAdapter!!.remove(employeAdapter!!.getItem(i))
                 }
+
             }
 
         })
@@ -119,6 +120,11 @@ class ListeEmployeActivity : AppCompatActivity() {
 
         //button click to show dialog
         fabEmploye.setOnClickListener {
+            var dateD:String=""
+            var dateF:String=""
+            var nbr:Int=0
+            var n:String=""
+            var metier:String=""
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_employe, null)
             //AlertDialogBuilder
@@ -135,11 +141,7 @@ class ListeEmployeActivity : AppCompatActivity() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerE.setAdapter(adapter)
 
-            //button valider
-            mDialogView.button.setOnClickListener {
-                Toast.makeText(this, spinnerE.selectedItem.toString() + " " + " Le nombre : " + mDialogView.nbr.text,
-                        Toast.LENGTH_SHORT).show()
-            }
+
 
             //date Début Picker Btn
             val dateDBtn = mDialogView.findViewById<Button>(R.id.dateDEmpBtn)
@@ -158,6 +160,8 @@ class ListeEmployeActivity : AppCompatActivity() {
                             dateDBtn.setText(
                                     dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
                             )
+                            dateD = dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+
                             dateDBtn.textSize = 12F
                         }, year, month, day
                 )
@@ -181,12 +185,43 @@ class ListeEmployeActivity : AppCompatActivity() {
                             dateFBtn.setText(
                                     dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
                             )
+                            dateF = dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+
                             dateFBtn.textSize = 12F
                         }, year, month, day
                 )
                 mDatepickerF!!.show()
             }
+            //button valider
+            mDialogView.button.setOnClickListener {
+                Toast.makeText(
+                    this,
+                    spinnerE.selectedItem.toString() + " " + " Le nombre : " + mDialogView.nbr.text,
+                    Toast.LENGTH_SHORT
+                ).show()
 
+                //récupérer les données saisis
+                n = mDialogView.nbr.text.toString()
+                nbr = n.toInt()
+                metier = spinnerE.selectedItem.toString()
+                // récupérer l 'id de métier
+                var id: Int = 0
+                for (i in 0..(listMetier!!.size) - 1) {
+
+                    val name = jsonArray4.getJSONObject(i).getString("name").toString()
+                    if (name == metier) {
+                        id = jsonArray4.getJSONObject(i).getString("id").toInt()
+                        // Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
+
+                    }
+
+                }
+
+
+                val demandeE = MonChantier.AjouterEmploye()
+                    .execute(id.toString(), dateD, dateF, nbr.toString())
+
+            }
             //show dialog
             mBuilder.show()
         }
@@ -337,7 +372,9 @@ class ListeEmployeActivity : AppCompatActivity() {
                         "ligne.demande.appro_personnel", "search_read",
                         Arrays.asList(
                                 Arrays.asList(
-                                        Arrays.asList("demande_appro_personnel_id", "=", "PISCINE SEMI OLYMPIQUE REGHAIA")
+                                        Arrays.asList("demande_appro_personnel_id", "=", "PISCINE SEMI OLYMPIQUE REGHAIA"),
+                                    Arrays.asList("employee_ids", "=!",null )
+
                                 )
                         ),
                         object : HashMap<Any, Any>() {

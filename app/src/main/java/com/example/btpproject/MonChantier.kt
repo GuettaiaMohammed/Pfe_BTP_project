@@ -21,6 +21,8 @@ import com.example.btpproject.FonctionsXmlRPC.Companion.getMany2One
 import kotlinx.android.synthetic.main.activity_ajouter_article.view.*
 import kotlinx.android.synthetic.main.activity_ajouter_article.view.button
 import kotlinx.android.synthetic.main.activity_ajouter_employe.view.*
+import kotlinx.android.synthetic.main.activity_ajouter_materiel.view.*
+import kotlinx.android.synthetic.main.activity_detail_materiel.view.*
 import kotlinx.android.synthetic.main.activity_mon_chantier2.*
 import org.apache.xmlrpc.XmlRpcException
 import org.apache.xmlrpc.client.XmlRpcClient
@@ -53,7 +55,7 @@ class MonChantier : AppCompatActivity() {
     private val listMetiers = arrayListOf<String>()
     private val listMateriels = arrayListOf<String>()
 
-    private lateinit var listInfosEmpl:List<Any>
+
 
     //datePicker Dialog
     var mDatepickerDEmp: DatePickerDialog? = null
@@ -333,14 +335,8 @@ class MonChantier : AppCompatActivity() {
 
                 }
 
-              //  Toast.makeText(this, "id = "+id.toString()+"metier ="+metier+" \n le nombre "+nbr.toString()+"\n date début ="+dateD+"\n date fin = "+dateF, Toast.LENGTH_SHORT).show()
 
-                listInfosEmpl= listOf(id,dateD,dateF,nbr)
-
-
-//                  Toast.makeText(this, "id = "+listInfosEmpl[0]+"metier ="+metier+" \n le nombre "+listInfosEmpl[3]+"\n date début ="+listInfosEmpl[1]+"\n date fin = "+listInfosEmpl[2], Toast.LENGTH_SHORT).show()
-
-               val demandeE = AjouterEmploye().execute(listInfosEmpl)
+               val demandeE = AjouterEmploye().execute(id.toString(),dateD,dateF,nbr.toString())
 
 
             }
@@ -357,6 +353,10 @@ class MonChantier : AppCompatActivity() {
 
         //button click to show dialog
         ajoutMateriel.setOnClickListener {
+            var dateD:String=""
+            var dateF:String=""
+            var type:String=""
+            var detail:String=""
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_materiel, null)
             //AlertDialogBuilder
@@ -368,6 +368,7 @@ class MonChantier : AppCompatActivity() {
             //Spinner
             val spinnerM = mDialogView.findViewById<Spinner>(R.id.spinnerM)
 
+
             //Remplire Spinner
             val adapter: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listMateriels)
 
@@ -375,10 +376,7 @@ class MonChantier : AppCompatActivity() {
             spinnerM.adapter = adapter
 
 
-            //button valider
-            mDialogView.button.setOnClickListener {
-                Toast.makeText(this, spinnerM.selectedItem.toString(), Toast.LENGTH_SHORT).show()
-            }
+
 
             //date Début Picker Btn
             val dateDBtn = mDialogView.findViewById<Button>(R.id.dateDMatBtn)
@@ -395,6 +393,7 @@ class MonChantier : AppCompatActivity() {
                         DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                             //affichage de la date selectionné
                             dateDBtn.text = dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+                            dateD = dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
                             dateDBtn.textSize = 12F
                         }, year, month, day
                 )
@@ -416,12 +415,39 @@ class MonChantier : AppCompatActivity() {
                         DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                             //affichage de la date selectionné
                             dateFBtn.text = dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+                            dateF = dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
                             dateFBtn.textSize = 12F
                         }, year, month, day
                 )
                 mDatepickerFMat!!.show()
             }
 
+
+
+            //button valider
+            mDialogView.button.setOnClickListener {
+                type=spinnerM.selectedItem.toString()
+                detail= mDialogView.comnt.text.toString()
+
+
+                var id:Int=0
+                for (i in 0..(listM!!.size) - 1) {
+
+                    val name = jsonArray3.getJSONObject(i).getString("name").toString()
+
+                    if(name==type)
+                    {
+                        id=jsonArray3.getJSONObject(i).getString("id").toInt()
+                        // Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
+
+                    }
+
+                }
+
+                val demandeM = AjouterMateriel().execute(id.toString(),dateD,dateF,detail)
+
+
+            }
             //show dialog
             val mAlertDialog = mBuilder.show()
         }
@@ -694,7 +720,7 @@ class MonChantier : AppCompatActivity() {
                         ),
                         object : java.util.HashMap<Any,Any>() {
                             init {
-                                put("fields", asList("name"))
+                                put("fields", asList("name","id"))
                                 //put("limit", 5);
                             }
                         }
@@ -918,7 +944,7 @@ class MonChantier : AppCompatActivity() {
 
 
 
-    class AjouterEmploye : AsyncTask<List<Any>, Void, List<Any>?>() {
+    class AjouterEmploye : AsyncTask<String, Void,List<Any>?>(){
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
@@ -930,7 +956,7 @@ class MonChantier : AppCompatActivity() {
         var idJob:Int=0
 
         @SuppressLint("NewApi")
-        override fun doInBackground(vararg infos: List<Any>?): List<Any>? {
+        override fun doInBackground(vararg infos:String): List<Any>? {
             var client = XmlRpcClient()
             var common_config = XmlRpcClientConfigImpl()
             try {
@@ -961,29 +987,28 @@ class MonChantier : AppCompatActivity() {
                 }
 
 
-for(i in infos)
-{
-    println("************************  datebbb = $i")
 
-}
-
-
-                    dateD = infos.get(1).toString()
-                println("************************  datebbb = ${infos[1]}")
-                println("************************  date = $dateD")
+    println("************************  datebbb = ${infos[1]}")
 
 
 
+                idJob = infos[0].toInt()
+                dateD = infos[1]
+                dateF = infos[2]
+                nbr =infos[3].toInt()
 
-             /*   var id: Int = models.execute(
+
+
+
+                var id: Int = models.execute(
                     "execute_kw", asList(
                         db, uid, password,
                         "demande.appro_personnel", "create",
                         asList(object : java.util.HashMap<Any, Any>() {
                             init {
                                 put("chantier_id", 2)
-                                put("date_debut", infos.get(1)!!)
-                                put("date_fin", infos.get(2)!!)
+                                put("date_debut", dateD)
+                                put("date_fin", dateF)
 
                             }
                         })
@@ -999,13 +1024,13 @@ for(i in infos)
                             init {
                                 put("chantier_id", 2)
                                 put("demande_appro_personnel_id",id)
-                                put("qte", infos.get(3)!!)
-                                put("job_id",infos.get(0)!!)
+                                put("qte", nbr)
+                                put("job_id",idJob)
 
                             }
                         })
                     ))as Int
-                println("************************  liste des données = $id1")*/
+                println("************************  liste des données = $id1")
             } catch (e: MalformedURLException) {
                 Log.d(
                     "MalformedURLException",
@@ -1019,7 +1044,97 @@ for(i in infos)
         }
     }
 
+
+    class AjouterMateriel : AsyncTask<String, Void,List<Any>?>(){
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+
+        var dateD:String=""
+        var dateF:String=""
+        var detail:String=""
+        var idM:Int=0
+
+        @SuppressLint("NewApi")
+        override fun doInBackground(vararg infos:String): List<Any>? {
+            var client = XmlRpcClient()
+            var common_config = XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL =
+                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int = client.execute(
+                    common_config, "authenticate", asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(
+                                    String.format(
+                                        "%s/xmlrpc/2/object",
+                                        "http://sogesi.hopto.org:7013"
+                                    )
+                                )
+                            }
+                        })
+                    }
+                }
+
+
+
+                println("************************  datebbb = ${infos[1]}")
+
+
+
+                idM = infos[0].toInt()
+                dateD = infos[1]
+                dateF = infos[2]
+                detail =infos[3]
+
+
+
+
+                var id: Int = models.execute(
+                    "execute_kw", asList(
+                        db, uid, password,
+                        "demande.appro_mat", "create",
+                        asList(object : java.util.HashMap<Any, Any>() {
+                            init {
+                                put("chantier_id", 2)
+                                put("type_materiel_id", idM)
+                                put("date_debut", dateD)
+                                put("date_fin", dateF)
+                                put("detail_mat", detail)
+
+                            }
+                        })
+                    )
+                ) as Int
+                println("************************  liste des données = $id")
+
+
+            } catch (e: MalformedURLException) {
+                Log.d(
+                    "MalformedURLException",
+                    "*********************************************************"
+                )
+                Log.d("MalformedURLException", e.toString())
+            } catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
     }
+
+
+}
 
 
 
