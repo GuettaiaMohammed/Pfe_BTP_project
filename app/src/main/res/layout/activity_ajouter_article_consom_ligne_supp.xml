@@ -83,7 +83,7 @@
                             app:fontFamily="sans-serif" />
 
                         <Spinner
-                            android:id="@+id/spinnerA"
+                            android:id="@+id/spinnerALigneSupp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
@@ -105,7 +105,7 @@
                             app:fontFamily="sans-serif" />
 
                         <Spinner
-                            android:id="@+id/spinnerUniteDMesure"
+                            android:id="@+id/spinnerUniteDMesureL"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />

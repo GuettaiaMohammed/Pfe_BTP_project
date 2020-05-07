@@ -39,9 +39,7 @@ class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         for (fragment in fragmentList) {
             transaction.remove(fragment)
         }
-        for(title in fragmentTitles){
-            fragmentTitles.remove(title)
-        }
+
         fragmentList.clear()
         fragmentTitles.clear()
         transaction.commitAllowingStateLoss()
