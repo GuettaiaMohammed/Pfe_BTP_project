@@ -43,4 +43,5 @@
     <string name="login">Login</string>
     <string name="description">Description</string>
     <string name="numero">N°</string>
+    <string name="QteConsom">Quantité consommé</string>
 </resources>

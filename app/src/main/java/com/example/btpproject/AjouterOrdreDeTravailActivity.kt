@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ListView
 import android.widget.Spinner
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
@@ -24,6 +25,10 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager
     private val listLot = arrayListOf<String>()
+
+    private var articleAdapter: ArticleLigneSuppAdapter? = null
+    private var listViewArticle: ListView? = null
+    private var listArticles: ArrayList<ArticleOT>? = null
 
     val db = "BTP_pfe"
     val username = "admin"
