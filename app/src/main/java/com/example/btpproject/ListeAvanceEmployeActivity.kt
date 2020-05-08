@@ -1,5 +1,6 @@
 package com.example.btpproject
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.AsyncTask
@@ -110,7 +111,14 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
         })
 
 
+
         fabAvance.setOnClickListener {
+
+            var date:String=""
+            var idCh:Int=2
+            var idE:Int=0
+            var empl:String=""
+            var montant:String=""
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_avance_employe, null)
             //AlertDialogBuilder
@@ -131,9 +139,7 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
 
 
             //button valider
-            mDialogView.button.setOnClickListener{
-                Toast.makeText(this,spinnerE.selectedItem.toString()+" "+" Le montant: "+mDialogView.montant.text ,Toast.LENGTH_SHORT).show()
-            }
+
 
             //date Début Picker Btn
             val dateBtn = mDialogView.findViewById<Button>(R.id.dateDAvBtn)
@@ -152,11 +158,36 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
                         dateBtn.setText(
                             dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
                         )
+                        date=dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year
+
                         dateBtn.textSize = 12F
                     }, year, month, day
                 )
 
                 mDatepicker!!.show()
+            }
+            mDialogView.button.setOnClickListener{
+                Toast.makeText(this,spinnerE.selectedItem.toString()+" "+" Le montant: "+mDialogView.montant.text ,Toast.LENGTH_SHORT).show()
+
+                empl=spinnerE.selectedItem.toString()
+                montant=mDialogView.montant.text.toString()
+
+                for (i in 0..(listEmp!!.size) - 1) {
+
+                    val name = jsonArray3.getJSONObject(i).getString("name").toString()
+
+if(name==empl)
+{
+    idE=jsonArray3.getJSONObject(i).getString("id").toInt()
+
+}
+
+
+                }
+                val demandeAvance = AjouterDemandeAvance().execute(idCh.toString(),date,idE.toString(),montant)
+
+
+
             }
 
             //show dialog
@@ -373,13 +404,13 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
                     "hr.employee", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("id", "!=", 0)
+                            Arrays.asList("id", ">", 0)
 
                         )
                     ),
                     object : HashMap<Any, Any>() {
                         init {
-                            put("fields", Arrays.asList("name"))
+                            put("fields", Arrays.asList("name","id"))
                             //put("limit", 5);
                         }
                     }
@@ -402,4 +433,97 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
 
 
     }
+
+
+
+    class AjouterDemandeAvance : AsyncTask<String, Void,List<Any>?>(){
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        var idE:Int=0
+        var dateD:String=""
+        var idCh:Int=0
+        var montant:String=""
+
+        @SuppressLint("NewApi")
+        override fun doInBackground(vararg infos:String): List<Any>? {
+            var client = XmlRpcClient()
+            var common_config = XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL =
+                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int = client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(
+                                    String.format(
+                                        "%s/xmlrpc/2/object",
+                                        "http://sogesi.hopto.org:7013"
+                                    )
+                                )
+                            }
+                        })
+                    }
+                }
+
+
+
+                println("************************  datebbb = ${infos[1]}")
+
+
+
+               idCh = infos[0].toInt()
+                dateD = infos[1]
+               idE=infos[2].toInt()
+                montant=infos[3]
+
+
+
+
+
+
+
+
+                var id1: Int = models.execute(
+                    "execute_kw", Arrays.asList(
+                        db, uid, password,
+                        "demande.avance", "create",
+                        Arrays.asList(object : HashMap<Any, Any>() {
+                            init {
+                                put("chantier_id", idCh)
+                                put("employee_id", idE)
+                                put("date", dateD)
+                                put("mantant_demande",montant)
+                                put("mantant_valide","0")
+
+
+                            }
+                        })
+                    )
+                )as Int
+                println("************************  liste des données = $id1")
+            } catch (e: MalformedURLException) {
+                Log.d(
+                    "MalformedURLException",
+                    "*********************************************************"
+                )
+                Log.d("MalformedURLException", e.toString())
+            } catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+    }
+
 }
