@@ -336,6 +336,8 @@ class ListeEmployeActivity : AppCompatActivity() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
+  val ids:ArrayList<Int> =ArrayList<Int>()
+        var listeEmp = ArrayList<Employe>()
 
         override fun doInBackground(vararg url: String?): List<Any>? {
             var client =  XmlRpcClient()
@@ -366,32 +368,64 @@ class ListeEmployeActivity : AppCompatActivity() {
                     }
                 }
 
-                //liste des chantier
-                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+
+                val listId = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "demande.appro_personnel", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+
+                            Arrays.asList("state", "=","termine" )
+
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("id")
+
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+                println("**************************  champs chantier = $listId")
+
+
+                val jsonArray1 = JSONArray(listId)
+
+                for(i in 0..(listId.size)-1) {
+                    var idD = jsonArray1.getJSONObject(i).getString("id").toInt()
+//
+
+
+
+                    val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                         db, uid, password,
                         "ligne.demande.appro_personnel", "search_read",
                         Arrays.asList(
+                            Arrays.asList(
                                 Arrays.asList(
-                                        Arrays.asList("demande_appro_personnel_id", "=", "PISCINE SEMI OLYMPIQUE REGHAIA"),
-                                    Arrays.asList("employee_ids", "=!",null )
+                                    "demande_appro_personnel_id",
+                                    "=",idD)
 
-                                )
+                            )
                         ),
                         object : HashMap<Any, Any>() {
                             init {
                                 put(
-                                        "fields",
-                                        Arrays.asList("job_id","employee_ids")
+                                    "fields",
+                                    Arrays.asList("job_id", "employee_ids")
 
                                 )
                             }
                         }
-                )) as Array<Any>)
-                println("**************************  champs chantier = $list")
+                    )) as Array<Any>)
+                    println("**************************  champs chantier = $list")
 
 
                 val jsonArray = JSONArray(list)
-                var listeEmp = ArrayList<Employe>()
+
 
                 for(i in 0..(list.size)-1){
                     var metierObj = jsonArray.getJSONObject(i).getString("job_id").toString()
@@ -431,7 +465,7 @@ class ListeEmployeActivity : AppCompatActivity() {
 
                     listeEmp!!.add(Employe(nomEmp, met2))
 
-                }
+                }}
                 return listeEmp
 
             }catch (e: MalformedURLException) {

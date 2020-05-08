@@ -18,6 +18,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import com.example.btpproject.FonctionsXmlRPC.Companion.getMany2One
+import kotlinx.android.synthetic.main.activity_ajouter_article.*
 import kotlinx.android.synthetic.main.activity_ajouter_article.view.*
 import kotlinx.android.synthetic.main.activity_ajouter_article.view.button
 import kotlinx.android.synthetic.main.activity_ajouter_employe.view.*
@@ -30,6 +31,7 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
 import org.json.JSONArray
 import java.net.MalformedURLException
 import java.net.URL
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Arrays.asList
 import kotlin.collections.ArrayList
@@ -210,6 +212,13 @@ class MonChantier : AppCompatActivity() {
 
             //button click to show dialog ajout d'article
         ajoutArticle.setOnClickListener {
+            var article:String=""
+            var nameA:String=""
+            var qte:String=""
+            var prix:String=""
+            var idA:Int=0
+            var idU:Int=0
+            var ref:String="piscine_semi_olympique_ref"
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_article, null)
             //AlertDialogBuilder
@@ -220,22 +229,58 @@ class MonChantier : AppCompatActivity() {
             val mAlertDialog = mBuilder.show()
             //Spinner
             val spinnerA = mDialogView.findViewById<Spinner>(R.id.spinnerA)
-            val spinnerU = mDialogView.findViewById<Spinner>(R.id.spinnerUniteDMesure)
+
             //Remplire Spinner
             val adapter: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listArticles)
             val adapter1: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listUnites)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerA.adapter = adapter
-            adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerU.adapter = adapter1
+
 
             //button valider
             mDialogView.button.setOnClickListener {
-                Toast.makeText(this, spinnerA.selectedItem.toString() + " " + " La quantité : " + mDialogView.qte.text + " " + spinnerU.selectedItem.toString(), Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, spinnerA.selectedItem.toString() + " " + " La quantité : " + mDialogView.qte.text + " " + spinnerU.selectedItem.toString(), Toast.LENGTH_SHORT).show()
+                article=spinnerA.selectedItem.toString()
+
+                qte= mDialogView.qte.text.toString()
+
+
+
+
+                for (i in 0..(listArticle!!.size) - 1) {
+
+                    val name = jsonArray8.getJSONObject(i).getString("name").toString()
+
+
+                    if(name==article)
+                    {
+
+                        idA=jsonArray8.getJSONObject(i).getString("id").toInt()
+                        prix=jsonArray8.getJSONObject(i).getString("standard_price").toString()
+
+
+                        var typeObj =
+                            jsonArray8.getJSONObject(i).getString("uom_id").toString()
+
+                     var type2 = typeObj.get(1).toString()
+
+                       idU=type2.toInt()
+
+                        nameA=name
+
+                    }
+
+                }
+                val c: SimpleDateFormat = SimpleDateFormat("dd/M/yyyy")
+                var d=c.format((Date()))
+
+
+
+
+            val demandeA = AjouterArticle().execute(ref,idA.toString(),idU.toString(),qte,d,nameA,prix)
 
 
             }
-
 
         }
 
@@ -852,7 +897,7 @@ class MonChantier : AppCompatActivity() {
                         ),
                         object : java.util.HashMap<Any,Any>() {
                             init {
-                                put("fields", asList("name"))
+                                put("fields", asList("name","id","standard_price","uom_id"))
                                 //put("limit", 5);
                             }
                         }
@@ -918,7 +963,7 @@ class MonChantier : AppCompatActivity() {
                         ),
                         object : java.util.HashMap<Any,Any>() {
                             init {
-                                put("fields", asList("name"))
+                                put("fields", asList("name","id"))
                                 //put("limit", 5);
                             }
                         }
@@ -1120,6 +1165,130 @@ class MonChantier : AppCompatActivity() {
                 println("************************  liste des données = $id")
 
 
+            } catch (e: MalformedURLException) {
+                Log.d(
+                    "MalformedURLException",
+                    "*********************************************************"
+                )
+                Log.d("MalformedURLException", e.toString())
+            } catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+    }
+
+
+    class AjouterArticle : AsyncTask<String, Void,List<Any>?>(){
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+var idDemnd:Int=0
+        var ref:String=""
+        var dateD:String=""
+        var nomA:String=""
+        var prix:String=""
+        var idA:Int=0
+        var idU:Int=0
+        var qte:Int=0
+
+        @SuppressLint("NewApi")
+        override fun doInBackground(vararg infos:String): List<Any>? {
+            var client = XmlRpcClient()
+            var common_config = XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL =
+                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int = client.execute(
+                    common_config, "authenticate", asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(
+                                    String.format(
+                                        "%s/xmlrpc/2/object",
+                                        "http://sogesi.hopto.org:7013"
+                                    )
+                                )
+                            }
+                        })
+                    }
+                }
+
+
+
+                println("************************  datebbb = ${infos[1]}")
+
+
+
+              ref = infos[0]
+                idA= infos[1].toInt()
+                idU= infos[2].toInt()
+                qte= infos[3].toInt()
+                dateD = infos[4]
+                nomA=infos[5]
+                prix=infos[6]
+
+
+
+
+
+
+
+                var liste: List<*> = java.util.ArrayList<Any>()
+
+                liste = asList(*models.execute("execute_kw", asList(
+                    db, uid, password,
+                    "purchase.order", "search_read",
+                    asList(asList(
+                        asList("origin", "=", ref),
+                        asList("state","=","draft")
+                    )
+                    ),
+                    object : java.util.HashMap<Any,Any>() {
+                        init {
+                            put("fields", asList("id"))
+                            //put("limit", 5);
+                        }
+                    }
+                )) as Array<Any>)
+                println("************************  liste des données = $liste")
+                val json=JSONArray(liste)
+                for (i in 0..(liste.size)-1)
+                {
+                    idDemnd=json.getJSONObject(i).getString("id").toInt()
+
+                }
+
+
+                var id1: Int = models.execute(
+                    "execute_kw", asList(
+                        db, uid, password,
+                        "purchase.order.line", "create",
+                        asList(object : java.util.HashMap<Any, Any>() {
+                            init {
+                                put("order_id", idDemnd)
+                                put("product_id", idA)
+                                put("name",nomA)
+                                put("product_uom",idU)
+                                put("product_qty",qte)
+                                put("date_planned",dateD)
+                                put("price_unit",prix)
+
+
+                            }
+                        })
+                    ))as Int
+                println("************************  liste des données = $id1")
             } catch (e: MalformedURLException) {
                 Log.d(
                     "MalformedURLException",

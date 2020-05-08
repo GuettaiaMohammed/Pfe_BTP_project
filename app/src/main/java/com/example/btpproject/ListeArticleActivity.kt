@@ -21,6 +21,7 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
 import org.json.JSONArray
 import java.net.MalformedURLException
 import java.net.URL
+import java.text.SimpleDateFormat
 import java.util.*
 
 class ListeArticleActivity : AppCompatActivity() {
@@ -109,6 +110,13 @@ class ListeArticleActivity : AppCompatActivity() {
 
         //button click to show dialog
         fabArticle.setOnClickListener {
+            var article:String=""
+            var nameA:String=""
+            var qte:String=""
+            var prix:String=""
+            var idA:Int=0
+            var idU:Int=0
+            var ref:String="piscine_semi_olympique_ref"
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_article, null)
             //AlertDialogBuilder
@@ -118,18 +126,55 @@ class ListeArticleActivity : AppCompatActivity() {
 
             //Spinner
             val spinnerA = mDialogView.findViewById<Spinner>(R.id.spinnerA)
-            val spinnerU = mDialogView.findViewById<Spinner>(R.id.spinnerUniteDMesure)
+
             //Remplire Spinner
             val adapter: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listArticles)
             val adapter1: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listUnites)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerA.adapter = adapter
-            adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerU.adapter = adapter1
+
 
             //button valider
             mDialogView.button.setOnClickListener {
-                Toast.makeText(this, spinnerA.selectedItem.toString() + " " + " La quantité : " + mDialogView.qte.text + " " + spinnerU.selectedItem.toString(), Toast.LENGTH_SHORT).show()
+                article=spinnerA.selectedItem.toString()
+
+                qte= mDialogView.qte.text.toString()
+
+
+
+
+                for (i in 0..(listArticle!!.size) - 1) {
+
+                    val name = jsonArray5.getJSONObject(i).getString("name").toString()
+
+
+                    if(name==article)
+                    {
+
+                        idA=jsonArray5.getJSONObject(i).getString("id").toInt()
+                        prix=jsonArray5.getJSONObject(i).getString("standard_price").toString()
+
+
+                        var typeObj =
+                            jsonArray5.getJSONObject(i).getString("uom_id").toString()
+
+                        var type2 = typeObj.get(1).toString()
+
+                        idU=type2.toInt()
+
+                        nameA=name
+
+                    }
+
+                }
+                val c: SimpleDateFormat = SimpleDateFormat("dd/M/yyyy")
+                var d=c.format((Date()))
+
+
+
+
+                val demandeA = MonChantier.AjouterArticle()
+                    .execute(ref,idA.toString(),idU.toString(),qte,d,nameA,prix)
 
 
             }
