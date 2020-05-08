@@ -132,7 +132,7 @@
                             android:layout_weight="1">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/qte"
+                                android:id="@+id/qteConsomArtLigneSuppEt"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="27dp"
@@ -157,7 +157,7 @@
                         android:orientation="horizontal">
 
                         <Button
-                            android:id="@+id/button"
+                            android:id="@+id/validAjtArticleLigneSuppBtn"
                             android:layout_width="120dp"
                             android:layout_height="40dp"
                             android:layout_weight="1"

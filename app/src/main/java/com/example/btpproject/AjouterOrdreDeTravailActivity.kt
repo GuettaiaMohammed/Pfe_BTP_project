@@ -93,7 +93,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                     //Ajouter les fragments
                     adapter.addFragment(FragmentListeLigneLotAjouteOt(idLot.toInt()), "Lignes")
                     adapter.addFragment(FragmentListeArticlesAjoutOt(idLot.toInt()), "Articles")
-                    adapter.addFragment(FragmentListeLigneSuppAjoutOt(), "Lignes Supp")
+                    adapter.addFragment(FragmentListeLigneSuppAjoutOt(idLot.toInt()), "Lignes Supp")
 
                 }
                 //Adapter setup

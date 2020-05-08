@@ -6,12 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import android.widget.Button
-import android.widget.Spinner
+import com.google.android.material.textfield.TextInputEditText
 import org.apache.xmlrpc.XmlRpcException
 import org.apache.xmlrpc.client.XmlRpcClient
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
@@ -22,7 +20,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class FragmentListeLigneSuppAjoutOt : Fragment() {
+class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
     internal val url = "http://sogesi.hopto.org:7013/"
     internal val db = "BTP_pfe"
     internal val username = "admin"
@@ -41,6 +39,7 @@ class FragmentListeLigneSuppAjoutOt : Fragment() {
     //les listes des spinner
     private val listArticlesS = arrayListOf<String>()
     private val listUnitesS = arrayListOf<String>()
+    private val listLigneLotS = arrayListOf<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,14 +61,19 @@ class FragmentListeLigneSuppAjoutOt : Fragment() {
 
         listArticlesS.add("")
         listUnitesS.add("")
+        listLigneLotS.add("")
 
-        val conn4=Article().execute(url)
-        val conn5=Unite().execute(url)
+        val conn4 = Article().execute(url)
+        val conn5 = Unite().execute(url)
+        val connLigneLot = LignesLots().execute(idLot)
+
 
         //liste articles
         val listArticle=conn4.get()
         //liste des unités
         val listU=conn5.get()
+        //liste des lignes lot
+        val listLigneLot = connLigneLot.get()
 
         //récupéré lles données de l'objet JSON
         val jsonArray8: JSONArray
@@ -77,22 +81,27 @@ class FragmentListeLigneSuppAjoutOt : Fragment() {
         for (i in 0..(listArticle!!.size) - 1) {
 
             val name = jsonArray8.getJSONObject(i).getString("name").toString()
-
-
             listArticlesS.add(name)
 
         }
-        val jsonArray6 = JSONArray(listU)
 
         //récupéré lles données de l'objet JSON
+        val jsonArray6 = JSONArray(listU)
         for (i in 0..(listU!!.size) - 1) {
 
             val name = jsonArray6.getJSONObject(i).getString("name").toString()
-
             listUnitesS.add(name)
-
         }
 
+        //récupéré lles données de l'objet JSON
+        val jsonLigneLot = JSONArray(listLigneLot)
+        for (i in 0..(listLigneLot!!.size) - 1) {
+
+            val name = jsonLigneLot.getJSONObject(i).getString("name").toString()
+            listLigneLotS.add(name)
+        }
+
+        // Page Ajout Ligne supplémentaire
         val ajoutLigneSupp: Button = view.findViewById(R.id.ajoutLigneSuppBtn)
         ajoutLigneSupp.setOnClickListener {
             //Inflate the dialog with custom view
@@ -101,40 +110,71 @@ class FragmentListeLigneSuppAjoutOt : Fragment() {
             val mBuilder = AlertDialog.Builder(view.context)
                 .setView(mDialogView)
 
+            //spinner Unité
+            val spinnerU = mDialogView.findViewById<Spinner>(R.id.spinnerUniteDMesureLigneSupp)
+            val adapter1: ArrayAdapter<String> = ArrayAdapter<String>(mBuilder.context, android.R.layout.simple_spinner_item, listUnitesS)
+            spinnerU.adapter = adapter1
+
+            //spinner LigneLot
+            val spinnerLL = mDialogView.findViewById<Spinner>(R.id.spinnerLigneParentLigneSupp)
+            val adapterLL: ArrayAdapter<String> = ArrayAdapter<String>(mBuilder.context, android.R.layout.simple_spinner_item, listLigneLotS)
+            spinnerLL.adapter = adapterLL
+
             listViewArticle = mDialogView.findViewById(R.id.listeArtConsomLigneSuppOt)
             articleAdapter = ArticleLigneSuppAdapter(mBuilder.context, 0)
 
             listArticles = ArrayList()
-            listArticles!!.add(ArticleOT("Ligne","Article", "Unité", "Qte consomé"))
-            listArticles!!.add(ArticleOT("","béton", "m²", "30 m²"))
+            articleAdapter!!.add(ArticleOT("Ligne","Article", "Unité", "Qte consomé"))
 
-            articleAdapter!!.addAll(listArticles)
-            listViewArticle!!.adapter = articleAdapter
 
-            //Boutton ajouter un article consommé pour une ligen supplémentaire
-            val articleConsomBtn = mDialogView.findViewById<Button>(R.id.ajouterArticleConsomLigneSuppBtn)
-            articleConsomBtn.setOnClickListener {
-                // afficher l'ajout de l'article consommé
-                val mDialogView2 = LayoutInflater.from(mBuilder.context).inflate(R.layout.activity_ajouter_article_consom_ligne_supp, null)
-                //AlertDialogBuilder
-                val mBuilder2 = AlertDialog.Builder(mBuilder.context)
-                    .setView(mDialogView2)
 
-                //Spinner Ajouté article consommé
-                val spinnerA = mDialogView2.findViewById<Spinner>(R.id.spinnerALigneSupp)
-                val spinnerU = mDialogView2.findViewById<Spinner>(R.id.spinnerUniteDMesureL)
-                //Remplire Spinner
-                val adapter: ArrayAdapter<String> = ArrayAdapter<String>(mBuilder2.context, android.R.layout.simple_spinner_item, listArticlesS)
-                val adapter1: ArrayAdapter<String> = ArrayAdapter<String>(mBuilder2.context, android.R.layout.simple_spinner_item, listUnitesS)
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinnerA.adapter = adapter
-                adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinnerU.adapter = adapter1
-
-                mBuilder2.show()
-
+            val btnValid = mDialogView.findViewById<Button>(R.id.validAjtLigneSuppBtn)
+            btnValid.setOnClickListener {
+                Toast.makeText(mBuilder.context, "Clique !!!", Toast.LENGTH_SHORT).show()
             }
 
+                //Page ajouter un article consommé pour une ligen supplémentaire
+                val articleConsomBtn = mDialogView.findViewById<Button>(R.id.ajouterArticleConsomLigneSuppBtn)
+                articleConsomBtn.setOnClickListener {
+                    // afficher l'ajout de l'article consommé
+                    val mDialogView2 = LayoutInflater.from(mBuilder.context).inflate(R.layout.activity_ajouter_article_consom_ligne_supp, null)
+                    //AlertDialogBuilder
+                    val mBuilder2 = AlertDialog.Builder(mBuilder.context)
+                        .setView(mDialogView2)
+                    val option: AlertDialog = mBuilder2.create()
+
+                    //quantité consommé Edit text
+                    val qteConsET = mDialogView2.findViewById<TextInputEditText>(R.id.qteConsomArtLigneSuppEt)
+
+                    //Spinner Ajouté article consommé
+                    val spinnerA = mDialogView2.findViewById<Spinner>(R.id.spinnerALigneSupp)
+                    val spinnerUU = mDialogView2.findViewById<Spinner>(R.id.spinnerUniteDMesureL)
+                    //Remplire Spinner
+                    val adapter: ArrayAdapter<String> = ArrayAdapter<String>(mBuilder2.context, android.R.layout.simple_spinner_item, listArticlesS)
+                    val adapter1: ArrayAdapter<String> = ArrayAdapter<String>(mBuilder2.context, android.R.layout.simple_spinner_item, listUnitesS)
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    spinnerA.adapter = adapter
+                    adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    spinnerUU.adapter = adapter1
+
+                        //Boutton valider Ajout d'un Article pour une ligne supplémentaire
+                        val validAjtArticleBtn = mDialogView2.findViewById<Button>(R.id.validAjtArticleLigneSuppBtn)
+                        validAjtArticleBtn.setOnClickListener {
+                            Toast.makeText(mBuilder2.context, "Clique !!!", Toast.LENGTH_SHORT).show()
+                            val article = spinnerA.selectedItem.toString()
+                            val unite = spinnerUU.selectedItem.toString()
+                            val qteConsom = qteConsET.text.toString()
+
+                            articleAdapter!!.add(ArticleOT("",article, unite, qteConsom))
+                            option.cancel()
+                        }
+
+                    mBuilder2.show()
+
+                }
+
+
+            listViewArticle!!.adapter = articleAdapter
 
             val mAlertDialog = mBuilder.show()
 
@@ -266,6 +306,69 @@ class FragmentListeLigneSuppAjoutOt : Fragment() {
 
 
                 return liste
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+    }
+
+    class LignesLots : AsyncTask<Int, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg id: Int?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+
+
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des chantier
+                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "ligne.lot", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("lot_id", "=", id)
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("name")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+
+                if(list.isNotEmpty()) {
+                    return list
+                }
 
             }catch (e: MalformedURLException) {
                 Log.d("MalformedURLException", "*********************************************************")

@@ -21,11 +21,13 @@ class FragmentLigneSuppAdapterAjoutOt  (context: Context, resource: Int) : Array
         val description = v.findViewById<TextView>(R.id.descriptionLigneSuppAjtOTTV2)
         val numero = v.findViewById<TextView>(R.id.numLigneSuppAjtOTTV2)
         val unite = v.findViewById<TextView>(R.id.uniteLigneSuppAjtOTTV2)
+        val qte = v.findViewById<TextView>(R.id.qteRealisLigneSuppAjtOtTV)
 
 
         description.text = ligne.description
         numero.text = ligne.numero
         unite.text = ligne.unite
+        qte.text = ligne.qteRealise
 
 
 
