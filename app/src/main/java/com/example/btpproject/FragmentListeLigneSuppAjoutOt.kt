@@ -1,5 +1,6 @@
 package com.example.btpproject
 
+import android.content.DialogInterface
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
@@ -57,7 +58,7 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
         ligneSuppAdapter = FragmentLigneSuppAdapterAjoutOt(view.context,0)
 
         ligneSupps = ArrayList()
-        ligneSupps!!.add(LigneSupplementaireOT("Ligne supplementaire", "0.1.3", "m²", "0"))
+        ligneSuppAdapter!!.add(LigneSupplementaireOT("Description", "N°", "Ligne parente", "Unité", "Qte rélalisé"))
 
         listArticlesS.add("")
         listUnitesS.add("")
@@ -122,15 +123,31 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
 
             listViewArticle = mDialogView.findViewById(R.id.listeArtConsomLigneSuppOt)
             articleAdapter = ArticleLigneSuppAdapter(mBuilder.context, 0)
-
-            listArticles = ArrayList()
             articleAdapter!!.add(ArticleOT("Ligne","Article", "Unité", "Qte consomé"))
 
+            val numLS = mDialogView.findViewById<TextInputEditText>(R.id.numLigneSuppET)
+            val descLS = mDialogView.findViewById<TextInputEditText>(R.id.descLigneSuppET)
+            val qteRealLS = mDialogView.findViewById<TextInputEditText>(R.id.qteRealiseLigneSuppET)
 
-
+            val dialog: AlertDialog = mBuilder.create()
+            //valider l'ajout d'un ligne supplémentaire
             val btnValid = mDialogView.findViewById<Button>(R.id.validAjtLigneSuppBtn)
             btnValid.setOnClickListener {
-                Toast.makeText(mBuilder.context, "Clique !!!", Toast.LENGTH_SHORT).show()
+
+                val numeroLigne = numLS.text.toString()
+                val descLigne = descLS.text.toString()
+                val uniteLigne = spinnerU.selectedItem.toString()
+                val ligneParente = spinnerLL.selectedItem.toString()
+                val qteLigne = qteRealLS.text.toString()
+
+                if(numeroLigne != "" && descLigne != "" && uniteLigne != "" && ligneParente != "" && qteLigne != ""){
+                    ligneSuppAdapter!!.add(LigneSupplementaireOT(descLigne, numeroLigne, ligneParente, uniteLigne, qteLigne))
+                    dialog.cancel()
+                }else{
+                    Toast.makeText(mBuilder.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
+                }
+
+
             }
 
                 //Page ajouter un article consommé pour une ligen supplémentaire
@@ -141,7 +158,7 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
                     //AlertDialogBuilder
                     val mBuilder2 = AlertDialog.Builder(mBuilder.context)
                         .setView(mDialogView2)
-                    val option: AlertDialog = mBuilder2.create()
+                    val dialog2: AlertDialog = mBuilder2.create()
 
                     //quantité consommé Edit text
                     val qteConsET = mDialogView2.findViewById<TextInputEditText>(R.id.qteConsomArtLigneSuppEt)
@@ -160,13 +177,16 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
                         //Boutton valider Ajout d'un Article pour une ligne supplémentaire
                         val validAjtArticleBtn = mDialogView2.findViewById<Button>(R.id.validAjtArticleLigneSuppBtn)
                         validAjtArticleBtn.setOnClickListener {
-                            Toast.makeText(mBuilder2.context, "Clique !!!", Toast.LENGTH_SHORT).show()
                             val article = spinnerA.selectedItem.toString()
                             val unite = spinnerUU.selectedItem.toString()
                             val qteConsom = qteConsET.text.toString()
 
-                            articleAdapter!!.add(ArticleOT("",article, unite, qteConsom))
-                            option.cancel()
+                            if(article != "" && unite != "" && qteConsom != "") {
+                                articleAdapter!!.add(ArticleOT("", article, unite, qteConsom))
+                                dialog2.cancel()
+                            }else{
+                                Toast.makeText(mBuilder2.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
+                            }
                         }
 
                     mBuilder2.show()
@@ -180,7 +200,7 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
 
         }
 
-        ligneSuppAdapter!!.addAll(ligneSupps)
+
         listView!!.adapter = ligneSuppAdapter
 
 

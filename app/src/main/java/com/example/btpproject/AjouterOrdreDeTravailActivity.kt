@@ -12,6 +12,7 @@ import android.widget.Spinner
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.textfield.TextInputEditText
 import org.apache.xmlrpc.XmlRpcException
 import org.apache.xmlrpc.client.XmlRpcClient
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
@@ -19,11 +20,17 @@ import org.json.JSONArray
 import java.net.MalformedURLException
 import java.net.URL
 import java.util.*
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import java.text.SimpleDateFormat
+
 
 class AjouterOrdreDeTravailActivity : AppCompatActivity() {
 
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager
+    lateinit var nameOT: TextInputEditText
     private val listLot = arrayListOf<String>()
 
     private var articleAdapter: ArticleLigneSuppAdapter? = null
@@ -49,6 +56,9 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
 
         tabLayout = findViewById(R.id.ajoutOTTabLayout)
         viewPager = findViewById(R.id.ajoutOTViewPager)
+        nameOT = findViewById(R.id.NomOTET)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        nameOT.setText(dateFormat.format(Date()))
         listLot.add("")
 
         //Spinner

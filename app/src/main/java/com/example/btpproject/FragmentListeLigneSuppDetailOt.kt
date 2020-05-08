@@ -28,8 +28,8 @@ class FragmentListeLigneSuppDetailOt: Fragment() {
         ligneSuppAdapter = FragmentLigneSuppAdapterDetailOt(view.context,0)
         ligneSupps = ArrayList()
 
-        ligneSupps!!.add(LigneSupplementaireOT("Descrption", "N°", "Unité", "Qte réalisé"))
-        ligneSupps!!.add(LigneSupplementaireOT("Ligne supplementaire", "0.1.3", "m²", "300"))
+        ligneSupps!!.add(LigneSupplementaireOT("Descrption", "N°","" ,"Unité", "Qte réalisé"))
+        ligneSupps!!.add(LigneSupplementaireOT("Ligne supplementaire", "0.1.3","", "m²", "300"))
 
         ligneSuppAdapter!!.addAll(ligneSupps)
         listView!!.adapter = ligneSuppAdapter
