@@ -120,8 +120,8 @@ class ListeArticleActivity : AppCompatActivity() {
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_article, null)
             //AlertDialogBuilder
-            val mBuilder = AlertDialog.Builder(this)
-                .setView(mDialogView)
+            val mBuilder = AlertDialog.Builder(this).create()
+                mBuilder.setView(mDialogView)
             //.setTitle("Login Form")
 
             //Spinner
@@ -171,10 +171,17 @@ class ListeArticleActivity : AppCompatActivity() {
                 var d=c.format((Date()))
 
 
+                if (qte != "" && article !="") {
+                    val demandeA = MonChantier.AjouterArticle()
+                        .execute(ref,idA.toString(),idU.toString(),qte,d,nameA,prix)
 
+                    mBuilder.dismiss()
+                }else
+                {
 
-                val demandeA = MonChantier.AjouterArticle()
-                    .execute(ref,idA.toString(),idU.toString(),qte,d,nameA,prix)
+                    Toast.makeText(mBuilder.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
+                }
+
 
 
             }

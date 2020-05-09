@@ -141,8 +141,8 @@ class ListeMaterielsActivity : AppCompatActivity() {
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_materiel, null)
             //AlertDialogBuilder
-            val mBuilder = AlertDialog.Builder(this)
-                .setView(mDialogView)
+            val mBuilder = AlertDialog.Builder(this).create()
+                mBuilder.setView(mDialogView)
             //.setTitle("Login Form")
 
             //date Début Picker Btn
@@ -229,10 +229,15 @@ class ListeMaterielsActivity : AppCompatActivity() {
 
                 }
 
-                val demandeM = MonChantier.AjouterMateriel()
-                    .execute(id.toString(),dateD,dateF,detail)
+                if(type != "" && detail != "" && dateD != "" && dateF != "") {
+                    val demandeM = MonChantier.AjouterMateriel()
+                        .execute(id.toString(), dateD, dateF, detail)
+                    mBuilder.dismiss()
+                }else{
 
 
+                    Toast.makeText(mBuilder.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
+                }
 
             }
 

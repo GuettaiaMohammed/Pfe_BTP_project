@@ -1,5 +1,6 @@
 package com.example.btpproject
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
@@ -62,6 +63,7 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
 
         val i=intent
         val id=i.getIntExtra("id",0)
+        println(" ************** id = $id")
         // Toast.makeText(this, id.toString() , Toast.LENGTH_SHORT).show()
         var conn = Connexion().execute(id)
         var details  = conn.get()
@@ -71,12 +73,13 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
 
         val jsonArray = JSONArray(details)
 
-
+var idE:String=""
         for (i in 0..(details!!.size) - 1) {
             var Obj =
                 jsonArray.getJSONObject(i).getString("employee_id").toString()
             var nom = Obj.split("\"")[1]
             var nom2 = nom.split("\"")[0]
+            idE=Obj.get(1).toString()
             var Obj2 =
                 jsonArray.getJSONObject(i).getString("unite").toString()
             var u = Obj2.split("\"")[1]
@@ -104,7 +107,7 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
         qteAdapter = QteRealiseAdapter(applicationContext, 0)
 
         mesQtes = ArrayList();
-        (mesQtes as ArrayList<QuantiteRealise>).add(QuantiteRealise("Date",  "Qantité réalisé", "Nb H Travaillé", "Montant pris"))
+        (mesQtes as ArrayList<QuantiteRealise>).add(QuantiteRealise("Date",  "Qantitée réalisée", "Nb H Travaillé"))
 
         for (i in 0..(Listdetails!!.size) - 1) {
             var Obj =
@@ -117,7 +120,7 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
             val montant = jsonArray1.getJSONObject(i).getString("montant_pris").toString()
             val nbHtravail = jsonArray1.getJSONObject(i).getString("nb_h_travail").toString()
 
-            mesQtes!!.add(QuantiteRealise(date,qteRealise+" "+unite,nbHtravail,montant+" "+nom2))
+            mesQtes!!.add(QuantiteRealise(date,qteRealise+" "+unite,nbHtravail))
 
         }
 
@@ -127,11 +130,14 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
 
 
         ajouterQteRealiserBtn.setOnClickListener {
+            var qteRealise:String=""
+            var nbhT:String=""
+
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_qte_realise, null)
             //AlertDialogBuilder
-            val mBuilder = AlertDialog.Builder(this)
-                .setView(mDialogView)
+            val mBuilder = AlertDialog.Builder(this).create()
+                mBuilder.setView(mDialogView)
             //.setTitle("Login Form")
             //show dialog
             mBuilder.show()
@@ -139,7 +145,27 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
               //pour ajouter la quantité receptionné et la date
               val c: SimpleDateFormat = SimpleDateFormat("dd/M/yyyy")
               var d=c.format((Date()))
-              qteAdapter!!.add(QuantiteRealise(d,""+mDialogView.qteR.text.toString(),""+mDialogView.nbH.text.toString(),""+mDialogView.pu.text.toString()))
+              qteRealise=mDialogView.qteR.text.toString()
+              nbhT=mDialogView.nbH.text.toString()
+
+
+             if (nbhT!="" && qteRealise!="" )
+              {
+                  val ajouterS = AjouterSuivi().execute(id.toString(),qteRealise,nbhT,d,idE)
+                  qteAdapter!!.add(QuantiteRealise(d,""+mDialogView.qteR.text.toString(),""+mDialogView.nbH.text.toString()))
+//var q:Int=qteR.text.toString().toInt()+qteRealise.toInt()
+  //                var n:Int=nbHptrav.text.toString().toInt()+nbhT.toInt()
+    //              qteR.setText(q.toString())
+      //            nbHptrav.setText(n.toString())
+
+                  mBuilder.dismiss()
+                  onRestart()
+              }else
+              {
+                  Toast.makeText(mBuilder.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
+              }
+
+
 
 
           }
@@ -355,4 +381,104 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
 
     }
 
+}class AjouterSuivi : AsyncTask<String, Void,List<Any>?>(){
+    val db = "BTP_pfe"
+    val username = "admin"
+    val password = "pfe_chantier"
+
+    var id:Int=0
+
+    var dateD:String=""
+    var qteT:String=""
+    var nbH:String=""
+    var idE:Int=0
+
+
+    @SuppressLint("NewApi")
+    override fun doInBackground(vararg infos:String): List<Any>? {
+        var client = XmlRpcClient()
+        var common_config = XmlRpcClientConfigImpl()
+        try {
+            //Testé l'authentification
+            common_config.serverURL =
+                URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+            val uid: Int = client.execute(
+                common_config, "authenticate", Arrays.asList(
+                    db, username, password, Collections.emptyMap<Any, Any>()
+                )
+            ) as Int
+
+
+            val models = object : XmlRpcClient() {
+                init {
+                    setConfig(object : XmlRpcClientConfigImpl() {
+                        init {
+                            serverURL = URL(
+                                String.format(
+                                    "%s/xmlrpc/2/object",
+                                    "http://sogesi.hopto.org:7013"
+                                )
+                            )
+                        }
+                    })
+                }
+            }
+
+
+
+            println("************************  datebbb = ${infos[0]}")
+
+
+
+            id = infos[0].toInt()
+            qteT=infos[1]
+            nbH=infos[2]
+            dateD = infos[3]
+            idE=infos[4].toInt()
+
+
+
+
+
+
+
+
+
+
+            var id1: Int = models.execute(
+                "execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "reg.employe", "create",
+
+                    Arrays.asList(object : HashMap<Any, Any>() {
+                        init {
+
+                            put("reglemnet_employe_ids", id)
+                            put("date",dateD)
+                            put("qte_realise", qteT)
+                            put("nb_h_travail", nbH)
+                            put("employee_id", idE)
+
+
+
+
+                        }
+                    })
+                )
+            )as Int
+            println("************************  liste des données = $id1")
+
+
+        } catch (e: MalformedURLException) {
+            Log.d(
+                "MalformedURLException",
+                "*********************************************************"
+            )
+            Log.d("MalformedURLException", e.toString())
+        } catch (e: XmlRpcException) {
+            e.printStackTrace()
+        }
+        return null
+    }
 }

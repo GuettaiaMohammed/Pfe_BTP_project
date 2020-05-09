@@ -222,8 +222,8 @@ class MonChantier : AppCompatActivity() {
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_article, null)
             //AlertDialogBuilder
-            val mBuilder = AlertDialog.Builder(this)
-                    .setView(mDialogView)
+            val mBuilder = AlertDialog.Builder(this).create()
+                    mBuilder.setView(mDialogView)
             //.setTitle("Login Form")
             //show dialog
             val mAlertDialog = mBuilder.show()
@@ -275,11 +275,15 @@ class MonChantier : AppCompatActivity() {
                 var d=c.format((Date()))
 
 
+if (qte != "" && article !="") {
+    val demandeA =
+        AjouterArticle().execute(ref, idA.toString(), idU.toString(), qte, d, nameA, prix)
+mBuilder.dismiss()
+}else
+{
 
-
-            val demandeA = AjouterArticle().execute(ref,idA.toString(),idU.toString(),qte,d,nameA,prix)
-
-
+    Toast.makeText(mBuilder.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
+}
             }
 
         }
@@ -295,8 +299,8 @@ class MonChantier : AppCompatActivity() {
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_employe, null)
             //AlertDialogBuilder
-            val mBuilder = AlertDialog.Builder(this)
-                    .setView(mDialogView)
+            val mBuilder = AlertDialog.Builder(this).create()
+                    mBuilder.setView(mDialogView)
             //.setTitle("Login Form")
 
 
@@ -379,10 +383,16 @@ class MonChantier : AppCompatActivity() {
                     }
 
                 }
+                if (dateD != ""&& dateF != "" && metier != "" && n != "") {
 
+                    val demandeE =
+                        AjouterEmploye().execute(id.toString(), dateD, dateF, nbr.toString())
+                    mBuilder.dismiss()
+                }else
+                {
 
-               val demandeE = AjouterEmploye().execute(id.toString(),dateD,dateF,nbr.toString())
-
+                    Toast.makeText(mBuilder.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
+                }
 
             }
 
@@ -405,8 +415,8 @@ class MonChantier : AppCompatActivity() {
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_materiel, null)
             //AlertDialogBuilder
-            val mBuilder = AlertDialog.Builder(this)
-                    .setView(mDialogView)
+            val mBuilder = AlertDialog.Builder(this).create()
+                    mBuilder.setView(mDialogView)
             //.setTitle("Login Form")
 
 
@@ -489,8 +499,14 @@ class MonChantier : AppCompatActivity() {
 
                 }
 
-                val demandeM = AjouterMateriel().execute(id.toString(),dateD,dateF,detail)
+                if(type != "" && detail != "" && dateD != "" && dateF != "") {
+                    val demandeM = AjouterMateriel().execute(id.toString(), dateD, dateF, detail)
+              mBuilder.dismiss()
+                }else{
 
+
+                    Toast.makeText(mBuilder.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
+                }
 
             }
             //show dialog

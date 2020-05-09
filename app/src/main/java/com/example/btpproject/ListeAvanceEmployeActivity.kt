@@ -122,8 +122,8 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_avance_employe, null)
             //AlertDialogBuilder
-            val mBuilder = AlertDialog.Builder(this)
-                .setView(mDialogView)
+            val mBuilder = AlertDialog.Builder(this).create()
+                mBuilder.setView(mDialogView)
             //.setTitle("Login Form")
 
 
@@ -184,8 +184,19 @@ if(name==empl)
 
 
                 }
-                val demandeAvance = AjouterDemandeAvance().execute(idCh.toString(),date,idE.toString(),montant)
+                if(montant != "" && date != "" && empl != "") {
+                    val demandeAvance = AjouterDemandeAvance().execute(
+                        idCh.toString(),
+                        date,
+                        idE.toString(),
+                        montant
+                    )
+                    mBuilder.dismiss()
+                }else
+                {
+                    Toast.makeText(mBuilder.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
 
+                }
 
 
             }
@@ -404,7 +415,7 @@ if(name==empl)
                     "hr.employee", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("id", ">", 0)
+                            Arrays.asList("id", ">", 1)
 
                         )
                     ),

@@ -128,8 +128,8 @@ class ListeEmployeActivity : AppCompatActivity() {
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_employe, null)
             //AlertDialogBuilder
-            val mBuilder = AlertDialog.Builder(this)
-                    .setView(mDialogView)
+            val mBuilder = AlertDialog.Builder(this).create()
+                    mBuilder.setView(mDialogView)
             //.setTitle("Login Form")
 
             //Spinner
@@ -194,11 +194,7 @@ class ListeEmployeActivity : AppCompatActivity() {
             }
             //button valider
             mDialogView.button.setOnClickListener {
-                Toast.makeText(
-                    this,
-                    spinnerE.selectedItem.toString() + " " + " Le nombre : " + mDialogView.nbr.text,
-                    Toast.LENGTH_SHORT
-                ).show()
+
 
                 //récupérer les données saisis
                 n = mDialogView.nbr.text.toString()
@@ -218,9 +214,16 @@ class ListeEmployeActivity : AppCompatActivity() {
                 }
 
 
-                val demandeE = MonChantier.AjouterEmploye()
-                    .execute(id.toString(), dateD, dateF, nbr.toString())
+                if (dateD != ""&& dateF != "" && metier != "" && n != "") {
 
+                    val demandeE =
+                        MonChantier.AjouterEmploye().execute(id.toString(), dateD, dateF, nbr.toString())
+                    mBuilder.dismiss()
+                }else
+                {
+
+                    Toast.makeText(mBuilder.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
+                }
             }
             //show dialog
             mBuilder.show()
