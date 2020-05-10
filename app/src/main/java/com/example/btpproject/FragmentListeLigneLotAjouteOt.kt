@@ -8,9 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_cellule_lot.*
 import org.apache.xmlrpc.XmlRpcException
@@ -44,8 +42,6 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
         view = inflater.inflate(R.layout.activity_fragment_liste_ligne_lot_ajout_ot, container, false)
 
 
-
-
         //ajout de la liste des lignes
         listView = view.findViewById(R.id.listeLigneAjoutOt)
         ligneLotAdapter = FragmentLigneLotAdapterAjoutOt(view.context,0)
@@ -60,7 +56,22 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
         }
         listView!!.adapter = ligneLotAdapter
 
+
+
         return view
+    }
+
+    fun create(idOT: Int){
+
+        for(i in 0..(lignes!!.size)-1){
+            val num = listView!!.getChildAt(i).findViewById<TextView>(R.id.numLigneLotAjtOTTV).text.toString()
+            val name = listView!!.getChildAt(i).findViewById<TextView>(R.id.designLigneLotAjtOTTV).text.toString()
+            val unite = listView!!.getChildAt(i).findViewById<TextView>(R.id.uniteAjtOTTV).text.toString()
+            val qte = listView!!.getChildAt(i).findViewById<EditText>(R.id.QteRealiseAjoutOtET).text.toString()
+            val idLL = lignes!!.get(i).id
+            val connAjt = AjouterLigneOT().execute(idOT.toString(), num, name, unite, qte, idLot.toString(), idLL)
+
+        }
     }
 
     class ListeLigneOt : AsyncTask<Int, Void, List<Any>?>() {
@@ -147,7 +158,8 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                                                     "name",
                                                     "num",
                                                     "unite",
-                                                    "qte_realise"
+                                                    "qte_realise",
+                                                    "ligne_lot_id"
                                                 )
                                             )
                                         }
@@ -162,11 +174,17 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                                 var unit = unite.split("\"")[1]
                                 var unit2 = unit.split("\"")[0]
 
+                                val ligneObj =
+                                    jsonArray4.getJSONObject(0).getString("ligne_lot_id").toString()
+                                var ligne1 = ligneObj.split("[")[1]
+                                var ligne2 = ligne1.split(",")[0]
+
                                 val num = jsonArray4.getJSONObject(0).getString("num").toString()
 
                                 val name = jsonArray4.getJSONObject(0).getString("name").toString()
 
-                                listLigneOt.add(LigneLotOT(num, name, unit2, "0"))
+
+                                listLigneOt.add(LigneLotOT(ligne2, num, name, unit2, "0"))
                             }
                         }
                     }
@@ -181,8 +199,116 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
             }
             return null
         }
+    }
+
+    class AjouterLigneOT : AsyncTask<String, Void,Int?>(){
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
 
 
+        var num:String=""
+        var name:String=""
+        var qteRealis:String = ""
+        var idOT:Int=0
+        var idU:Int=0
+        var idL:Int=0
+        var idLL:Int=0
+
+        @SuppressLint("NewApi")
+        override fun doInBackground(vararg infos:String): Int? {
+            var client = XmlRpcClient()
+            var common_config = XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL =
+                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int = client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(
+                                    String.format(
+                                        "%s/xmlrpc/2/object",
+                                        "http://sogesi.hopto.org:7013"
+                                    )
+                                )
+                            }
+                        })
+                    }
+                }
+
+                var liste: List<*> = java.util.ArrayList<Any>()
+
+                liste = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "uom.uom", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("name", "=", infos[3])
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put("fields", Arrays.asList("name"))
+                            //put("limit", 5);
+                        }
+                    }
+                )) as Array<Any>)
+
+                    val jsonArray4 = JSONArray(liste)
+                    val idUn =
+                        jsonArray4.getJSONObject(0).getString("id").toString()
+
+
+                idOT = infos[0].toInt()
+                num = infos[1]
+                name= infos[2]
+                idU= idUn.toInt()
+                qteRealis= infos[4]
+                idL = infos[5].toInt()
+                idLL = infos[6].toInt()
+
+                var id: Int = models.execute(
+                    "execute_kw", Arrays.asList(
+                        db, uid, password,
+                        "ligne.ordre.travail", "create",
+                        Arrays.asList(object : HashMap<Any, Any>() {
+                            init {
+                                put("ordre_travail_id", idOT)
+                                put("ligne_lot_id", idLL)
+                                put("lot_id", idL)
+                                put("num", num)
+                                put("name", name)
+                                put("unite", idU)
+                                put("qte_realis", qteRealis)
+
+                            }
+                        })
+                    )
+                ) as Int
+                println("************************  liste des données = $id")
+                return id
+
+            } catch (e: MalformedURLException) {
+                Log.d(
+                    "MalformedURLException",
+                    "*********************************************************"
+                )
+                Log.d("MalformedURLException", e.toString())
+            } catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return 0
+        }
     }
 }
 

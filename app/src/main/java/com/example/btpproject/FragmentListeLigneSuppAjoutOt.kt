@@ -58,7 +58,7 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
         ligneSuppAdapter = FragmentLigneSuppAdapterAjoutOt(view.context,0)
 
         ligneSupps = ArrayList()
-        ligneSuppAdapter!!.add(LigneSupplementaireOT("Description", "N°", "Ligne parente", "Unité", "Qte rélalisé"))
+        ligneSuppAdapter!!.add(LigneSupplementaireOT("Description", "N°", "Ligne parente", "Unité", "Qte réalisé"))
 
         listArticlesS.add("")
         listUnitesS.add("")

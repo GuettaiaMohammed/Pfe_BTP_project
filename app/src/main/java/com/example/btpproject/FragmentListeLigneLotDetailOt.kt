@@ -100,7 +100,7 @@ class FragmentListeLigneLotDetailOt(var idOT: Int): Fragment() {
 
 
                 val listLigneOt = ArrayList<LigneLotOT>()
-                listLigneOt!!.add(LigneLotOT("N°", "Designation", "Unité", "Quantité réalisé"))
+                listLigneOt!!.add(LigneLotOT("","N°", "Designation", "Unité", "Quantité réalisé"))
 
                 if(list.isNotEmpty()) {
                     val jsonArray3 = JSONArray(list)
@@ -119,6 +119,7 @@ class FragmentListeLigneLotDetailOt(var idOT: Int): Fragment() {
                         // recupéré les champ nom unite num des ligne par chaque Id
                         for (i in 0..(idd!!.size) - 1) {
                             val idInt = idd[i].toInt()
+                            println("************************ id int= ${idInt}")
                             val listLigne =
                                 Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                                     db, uid, password,
@@ -160,7 +161,8 @@ class FragmentListeLigneLotDetailOt(var idOT: Int): Fragment() {
                                         jsonArray4.getJSONObject(0).getString("qte_realis")
                                             .toString()
 
-                                    listLigneOt.add(LigneLotOT(num, name, unit2, qte))
+
+                                    listLigneOt.add(LigneLotOT("", num, name, unit2, qte))
                                 }
 
                             }
