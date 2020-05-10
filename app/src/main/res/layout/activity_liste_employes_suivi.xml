@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#FFFFFF">
 
         <androidx.appcompat.widget.Toolbar
@@ -17,10 +17,10 @@
             android:background="@color/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
         <!--app:navigationIcon="@drawable/menu" -->
 
 
@@ -58,17 +58,17 @@
             android:layout_marginTop="125dp"
             android:layout_marginEnd="25dp"
             android:layout_marginRight="25dp"
+            app:backgroundTint="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/layoutEmplye"
             app:layout_constraintStart_toStartOf="@+id/layoutEmplye"
             app:layout_constraintTop_toTopOf="@+id/toolbar"
             app:maxImageSize="70dp"
-            app:backgroundTint="@color/colorPrimary"
-            app:srcCompat="@android:drawable/ic_menu_add"/>
+            app:srcCompat="@android:drawable/ic_menu_add" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="550dp"
+            android:layout_height="match_parent"
             android:gravity="center"
 
             android:paddingLeft="6dp"
@@ -82,7 +82,7 @@
             <ListView
                 android:id="@+id/empl"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="540dp"
                 android:padding="10dp"
                 tools:layout_editor_absoluteX="10dp">
 

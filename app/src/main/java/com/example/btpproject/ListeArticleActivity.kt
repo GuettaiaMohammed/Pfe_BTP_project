@@ -176,6 +176,12 @@ class ListeArticleActivity : AppCompatActivity() {
                         .execute(ref,idA.toString(),idU.toString(),qte,d,nameA,prix)
 
                     mBuilder.dismiss()
+                    val i:Intent=intent
+                    finish()
+                    overridePendingTransition(0,0)
+                    startActivity(i)
+                    overridePendingTransition(0,0)
+                    i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 }else
                 {
 

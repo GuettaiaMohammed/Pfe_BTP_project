@@ -84,16 +84,36 @@
                         android:textSize="14sp"
                         app:fontFamily="sans-serif" />
 
-                    <TextView
-                        android:id="@+id/qteP"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="100"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="14sp"
-                        app:fontFamily="sans-serif" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/qteP"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="100"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp"
+                            app:fontFamily="sans-serif" />
+
+                        <TextView
+                            android:id="@+id/unit2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="3dp"
+                            android:text="m3"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp"
+                            app:fontFamily="sans-serif" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -112,16 +132,37 @@
                         android:textSize="14sp"
                         app:fontFamily="sans-serif" />
 
-                    <TextView
-                        android:id="@+id/qteR"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="72"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="14sp"
-                        app:fontFamily="sans-serif" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/qteR"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="72"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp"
+                            app:fontFamily="sans-serif" />
+
+                        <TextView
+                            android:id="@+id/unit1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="3dp"
+                            android:gravity="center"
+                            android:text="m3"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp"
+                            app:fontFamily="sans-serif" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout

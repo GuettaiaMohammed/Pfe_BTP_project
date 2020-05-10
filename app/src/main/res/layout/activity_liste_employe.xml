@@ -70,7 +70,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="550dp"
+            android:layout_height="match_parent"
             android:layout_marginTop="15dp"
 
             android:gravity="center"
@@ -85,7 +85,7 @@
             <ListView
                 android:id="@+id/empl"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="540dp"
                 android:padding="10dp"
                 tools:layout_editor_absoluteX="10dp">
 

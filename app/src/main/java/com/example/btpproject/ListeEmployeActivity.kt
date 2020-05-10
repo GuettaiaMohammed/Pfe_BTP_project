@@ -219,6 +219,12 @@ class ListeEmployeActivity : AppCompatActivity() {
                     val demandeE =
                         MonChantier.AjouterEmploye().execute(id.toString(), dateD, dateF, nbr.toString())
                     mBuilder.dismiss()
+                    val i:Intent=intent
+                    finish()
+                    overridePendingTransition(0,0)
+                    startActivity(i)
+                    overridePendingTransition(0,0)
+                    i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 }else
                 {
 

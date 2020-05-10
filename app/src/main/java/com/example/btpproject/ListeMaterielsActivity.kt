@@ -233,6 +233,12 @@ class ListeMaterielsActivity : AppCompatActivity() {
                     val demandeM = MonChantier.AjouterMateriel()
                         .execute(id.toString(), dateD, dateF, detail)
                     mBuilder.dismiss()
+                    val i:Intent=intent
+                    finish()
+                    overridePendingTransition(0,0)
+                    startActivity(i)
+                    overridePendingTransition(0,0)
+                    i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 }else{
 
 

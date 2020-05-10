@@ -53,6 +53,8 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
         val nbHprev=findViewById<TextView>(R.id.nbHp)
 
         val nbHptrav=findViewById<TextView>(R.id.nbHt)
+        val unite1=findViewById<TextView>(R.id.unit1)
+        val unite2=findViewById<TextView>(R.id.unit2)
         var unite:String=""
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -91,10 +93,12 @@ var idE:String=""
             val nbHtravail = jsonArray.getJSONObject(i).getString("nb_h_travail").toString()
 
             name.setText(nom2)
-            qtePrev.setText(qtePrevu+" "+u1)
-            qteR.setText(qteRealise+" "+u1)
+            qtePrev.setText(qtePrevu)
+            qteR.setText(qteRealise)
             nbHprev.setText(nbHprevu)
             nbHptrav.setText(nbHtravail)
+            unite1.setText(u1)
+            unite2.setText(u1)
             unite=u1
 
         }
@@ -152,14 +156,22 @@ var idE:String=""
              if (nbhT!="" && qteRealise!="" )
               {
                   val ajouterS = AjouterSuivi().execute(id.toString(),qteRealise,nbhT,d,idE)
-                  qteAdapter!!.add(QuantiteRealise(d,""+mDialogView.qteR.text.toString(),""+mDialogView.nbH.text.toString()))
+                  qteAdapter!!.add(QuantiteRealise(d,""+mDialogView.qteR.text.toString()+" "+unite,""+mDialogView.nbH.text.toString()))
 //var q:Int=qteR.text.toString().toInt()+qteRealise.toInt()
-  //                var n:Int=nbHptrav.text.toString().toInt()+nbhT.toInt()
-    //              qteR.setText(q.toString())
-      //            nbHptrav.setText(n.toString())
+  //           var n:Int=nbHptrav.text.toString().toInt()+nbhT.toInt()
+             // qteR.setText(q.toString())
+               //   nbHptrav.setText(n.toString())
 
                   mBuilder.dismiss()
-                  onRestart()
+
+                  val i:Intent=intent
+                  finish()
+                  overridePendingTransition(0,0)
+                  startActivity(i)
+                  overridePendingTransition(0,0)
+                  i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+
+
               }else
               {
                   Toast.makeText(mBuilder.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
@@ -427,8 +439,6 @@ var idE:String=""
 
 
 
-            println("************************  datebbb = ${infos[0]}")
-
 
 
             id = infos[0].toInt()
@@ -441,12 +451,7 @@ var idE:String=""
 
 
 
-
-
-
-
-
-            var id1: Int = models.execute(
+           var id1: Int = models.execute(
                 "execute_kw", Arrays.asList(
                     db, uid, password,
                     "reg.employe", "create",
@@ -454,7 +459,11 @@ var idE:String=""
                     Arrays.asList(object : HashMap<Any, Any>() {
                         init {
 
-                            put("reglemnet_employe_ids", id)
+                            put("reglement_employe_id", id)
+
+                            put("employee_id",idE)
+                            put("chantier_id",2)
+
                             put("date",dateD)
                             put("qte_realise", qteT)
                             put("nb_h_travail", nbH)

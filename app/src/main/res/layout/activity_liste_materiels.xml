@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".ListeMaterielsActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,10 +18,10 @@
             android:background="@color/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
         <!--app:navigationIcon="@drawable/menu" -->
 
 
@@ -60,19 +60,19 @@
             android:layout_marginEnd="25dp"
             android:layout_marginRight="25dp"
 
+            app:backgroundTint="@color/colorPrimary"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/layoutMateriel"
             app:layout_constraintStart_toStartOf="@+id/layoutMateriel"
             app:layout_constraintTop_toTopOf="@+id/toolbar"
             app:maxImageSize="70dp"
-            app:backgroundTint="@color/colorPrimary"
-            app:srcCompat="@android:drawable/ic_menu_add"/>
+            app:srcCompat="@android:drawable/ic_menu_add" />
 
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="416dp"
-            android:layout_height="550dp"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingLeft="10dp"
@@ -87,7 +87,7 @@
             <ListView
                 android:id="@+id/materielsListe"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="540dp">
 
             </ListView>
 

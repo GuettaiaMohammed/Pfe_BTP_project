@@ -192,6 +192,12 @@ if(name==empl)
                         montant
                     )
                     mBuilder.dismiss()
+                    val i:Intent=intent
+                    finish()
+                    overridePendingTransition(0,0)
+                    startActivity(i)
+                    overridePendingTransition(0,0)
+                    i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 }else
                 {
                     Toast.makeText(mBuilder.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
