@@ -74,11 +74,11 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
             refLot.text = refLott
             date.text = datte
 
-            val id = jsonArray.getJSONObject(i).getString("id").toString()
+
             //Ajouter les fragments
-            adapter.addFragment(FragmentListeLigneLotDetailOt(id.toInt()), "Lignes")
-            adapter.addFragment(FragmentListeArticlesDetailOt(id.toInt()), "Articles")
-            adapter.addFragment(FragmentListeLigneSuppDetailOt(), "Lignes Supp")
+            adapter.addFragment(FragmentListeLigneLotDetailOt(id), "Lignes")
+            adapter.addFragment(FragmentListeArticlesDetailOt(id), "Articles")
+            adapter.addFragment(FragmentListeLigneSuppDetailOt(id), "Lignes Supp")
 
         }
 

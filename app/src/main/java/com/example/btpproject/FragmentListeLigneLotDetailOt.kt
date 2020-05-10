@@ -20,7 +20,7 @@ import java.net.URL
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FragmentListeLigneLotDetailOt(var idLot: Int): Fragment() {
+class FragmentListeLigneLotDetailOt(var idOT: Int): Fragment() {
     internal lateinit var view: View
     private var lignes: ArrayList<LigneLotOT>? = null
     private var listView: ListView? = null
@@ -36,7 +36,7 @@ class FragmentListeLigneLotDetailOt(var idLot: Int): Fragment() {
         listView = view.findViewById(R.id.ListLigneLotDetailOT)
         ligneLotAdapter = FragmentLigneLotAdapterDetailOt(view.context,0)
 
-        val conn = ListeLigneOtt().execute(idLot)
+        val conn = ListeLigneOtt().execute(idOT)
         lignes = conn.get() as ArrayList<LigneLotOT>?
 
         if(lignes != null) {

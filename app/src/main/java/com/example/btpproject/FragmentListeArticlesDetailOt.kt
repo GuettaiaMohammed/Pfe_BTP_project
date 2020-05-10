@@ -20,7 +20,7 @@ import java.net.URL
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FragmentListeArticlesDetailOt(var idLot: Int) : Fragment() {
+class FragmentListeArticlesDetailOt(var idOT: Int) : Fragment() {
     internal lateinit var view: View
     private var articleOT: ArrayList<ArticleOT>? = null
     private var listView: ListView? = null
@@ -37,7 +37,7 @@ class FragmentListeArticlesDetailOt(var idLot: Int) : Fragment() {
         articleAdapter = FragmentArticleAdapterDetailOt(view.context,0)
         articleOT = ArrayList()
 
-        val conn = ListeArticleOtt().execute(idLot)
+        val conn = ListeArticleOtt().execute(idOT)
         articleOT = conn.get() as ArrayList<ArticleOT>?
 
         if(articleOT != null) {
@@ -101,7 +101,7 @@ class FragmentListeArticlesDetailOt(var idLot: Int) : Fragment() {
 
 
                 val listArticleOt = ArrayList<ArticleOT>()
-                listArticleOt!!.add(ArticleOT("Ligne","Article", "Unité","Quantité consommé"))
+                listArticleOt!!.add(ArticleOT("Ligne","Article", "Unité","Quantité consomé"))
 
                 if(list.isNotEmpty()) {
                     val jsonArray3 = JSONArray(list)
