@@ -86,8 +86,8 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         val adapter = ViewPagerAdapter(supportFragmentManager)
 
         lateinit var fragmentLigneLot: FragmentListeLigneLotAjouteOt
-        var fragmentArticle: FragmentListeArticlesAjoutOt
-        var fragmentLigneSupp: FragmentListeLigneSuppAjoutOt
+        lateinit var fragmentArticle: FragmentListeArticlesAjoutOt
+        lateinit var fragmentLigneSupp: FragmentListeLigneSuppAjoutOt
         spinnerE.onItemSelectedListener = object:  AdapterView.OnItemSelectedListener{
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -143,13 +143,14 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
             val emplacementID = connIdE.get()
             if(nom!="" && num!="" && nomLot!=""){
                 val connAjt = AjouterOT().execute(nom, num, projectID.toString(), idLot, emplacementID.toString(), nomLot, date)
-                println("é**************************${connAjt.get()}")
+
                 if(connAjt.get() != 0) {
                     val idNvOT = connAjt.get()
                     fragmentLigneLot.create(idNvOT!!.toInt())
+                    fragmentArticle.create(idNvOT!!.toInt())
 
                     val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
-                    // start your next activity
+                     //start your next activity
                     startActivity(intent)
                 }
 

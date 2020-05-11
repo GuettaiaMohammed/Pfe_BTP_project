@@ -62,15 +62,21 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
     }
 
     fun create(idOT: Int){
+        if(lignes != null) {
+            for (i in 0..(lignes!!.size) - 1) {
+                val num =
+                    listView!!.getChildAt(i).findViewById<TextView>(R.id.numLigneLotAjtOTTV).text.toString()
+                val name = listView!!.getChildAt(i).findViewById<TextView>(R.id.designLigneLotAjtOTTV)
+                    .text.toString()
+                val unite =
+                    listView!!.getChildAt(i).findViewById<TextView>(R.id.uniteAjtOTTV).text.toString()
+                val qte = listView!!.getChildAt(i).findViewById<EditText>(R.id.QteRealiseAjoutOtET)
+                    .text.toString()
+                val idLL = lignes!!.get(i).id
+                val connAjt =
+                    AjouterLigneOT().execute(idOT.toString(), num, name, unite, qte, idLot.toString(), idLL)
 
-        for(i in 0..(lignes!!.size)-1){
-            val num = listView!!.getChildAt(i).findViewById<TextView>(R.id.numLigneLotAjtOTTV).text.toString()
-            val name = listView!!.getChildAt(i).findViewById<TextView>(R.id.designLigneLotAjtOTTV).text.toString()
-            val unite = listView!!.getChildAt(i).findViewById<TextView>(R.id.uniteAjtOTTV).text.toString()
-            val qte = listView!!.getChildAt(i).findViewById<EditText>(R.id.QteRealiseAjoutOtET).text.toString()
-            val idLL = lignes!!.get(i).id
-            val connAjt = AjouterLigneOT().execute(idOT.toString(), num, name, unite, qte, idLot.toString(), idLL)
-
+            }
         }
     }
 
@@ -106,17 +112,17 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                 //liste des id des lignes
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                     db, uid, password,
-                    "ordre.travail", "search_read",
+                    "project.lot", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("lot_id", "=", id)
+                            Arrays.asList("id", "=", id)
                         )
                     ),
                     object : HashMap<Any, Any>() {
                         init {
                             put(
                                 "fields",
-                                Arrays.asList("ligne_ordre_travail_ids")
+                                Arrays.asList("ligne_lot_ids")
                             )
                         }
                     }
@@ -144,7 +150,7 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                             val listLigne =
                                 Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                                     db, uid, password,
-                                    "ligne.ordre.travail", "search_read",
+                                    "ligne.lot", "search_read",
                                     Arrays.asList(
                                         Arrays.asList(
                                             Arrays.asList("id", "=", idInt)
@@ -157,9 +163,7 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                                                 Arrays.asList(
                                                     "name",
                                                     "num",
-                                                    "unite",
-                                                    "qte_realise",
-                                                    "ligne_lot_id"
+                                                    "unite"
                                                 )
                                             )
                                         }
@@ -174,17 +178,12 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                                 var unit = unite.split("\"")[1]
                                 var unit2 = unit.split("\"")[0]
 
-                                val ligneObj =
-                                    jsonArray4.getJSONObject(0).getString("ligne_lot_id").toString()
-                                var ligne1 = ligneObj.split("[")[1]
-                                var ligne2 = ligne1.split(",")[0]
-
                                 val num = jsonArray4.getJSONObject(0).getString("num").toString()
 
                                 val name = jsonArray4.getJSONObject(0).getString("name").toString()
 
 
-                                listLigneOt.add(LigneLotOT(ligne2, num, name, unit2, "0"))
+                                listLigneOt.add(LigneLotOT(idInt.toString(), num, name, unit2, "0"))
                             }
                         }
                     }

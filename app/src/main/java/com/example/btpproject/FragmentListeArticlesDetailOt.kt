@@ -101,7 +101,7 @@ class FragmentListeArticlesDetailOt(var idOT: Int) : Fragment() {
 
 
                 val listArticleOt = ArrayList<ArticleOT>()
-                listArticleOt!!.add(ArticleOT("Ligne","Article", "Unité","Quantité consomé"))
+                listArticleOt!!.add(ArticleOT("","Ligne","","Article", "Unité","Quantité consomé"))
 
                 if(list.isNotEmpty()) {
                     val jsonArray3 = JSONArray(list)
@@ -164,7 +164,7 @@ class FragmentListeArticlesDetailOt(var idOT: Int) : Fragment() {
                                     val qte =
                                         jsonArray4.getJSONObject(0).getString("qte").toString()
 
-                                    listArticleOt.add(ArticleOT(ligneF, name, unit2, qte))
+                                    listArticleOt.add(ArticleOT("",ligneF,"", name, unit2, qte))
                                 }
                             }
 

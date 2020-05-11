@@ -123,7 +123,7 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
 
             listViewArticle = mDialogView.findViewById(R.id.listeArtConsomLigneSuppOt)
             articleAdapter = ArticleLigneSuppAdapter(mBuilder.context, 0)
-            articleAdapter!!.add(ArticleOT("Ligne","Article", "Unité", "Qte consomé"))
+            articleAdapter!!.add(ArticleOT("","Ligne","","Article", "Unité", "Qte consomé"))
 
             val numLS = mDialogView.findViewById<TextInputEditText>(R.id.numLigneSuppET)
             val descLS = mDialogView.findViewById<TextInputEditText>(R.id.descLigneSuppET)
@@ -181,7 +181,7 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
                             val qteConsom = qteConsET.text.toString()
 
                             if(article != "" && unite != "" && qteConsom != "") {
-                                articleAdapter!!.add(ArticleOT("", article, unite, qteConsom))
+                                articleAdapter!!.add(ArticleOT("","","",article, unite, qteConsom))
                                 mBuilder2.dismiss()
                             }else{
                                 Toast.makeText(mBuilder2.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()

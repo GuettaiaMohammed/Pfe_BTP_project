@@ -1,5 +1,6 @@
 package com.example.btpproject
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.os.AsyncTask
 import android.os.Build
@@ -8,7 +9,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ListView
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import org.apache.xmlrpc.XmlRpcException
@@ -49,6 +52,24 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
         return view
     }
 
+    fun create(idOT: Int){
+        if(articleOT != null) {
+            for (i in 0..(articleOT!!.size) - 1) {
+                val nomLigne = listView!!.getChildAt(i).findViewById<TextView>(R.id.ligneLotArtAjtOTTV).text.toString()
+                val nomArticle = listView!!.getChildAt(i).findViewById<TextView>(R.id.nomArlAjtOTTV)
+                    .text.toString()
+                val unite =
+                    listView!!.getChildAt(i).findViewById<TextView>(R.id.uniteArtAjtOTTV).text.toString()
+                val qte = listView!!.getChildAt(i).findViewById<EditText>(R.id.qteConsommeAjtOtET).text.toString()
+                val idLL = articleOT!!.get(i).idLigne
+                var idP = articleOT!!.get(i).idArticle
+
+                val connAjt = AjouterArticleOT().execute(idOT.toString(), nomArticle, unite, qte, idP, idLL)
+
+            }
+        }
+    }
+
     class ListeArticleOt : AsyncTask<Int, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
@@ -83,7 +104,7 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                 //liste des id des lignes
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                     db, uid, password,
-                    "ordre.travail", "search_read",
+                    "project.lot", "search_read",
                     Arrays.asList(
                         Arrays.asList(
                             Arrays.asList("id", "=", id)
@@ -93,7 +114,7 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                         init {
                             put(
                                 "fields",
-                                Arrays.asList("ligne_article_consom_ids")
+                                Arrays.asList("article_lot_ids")
                             )
                         }
                     }
@@ -119,7 +140,7 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                             val idInt = idd[i].toInt()
                             val listLigne = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                                 db, uid, password,
-                                "article.consom", "search_read",
+                                "article.lot", "search_read",
                                 Arrays.asList(
                                     Arrays.asList(
                                         Arrays.asList("id", "=", idInt)
@@ -129,7 +150,7 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                                     init {
                                         put(
                                             "fields",
-                                            Arrays.asList("ligne_lot_id","name", "unite", "qte")
+                                            Arrays.asList("product_id", "unite", "ligne_lot_id")
                                         )
                                     }
                                 }
@@ -138,20 +159,46 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                             if(listLigne.isNotEmpty()) {
                                 //liste des champs
                                 val jsonArray4 = JSONArray(listLigne)
-                                val ligneLot =
+                                val prod =
+                                    jsonArray4.getJSONObject(0).getString("product_id").toString()
+                                var prod1 = prod.split("[")[1]
+                                var prod2 = prod1.split(",")[0]
+
+                                val ligneObj =
                                     jsonArray4.getJSONObject(0).getString("ligne_lot_id").toString()
-                                var ligne = ligneLot.split("\"")[1]
-                                var ligneF = ligne.split("\"")[0]
+                                var ligne1 = ligneObj.split("[")[1]
+                                var ligneid = ligne1.split(",")[0]
+
+                                var ligneN = ligneObj.split("\"")[1]
+                                var ligneNom = ligneN.split("\"")[0]
+
+                                val liste = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                                    db, uid, password,
+                                    "product.product", "search_read",
+                                    Arrays.asList(
+                                        Arrays.asList(
+                                            Arrays.asList("id", "=", prod2.toInt())
+                                        )
+                                    ),
+                                    object : HashMap<Any, Any>() {
+                                        init {
+                                            put("fields", Arrays.asList("name"))
+                                            //put("limit", 5);
+                                        }
+                                    }
+                                )) as Array<Any>)
+
+                                val jsonArray5 = JSONArray(liste)
 
                                 val unite =
                                     jsonArray4.getJSONObject(0).getString("unite").toString()
                                 var unit = unite.split("\"")[1]
                                 var unit2 = unit.split("\"")[0]
 
-                                val name = jsonArray4.getJSONObject(0).getString("name").toString()
-                                val qte = jsonArray4.getJSONObject(0).getString("qte").toString()
+                                val name = jsonArray5.getJSONObject(0).getString("name").toString()
 
-                                listArticleOt.add(ArticleOT(ligneF, name, unit2, "0"))
+
+                                listArticleOt.add(ArticleOT(ligneid, ligneNom, prod2, name, unit2, "0"))
                             }
                         }
 
@@ -168,7 +215,112 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
             }
             return null
         }
+    }
+
+    class AjouterArticleOT : AsyncTask<String, Void,Int?>(){
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        var name:String=""
+        var qte:String = ""
+        var idOT:Int=0
+        var idU:Int=0
+        var idP:Int=0
+        var idLL:Int=0
+
+        @SuppressLint("NewApi")
+        override fun doInBackground(vararg infos:String): Int? {
+            var client = XmlRpcClient()
+            var common_config = XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL =
+                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int = client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
 
 
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(
+                                    String.format(
+                                        "%s/xmlrpc/2/object",
+                                        "http://sogesi.hopto.org:7013"
+                                    )
+                                )
+                            }
+                        })
+                    }
+                }
+
+                var liste: List<*> = java.util.ArrayList<Any>()
+
+                liste = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "uom.uom", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("name", "=", infos[2])
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put("fields", Arrays.asList("name"))
+                            //put("limit", 5);
+                        }
+                    }
+                )) as Array<Any>)
+
+                val jsonArray4 = JSONArray(liste)
+                val idUn =
+                    jsonArray4.getJSONObject(0).getString("id").toString()
+
+
+                idOT = infos[0].toInt()
+                name= infos[1]
+                idU= idUn.toInt()
+                qte= infos[3]
+                idP = infos[4].toInt()
+                idLL = infos[5].toInt()
+
+
+                var id: Int = models.execute(
+                    "execute_kw", Arrays.asList(
+                        db, uid, password,
+                        "article.consom", "create",
+                        Arrays.asList(object : HashMap<Any, Any>() {
+                            init {
+                                put("ordre_travail_id", idOT)
+                                put("ligne_lot_id", idLL)
+                                put("product_id", idP)
+                                put("name", name)
+                                put("unite", idU)
+                                put("qte", qte)
+
+                            }
+                        })
+                    )
+                ) as Int
+                println("************************  liste des données = $id")
+                return id
+
+            } catch (e: MalformedURLException) {
+                Log.d(
+                    "MalformedURLException",
+                    "*********************************************************"
+                )
+                Log.d("MalformedURLException", e.toString())
+            } catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return 0
+        }
     }
 }
