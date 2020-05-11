@@ -104,10 +104,10 @@ class ListeMaterielsActivity : AppCompatActivity() {
             val dateD = jsonArray.getJSONObject(i).getString("date_debut").toString()
             val dateF = jsonArray.getJSONObject(i).getString("date_fin").toString()
             var typeObj =
-                jsonArray.getJSONObject(i).getString("type_materiel_id").toString()
+                jsonArray.getJSONObject(i).getString("materiel_id").toString()
             var type = typeObj.split("\"")[1]
             var type2 = type.split("\"")[0]
-            var detail=jsonArray.getJSONObject(i).getString("detail_mat").toString()
+            var detail=jsonArray.getJSONObject(i).getString("state").toString()
             println("**************************  type = $type2")
             println("**************************  Date debut = $dateD")
 
@@ -388,24 +388,23 @@ class ListeMaterielsActivity : AppCompatActivity() {
                 //liste des demandes matériels
                 val list = asList(*models.execute("execute_kw", asList(
                     db, uid, password,
-                    "demande.appro_mat", "search_read",
+                    "chantier.materiel", "search_read",
                     asList(
                         asList(
-                            asList("chantier_id", "=", 2),
-                            asList("state","=","valide")
+                            asList("chantier_id", "=", 2)
                         )
                     ),
                     object : HashMap<Any,Any>() {
                         init {
                             put(
                                 "fields",
-                                asList("id","type_materiel_id", "date_debut", "date_fin","detail_mat")
+                                asList("id","materiel_id", "date_debut", "date_fin","state","duree_mat")
                             )
                         }
                     }
                 )) as Array<Any>)
 
-
+println("*************** list = $list")
 
                 return list
 

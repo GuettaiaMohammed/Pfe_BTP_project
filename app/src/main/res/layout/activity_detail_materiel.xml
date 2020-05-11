@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Détail matériel"
+                    android:text="Etat"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
 
@@ -100,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Date de damande"
+                    android:text="Commentaire"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
 

@@ -1,14 +1,12 @@
 package com.example.btpproject
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -31,10 +29,12 @@ import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Build
+import android.view.*
 import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Arrays.asList
 import java.util.concurrent.TimeUnit
 
 
@@ -56,7 +56,7 @@ class DetailMaterielActivity : AppCompatActivity() {
         val date_fin=findViewById<TextView>(R.id.date_fin)
         val duree=findViewById<TextView>(R.id.duree)
         val detailM=findViewById<TextView>(R.id.detail)
-
+var statu:String=""
 
 
 val i=intent
@@ -71,66 +71,89 @@ val i=intent
         for (i in 0..(details!!.size) - 1) {
             val dateD = jsonArray.getJSONObject(i).getString("date_debut").toString()
             val dateF = jsonArray.getJSONObject(i).getString("date_fin").toString()
-            val dateCreation= jsonArray.getJSONObject(i).getString("create_date").toString()
+            val dure= jsonArray.getJSONObject(i).getString("duree_mat").toString()
+            val comnt= jsonArray.getJSONObject(i).getString("commentaire").toString()
             var typeObj =
-                jsonArray.getJSONObject(i).getString("type_materiel_id").toString()
+                jsonArray.getJSONObject(i).getString("materiel_id").toString()
             var type = typeObj.split("\"")[1]
             var type2 = type.split("\"")[0]
-            var detail=jsonArray.getJSONObject(i).getString("detail_mat").toString()
+            var detail=jsonArray.getJSONObject(i).getString("state").toString()
 
-
-            val date = LocalDate.parse(dateD, DateTimeFormatter.ISO_DATE)
-            val date1 = LocalDate.parse(dateF, DateTimeFormatter.ISO_DATE)
-
-
-
-             val CONST_DURATION_OF_DAY = 1000L * 60 * 60 * 24
-            val  calendar1 =  GregorianCalendar()
-		calendar1.set(Calendar.YEAR, date.year);
-		calendar1.set(Calendar.MONTH, date.monthValue);
-		calendar1.set(Calendar.DAY_OF_MONTH, date.dayOfMonth);
-		val date2 = calendar1.getTime();
-		//  2006-08-15
-		val calendar2 = GregorianCalendar()
-		calendar2.set(Calendar.YEAR, date1.year);
-		calendar2.set(Calendar.MONTH, date1.monthValue);
-		calendar2.set(Calendar.DAY_OF_MONTH, date1.dayOfMonth);
-		val date3  = calendar2.getTime();
-		// Différence
-		val diff = Math.abs(date3.getTime() - date2.getTime());
-		val numberOfDay =diff/CONST_DURATION_OF_DAY
 
 
             nom.setText(type2)
-            date_D.setText(dateCreation)
+
+            if (comnt=="false"){
+            date_D.setText(" ")}
+            else{
+                date_D.setText(comnt)
+            }
             date_debut.setText(dateD)
             date_fin.setText(dateF)
-            duree.setText(numberOfDay.toString()+" jours")
-            detailM.setText(detail)
-
+            duree.setText(dure+" jours")
+            //detailM.setText(detail)
+statu=detail
 
 
         }
+        if (statu=="en_cour"){
+            detailM.setText("Utilisé")
+            receptionMateriel.setText("Libérer")
+            receptionMateriel.setOnClickListener {
+                val recp =
+                    Receptionner().execute(id.toString(), "", "libre")
+                detailM.setText("Libéré")
+               // receptionMateriel.setText("")
+                //receptionMateriel.setBackgroundColor(Color.WHITE)
+                receptionMateriel.setVisibility(View.INVISIBLE)
+receptionMateriel.setEnabled(false)
+            }
 
+        }
+        if (statu=="libre"){
+            detailM.setText("Libéré")
+            //receptionMateriel.setText("")
+            //receptionMateriel.setBackgroundColor(Color.WHITE)
+            receptionMateriel.setEnabled(false)
+            receptionMateriel.setVisibility(View.INVISIBLE)
+
+        }
+         if (statu=="attente"){
+             detailM.setText("Attente de réception")
         receptionMateriel.setOnClickListener {
+            var cmnt:String=""
                   //Inflate the dialog with custom view
                   val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_receptioner_materiel, null)
                   //AlertDialogBuilder
-                  val mBuilder = AlertDialog.Builder(this)
-                      .setView(mDialogView)
+                  val mBuilder = AlertDialog.Builder(this).create()
+                      mBuilder.setView(mDialogView)
                   //.setTitle("Login Form")
              //show dialog
              mBuilder.show()
              mDialogView.validerNote.setOnClickListener{
+                 cmnt=mDialogView.note.text.toString()
                  if(mDialogView.note.text.toString()!="") {
                      Toast.makeText(this, "Votre note est envoyée !!", Toast.LENGTH_SHORT).show()
+
+                     val recp =
+                        Receptionner().execute(id.toString(), cmnt, "en_cour")
+                     mBuilder.dismiss()
+
                  }
-mBuilder.setCancelable(true)
+                 mDialogView.annulerNote.setOnClickListener{
+
+                         val recp =
+                             Receptionner().execute(id.toString(), "", "en_cour")
+                         mBuilder.dismiss()
+
+                     }
+
+
              }
 
-
-             receptionMateriel.setEnabled(false)
-              }
+            detailM.setText("Utilisé")
+             receptionMateriel.setText("Libérer")
+              }}
 
     }
 
@@ -251,7 +274,7 @@ mBuilder.setCancelable(true)
                 //liste des demandes matériels
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                     db, uid, password,
-                    "demande.appro_mat", "search_read",
+                    "chantier.materiel", "search_read",
                     Arrays.asList(
                         Arrays.asList(
                             Arrays.asList("chantier_id", "=", 2),
@@ -263,11 +286,12 @@ mBuilder.setCancelable(true)
                             put(
                                 "fields",
                                 Arrays.asList(
-                                    "type_materiel_id",
+                                    "materiel_id",
                                     "date_debut",
                                     "date_fin",
-                                    "create_date",
-                                    "detail_mat"
+                                    "state",
+                                    "duree_mat",
+                                    "commentaire"
                                 )
                             )
                         }
@@ -289,4 +313,111 @@ mBuilder.setCancelable(true)
 
 
     }
+
+    class Receptionner : AsyncTask<String, Void,List<Any>?>(){
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        var idE:Int=0
+        var state:String=""
+
+        var comment:String=""
+
+        @SuppressLint("NewApi")
+        override fun doInBackground(vararg infos:String): List<Any>? {
+            var client = XmlRpcClient()
+            var common_config = XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL =
+                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int = client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(
+                                    String.format(
+                                        "%s/xmlrpc/2/object",
+                                        "http://sogesi.hopto.org:7013"
+                                    )
+                                )
+                            }
+                        })
+                    }
+                }
+
+
+
+                println("************************  datebbb = ${infos[1]}")
+
+
+
+
+                idE=infos[0].toInt()
+                comment=infos[1]
+                state=infos[2]
+
+
+
+
+
+
+
+
+/*                var id1: Int = models.execute(
+                    "execute_kw", Arrays.asList(
+                        db, uid, password,
+                        "demande.avance", "create",
+                        Arrays.asList(object : HashMap<Any, Any>() {
+                            init {
+                                put("chantier_id", idCh)
+                               put("employee_id", idE)
+                                put("date", dateD)
+                                put("mantant_demande",montant)
+                                put("mantant_valide","0")
+
+
+                            }
+                        })
+                    )
+                )as Int
+                println("************************  liste des données = $id1")*/
+                var id2=models.execute("execute_kw", asList(
+    db, uid, password,
+    "chantier.materiel", "write",
+    asList(
+        asList(idE),
+        object : HashMap<Any, Any>()
+        { init
+
+
+            { put("commentaire", comment)
+                put("state", state)
+
+
+            }}
+    )
+))
+            } catch (e: MalformedURLException) {
+                Log.d(
+                    "MalformedURLException",
+                    "*********************************************************"
+                )
+                Log.d("MalformedURLException", e.toString())
+            } catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+    }
+
 }
