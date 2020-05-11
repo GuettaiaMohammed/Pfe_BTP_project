@@ -28,6 +28,7 @@ class FragmentLigneSuppAdapterAjoutOt  (context: Context, resource: Int) : Array
         numero.text = ligne.numero
         unite.text = ligne.unite
         qte.text = ligne.qteRealise
+        val ligneParentId = ligne.ligneParenteId
 
 
 

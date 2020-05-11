@@ -113,7 +113,7 @@ class FragmentListeLigneSuppDetailOt(var idOT: Int): Fragment() {
                     //liste final des ids
                     val idd: List<String> = ids2.split(",")
 
-
+                    println("${idd[0]}")
                     if (idd[0] != "") {
 
 
@@ -149,10 +149,10 @@ class FragmentListeLigneSuppDetailOt(var idOT: Int): Fragment() {
                                 //liste des champs
                                 val jsonArray4 = JSONArray(listLigne)
 
-                                val ligneObj =
+                              /*  val ligneObj =
                                     jsonArray4.getJSONObject(0).getString("ligne_supp_lot_id").toString()
                                 var ligne = ligneObj.split("\"")[1]
-                                var ligneParente = ligne.split("\"")[0]
+                                var ligneParente = ligne.split("\"")[0]*/
 
                                 val unite =
                                     jsonArray4.getJSONObject(0).getString("unite").toString()
@@ -167,7 +167,7 @@ class FragmentListeLigneSuppDetailOt(var idOT: Int): Fragment() {
                                     jsonArray4.getJSONObject(0).getString("qte_realis")
                                         .toString()
 
-                                listLigneSupp.add(LigneSupplementaireOT(name, num, ligneParente, unit2, qte))
+                                listLigneSupp.add(LigneSupplementaireOT(name, num, "", unit2, qte))
                             }
 
                         }

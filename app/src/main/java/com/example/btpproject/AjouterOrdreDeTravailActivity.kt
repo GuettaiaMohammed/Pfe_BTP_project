@@ -147,7 +147,8 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                 if(connAjt.get() != 0) {
                     val idNvOT = connAjt.get()
                     fragmentLigneLot.create(idNvOT!!.toInt())
-                    fragmentArticle.create(idNvOT!!.toInt())
+                    fragmentArticle.create(idNvOT.toInt())
+                    fragmentLigneSupp.createLigneSupp(idNvOT.toInt())
 
                     val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
                      //start your next activity

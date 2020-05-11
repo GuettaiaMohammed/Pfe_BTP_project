@@ -63,8 +63,9 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                 val qte = listView!!.getChildAt(i).findViewById<EditText>(R.id.qteConsommeAjtOtET).text.toString()
                 val idLL = articleOT!!.get(i).idLigne
                 var idP = articleOT!!.get(i).idArticle
+                var idLp = articleOT!!.get(i).idLP
 
-                val connAjt = AjouterArticleOT().execute(idOT.toString(), nomArticle, unite, qte, idP, idLL)
+                val connAjt = AjouterArticleOT().execute(idOT.toString(), nomArticle, unite, qte, idP, idLL, idLp)
 
             }
         }
@@ -114,7 +115,7 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                         init {
                             put(
                                 "fields",
-                                Arrays.asList("article_lot_ids")
+                                Arrays.asList("ligne_lot_ids")
                             )
                         }
                     }
@@ -140,17 +141,17 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                             val idInt = idd[i].toInt()
                             val listLigne = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                                 db, uid, password,
-                                "article.lot", "search_read",
+                                "ligne.article.lot", "search_read",
                                 Arrays.asList(
                                     Arrays.asList(
-                                        Arrays.asList("id", "=", idInt)
+                                        Arrays.asList("ligne_lot_id", "=", idInt)
                                     )
                                 ),
                                 object : HashMap<Any, Any>() {
                                     init {
                                         put(
                                             "fields",
-                                            Arrays.asList("product_id", "unite", "ligne_lot_id")
+                                            Arrays.asList("name", "unite", "ligne_lot_id", "product_id")
                                         )
                                     }
                                 }
@@ -172,33 +173,16 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                                 var ligneN = ligneObj.split("\"")[1]
                                 var ligneNom = ligneN.split("\"")[0]
 
-                                val liste = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                                    db, uid, password,
-                                    "product.product", "search_read",
-                                    Arrays.asList(
-                                        Arrays.asList(
-                                            Arrays.asList("id", "=", prod2.toInt())
-                                        )
-                                    ),
-                                    object : HashMap<Any, Any>() {
-                                        init {
-                                            put("fields", Arrays.asList("name"))
-                                            //put("limit", 5);
-                                        }
-                                    }
-                                )) as Array<Any>)
-
-                                val jsonArray5 = JSONArray(liste)
-
                                 val unite =
                                     jsonArray4.getJSONObject(0).getString("unite").toString()
                                 var unit = unite.split("\"")[1]
                                 var unit2 = unit.split("\"")[0]
 
-                                val name = jsonArray5.getJSONObject(0).getString("name").toString()
+                                val name = jsonArray4.getJSONObject(0).getString("name").toString()
+                                val id = jsonArray4.getJSONObject(0).getString("id").toString()
 
 
-                                listArticleOt.add(ArticleOT(ligneid, ligneNom, prod2, name, unit2, "0"))
+                                listArticleOt.add(ArticleOT(id,ligneid, ligneNom, prod2, name, unit2, "0"))
                             }
                         }
 
@@ -228,6 +212,7 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
         var idU:Int=0
         var idP:Int=0
         var idLL:Int=0
+        var idLP:Int=0
 
         @SuppressLint("NewApi")
         override fun doInBackground(vararg infos:String): Int? {
@@ -289,6 +274,7 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                 qte= infos[3]
                 idP = infos[4].toInt()
                 idLL = infos[5].toInt()
+                idLP = infos[6].toInt()
 
 
                 var id: Int = models.execute(
@@ -299,6 +285,7 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                             init {
                                 put("ordre_travail_id", idOT)
                                 put("ligne_lot_id", idLL)
+                                put("ligne_article_lot_id", idLP)
                                 put("product_id", idP)
                                 put("name", name)
                                 put("unite", idU)

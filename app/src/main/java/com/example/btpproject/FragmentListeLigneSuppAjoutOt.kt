@@ -1,5 +1,6 @@
 package com.example.btpproject
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.AsyncTask
 import android.os.Bundle
@@ -123,7 +124,7 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
 
             listViewArticle = mDialogView.findViewById(R.id.listeArtConsomLigneSuppOt)
             articleAdapter = ArticleLigneSuppAdapter(mBuilder.context, 0)
-            articleAdapter!!.add(ArticleOT("","Ligne","","Article", "Unité", "Qte consomé"))
+            articleAdapter!!.add(ArticleOT("","","Ligne","","Article", "Unité", "Qte consomé"))
 
             val numLS = mDialogView.findViewById<TextInputEditText>(R.id.numLigneSuppET)
             val descLS = mDialogView.findViewById<TextInputEditText>(R.id.descLigneSuppET)
@@ -137,10 +138,12 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
                 val descLigne = descLS.text.toString()
                 val uniteLigne = spinnerU.selectedItem.toString()
                 val ligneParente = spinnerLL.selectedItem.toString()
+                val ligneParentePosition = spinnerLL.selectedItemPosition
+                val ligneParenteId =  jsonLigneLot.getJSONObject(ligneParentePosition-1).getString("id").toString()
                 val qteLigne = qteRealLS.text.toString()
 
                 if(numeroLigne != "" && descLigne != "" && uniteLigne != "" && ligneParente != "" && qteLigne != ""){
-                    ligneSuppAdapter!!.add(LigneSupplementaireOT(descLigne, numeroLigne, ligneParente, uniteLigne, qteLigne))
+                    ligneSuppAdapter!!.add(LigneSupplementaireOT(descLigne, numeroLigne, ligneParenteId, uniteLigne, qteLigne))
                     mBuilder.dismiss()
                 }else{
                     Toast.makeText(mBuilder.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
@@ -181,7 +184,7 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
                             val qteConsom = qteConsET.text.toString()
 
                             if(article != "" && unite != "" && qteConsom != "") {
-                                articleAdapter!!.add(ArticleOT("","","",article, unite, qteConsom))
+                                articleAdapter!!.add(ArticleOT("","","","",article, unite, qteConsom))
                                 mBuilder2.dismiss()
                             }else{
                                 Toast.makeText(mBuilder2.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
@@ -204,6 +207,26 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
 
 
         return view
+    }
+
+    fun createLigneSupp(idOT: Int){
+        if(ligneSuppAdapter != null) {
+            for (i in 1..(ligneSuppAdapter!!.count) - 1) {
+                val num =
+                    listView!!.getChildAt(i).findViewById<TextView>(R.id.numLigneSuppAjtOTTV2).text.toString()
+                val name = listView!!.getChildAt(i).findViewById<TextView>(R.id.descriptionLigneSuppAjtOTTV2)
+                    .text.toString()
+                val unite =
+                    listView!!.getChildAt(i).findViewById<TextView>(R.id.uniteLigneSuppAjtOTTV2).text.toString()
+                val qte = listView!!.getChildAt(i).findViewById<TextView>(R.id.qteRealisLigneSuppAjtOtTV)
+                    .text.toString()
+                val ligneParentId = ligneSuppAdapter!!.getItem(i).ligneParenteId
+
+                val connAjt =
+                    AjouterLigneSuppOT().execute(idOT.toString(), num, name, unite, qte, ligneParentId, idLot.toString())
+
+            }
+        }
     }
 
     class Article : AsyncTask<String, Void, List<Any>?>() {
@@ -397,7 +420,115 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
             }
             return null
         }
+    }
+
+    class AjouterLigneSuppOT : AsyncTask<String, Void,Int?>(){
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
 
 
+        var num:String=""
+        var name:String=""
+        var qteRealis:String = ""
+        var idOT:Int=0
+        var idU:Int=0
+        var idLP:Int=0
+        var idL:Int=0
+
+        @SuppressLint("NewApi")
+        override fun doInBackground(vararg infos:String): Int? {
+            var client = XmlRpcClient()
+            var common_config = XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL =
+                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int = client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(
+                                    String.format(
+                                        "%s/xmlrpc/2/object",
+                                        "http://sogesi.hopto.org:7013"
+                                    )
+                                )
+                            }
+                        })
+                    }
+                }
+
+                var liste: List<*> = java.util.ArrayList<Any>()
+
+                liste = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "uom.uom", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("name", "=", infos[3])
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put("fields", Arrays.asList("name"))
+                            //put("limit", 5);
+                        }
+                    }
+                )) as Array<Any>)
+
+                val jsonArray4 = JSONArray(liste)
+                val idUn =
+                    jsonArray4.getJSONObject(0).getString("id").toString()
+
+
+                idOT = infos[0].toInt()
+                num = infos[1]
+                name= infos[2]
+                idU= idUn.toInt()
+                qteRealis= infos[4]
+                idLP = infos[5].toInt()
+                idL = infos[6].toInt()
+
+                var id: Int = models.execute(
+                    "execute_kw", Arrays.asList(
+                        db, uid, password,
+                        "sous_ligne.suplementaire", "create",
+                        Arrays.asList(object : HashMap<Any, Any>() {
+                            init {
+                                put("ordre_travail_id", idOT)
+                                //put("ligne_sup_lot_id", idLP)
+                               //put("supplementaire_lot_id", idL)
+                                put("num", num)
+                                put("name", name)
+                                put("unite", idU)
+                                put("qte_realis", qteRealis)
+
+                            }
+                        })
+                    )
+                ) as Int
+                println("************************  liste des données = $id")
+                return id
+
+            } catch (e: MalformedURLException) {
+                Log.d(
+                    "MalformedURLException",
+                    "*********************************************************"
+                )
+                Log.d("MalformedURLException", e.toString())
+            } catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return 0
+        }
     }
 }
