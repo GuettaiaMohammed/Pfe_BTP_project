@@ -121,7 +121,14 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         }
 
         //Coté ajoute
+        val connRefMax = Reference().execute(url)
+        val ref= connRefMax.get().toInt()
+        val refMax = ref+1
+
         val numOt = findViewById<TextInputEditText>(R.id.refOTET)
+        numOt.setText(refMax.toString())
+
+
         val validerBtn = findViewById<Button>(R.id.validerAjtOtBtn)
         validerBtn.setOnClickListener {
             // Id lot
@@ -346,6 +353,87 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                     val idE= jsonArray.getJSONObject(0).getString("id").toInt()
                     println("**************************** id emplacement = ${idE.toString()}")
                     return idE
+                }
+
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return 0
+        }
+    }
+
+    class Reference : AsyncTask<String, Void, Int>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg url: String?): Int {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des chantier
+                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "ordre.travail", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("chantier_id", "=", 2)
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("reference")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+
+                var listeRef = ArrayList<Int>()
+                if(list.isNotEmpty()){
+                    for(i in 0..(list.size)-1) {
+                        val jsonArray = JSONArray(list)
+                        val ref = jsonArray.getJSONObject(i).getString("reference").toInt()
+                        println("**************************** id emplacement = ${ref.toString()}")
+                        listeRef.add(ref)
+                    }
+                    var refMax: Int = 0
+                    if(listeRef.size == 1 ){
+                        refMax = listeRef[0]
+                        return refMax
+                    }else {
+                        for (i in 0..(listeRef.size) - 1) {
+                            if (refMax <= listeRef[i]){
+                                refMax = listeRef[i]
+                            }
+                        }
+                        return refMax
+                    }
                 }
 
 

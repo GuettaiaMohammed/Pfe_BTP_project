@@ -167,24 +167,28 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
 
                     //Spinner Ajouté article consommé
                     val spinnerA = mDialogView2.findViewById<Spinner>(R.id.spinnerALigneSupp)
-                    val spinnerUU = mDialogView2.findViewById<Spinner>(R.id.spinnerUniteDMesureL)
                     //Remplire Spinner
                     val adapter: ArrayAdapter<String> = ArrayAdapter<String>(mBuilder2.context, android.R.layout.simple_spinner_item, listArticlesS)
-                    val adapter1: ArrayAdapter<String> = ArrayAdapter<String>(mBuilder2.context, android.R.layout.simple_spinner_item, listUnitesS)
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinnerA.adapter = adapter
-                    adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerUU.adapter = adapter1
+
 
                         //Boutton valider Ajout d'un Article pour une ligne supplémentaire
                         val validAjtArticleBtn = mDialogView2.findViewById<Button>(R.id.validAjtArticleLigneSuppBtn)
                         validAjtArticleBtn.setOnClickListener {
                             val article = spinnerA.selectedItem.toString()
-                            val unite = spinnerUU.selectedItem.toString()
+                                val artPos = spinnerA.selectedItemPosition
+                                val articleId = jsonArray8.getJSONObject(artPos-1).getString("id").toString()
+
+                            val unitePos = spinnerA.selectedItemPosition
+                                val unite = jsonArray8.getJSONObject(unitePos-1).getString("uom_id").toString()
+                                var unit = unite.split("\"")[1]
+                                var unit2 = unit.split("\"")[0]
+
                             val qteConsom = qteConsET.text.toString()
 
                             if(article != "" && unite != "" && qteConsom != "") {
-                                articleAdapter!!.add(ArticleOT("","","","",article, unite, qteConsom))
+                                articleAdapter!!.add(ArticleOT("","","",articleId,article, unit2, qteConsom))
                                 mBuilder2.dismiss()
                             }else{
                                 Toast.makeText(mBuilder2.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
@@ -223,7 +227,25 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
                 val ligneParentId = ligneSuppAdapter!!.getItem(i).ligneParenteId
 
                 val connAjt =
-                    AjouterLigneSuppOT().execute(idOT.toString(), num, name, unite, qte, ligneParentId, idLot.toString())
+                    AjouterLigneSuppOT().execute(idOT.toString(), num, name, unite, qte, ligneParentId)
+                val idLigneS = connAjt.get()
+                createArticleLignesupp(idLigneS!!.toInt())
+
+            }
+        }
+    }
+
+    fun createArticleLignesupp(idLigneSupp: Int){
+        if(articleAdapter != null) {
+            for (i in 1..(articleAdapter!!.count) - 1) {
+                val unite =
+                    listViewArticle!!.getChildAt(i).findViewById<TextView>(R.id.uniteArtLigneSuppTV).text.toString()
+                val qte = listViewArticle!!.getChildAt(i).findViewById<TextView>(R.id.QteConsomArtLigneSuppTV)
+                    .text.toString()
+                val articleId = articleAdapter!!.getItem(i).idArticle
+
+                val connAjt =
+                    AjouterArticleLigneSuppOT().execute(idLigneSupp.toString(), articleId, unite, qte)
 
             }
         }
@@ -270,7 +292,11 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
                     ),
                     object : HashMap<Any, Any>() {
                         init {
-                            put("fields", Arrays.asList("name"))
+                            put("fields",
+                                Arrays.asList(
+                                    "name",
+                                    "uom_id"
+                                ))
                             //put("limit", 5);
                         }
                     }
@@ -496,7 +522,6 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
                 idU= idUn.toInt()
                 qteRealis= infos[4]
                 idLP = infos[5].toInt()
-                idL = infos[6].toInt()
 
                 var id: Int = models.execute(
                     "execute_kw", Arrays.asList(
@@ -505,12 +530,113 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
                         Arrays.asList(object : HashMap<Any, Any>() {
                             init {
                                 put("ordre_travail_id", idOT)
-                                //put("ligne_sup_lot_id", idLP)
-                               //put("supplementaire_lot_id", idL)
+                                put("ligne_lot_id", idLP)
                                 put("num", num)
                                 put("name", name)
                                 put("unite", idU)
                                 put("qte_realis", qteRealis)
+
+                            }
+                        })
+                    )
+                ) as Int
+                println("************************  liste des données = $id")
+                return id
+
+            } catch (e: MalformedURLException) {
+                Log.d(
+                    "MalformedURLException",
+                    "*********************************************************"
+                )
+                Log.d("MalformedURLException", e.toString())
+            } catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return 0
+        }
+    }
+
+    class AjouterArticleLigneSuppOT : AsyncTask<String, Void,Int?>(){
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+
+
+        var qte:String = ""
+        var idArt:Int=0
+        var idU:Int=0
+        var idLP:Int=0
+
+        @SuppressLint("NewApi")
+        override fun doInBackground(vararg infos:String): Int? {
+            var client = XmlRpcClient()
+            var common_config = XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL =
+                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int = client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(
+                                    String.format(
+                                        "%s/xmlrpc/2/object",
+                                        "http://sogesi.hopto.org:7013"
+                                    )
+                                )
+                            }
+                        })
+                    }
+                }
+
+                var liste: List<*> = java.util.ArrayList<Any>()
+
+                liste = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "uom.uom", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("name", "=", infos[2])
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put("fields", Arrays.asList("name"))
+                            //put("limit", 5);
+                        }
+                    }
+                )) as Array<Any>)
+
+                val jsonArray4 = JSONArray(liste)
+                val idUn =
+                    jsonArray4.getJSONObject(0).getString("id").toString()
+
+
+                idLP = infos[0].toInt()
+                idArt = infos[1].toInt()
+                idU= idUn.toInt()
+                qte= infos[3]
+
+                var id: Int = models.execute(
+                    "execute_kw", Arrays.asList(
+                        db, uid, password,
+                        "article.sous_line", "create",
+                        Arrays.asList(object : HashMap<Any, Any>() {
+                            init {
+                                put("sous_ligne_suplementaire_id", idLP)
+                                put("product_id", idArt)
+                                put("unite", idU)
+                                put("qte_consom", qte)
 
                             }
                         })

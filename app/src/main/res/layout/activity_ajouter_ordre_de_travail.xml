@@ -96,7 +96,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="7dp"
-                    android:hint="@string/ref" />
+                    android:hint="N° OT"
+                    android:inputType="textPersonName|text" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
