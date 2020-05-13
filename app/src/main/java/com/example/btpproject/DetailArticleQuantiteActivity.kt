@@ -1,5 +1,6 @@
 package com.example.btpproject
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
@@ -53,20 +54,33 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
         val nom=findViewById<TextView>(R.id.name)
         val dateD=findViewById<TextView>(R.id.date)
         val qteD=findViewById<TextView>(R.id.qteDemand)
+        val state=findViewById<TextView>(R.id.etat)
+        val qteT=findViewById<TextView>(R.id.qteTraite)
 
 
         val i=intent
         val id=i.getIntExtra("id",0)
         // Toast.makeText(this, id.toString() , Toast.LENGTH_SHORT).show()
 
-        var conn = DetailArticle().execute(id)
+        var conn = DetailArticle2().execute(id)
         var details  = conn.get()
-        val jsonArray = JSONArray(details)
 
+
+
+        var conn1=QuantiteRec().execute(id)
+        var listQte=conn1.get()
+
+
+
+var qte2:String=""
+        val jsonArray = JSONArray(details)
         for (i1 in 0..(details!!.size) - 1) {
 
-        var date= jsonArray.getJSONObject(i1).getString("date_planned").toString()
-        var qte= jsonArray.getJSONObject(i1).getString("product_qty").toString()
+        var date= jsonArray.getJSONObject(i1).getString("date").toString()
+        var qte= jsonArray.getJSONObject(i1).getString("product_uom_qty").toString()
+
+            var etat= jsonArray.getJSONObject(i1).getString("state").toString()
+           qte2= jsonArray.getJSONObject(i1).getString("quantity_done").toString()
 
 
         var typeObj =
@@ -81,9 +95,22 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
             nom.setText(type2)
             qteD.setText(qte+" "+u2)
             dateD.setText(date)
+            if(qte==qte2){
+                receptionArticle.setEnabled(false)
+            }
+            if(etat=="done"){
+             state.setText("Fait")
 
+                receptionArticle.setEnabled(false)
+            }
+            else{
+                state.setText("Prêt")
+            }
+            qteT.setText(qte2+" "+u2)
 
         }
+
+        val jsonArray1 = JSONArray(listQte)
 
 
         listView = this.findViewById(R.id.qteListe)
@@ -92,29 +119,63 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
         this.mesQtes = ArrayList();
 
 
+
+    if(listQte!=null) {
         (mesQtes as ArrayList<QuantiteArticle>).add(QuantiteArticle("Quantité ",  "Date réception"))
-        //qteAdapter!!.addAll(mesQtes)
+
+        for (i1 in 0..(listQte!!.size) - 1) {
+
+        var date = jsonArray1.getJSONObject(i1).getString("date").toString()
+
+
+        var qtec2 = jsonArray1.getJSONObject(i1).getString("qty_done").toString()
+
+
+        var typeObj2 =
+            jsonArray1.getJSONObject(i1).getString("product_uom_id").toString()
+        var u = typeObj2.split("\"")[1]
+        var u2 = u.split("\"")[0]
+
+        if(qtec2!="0.0"){
+        mesQtes!!.add(QuantiteArticle(qtec2 + " " + u2, date))}
+
+
+    }
+}
+
 
 
         receptionArticle.setOnClickListener {
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_receptioner_article, null)
             //AlertDialogBuilder
-            val mBuilder = AlertDialog.Builder(this)
-                .setView(mDialogView)
+            val mBuilder = AlertDialog.Builder(this).create()
+                mBuilder.setView(mDialogView)
             //.setTitle("Login Form")
             mBuilder.show()
             mDialogView.valider.setOnClickListener{
                 //pour ajouter la quantité receptionné et la date
                 val c: SimpleDateFormat =SimpleDateFormat("dd/M/yyyy")
                 var d=c.format((Date()))
-               qteAdapter!!.add(QuantiteArticle(""+mDialogView.qteRecep.text.toString(),d))
 
 qteRecu=mDialogView.qteRecep.text.toString()
+                val receptQte =Receptionner()
+                    .execute(id.toString(),qteRecu,d)
+                mBuilder.dismiss()
+                if(qteD.getText()==qteRecu)
+                    receptionArticle.setEnabled(false)
+                val i:Intent=intent
+                finish()
+                overridePendingTransition(0,0)
+                startActivity(i)
+                overridePendingTransition(0,0)
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             }
+mDialogView.annuler.setOnClickListener {
+    mBuilder.dismiss()
+}
 //pour désactiver le button receptionner
-            if(qteDemand.getText()==qteRecu)
-                receptionArticle.setEnabled(false)
+
 
 
         }
@@ -275,6 +336,280 @@ qteRecu=mDialogView.qteRecep.text.toString()
 
 
     }
+
+
+    class DetailArticle2 : AsyncTask<Int, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg id: Int?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+                Log.d(
+                    "result",
+                    "*******************************************************************"
+                );
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+
+
+
+
+
+                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "stock.move", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("id", "=", id)
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("id","product_id","product_uom_qty","quantity_done","product_uom","date","state")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+                println("**************************  champs chantier = $list")
+
+
+
+
+                return list
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
+    }
+
+    class QuantiteRec : AsyncTask<Int, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg id: Int?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+                Log.d(
+                    "result",
+                    "*******************************************************************"
+                );
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+
+
+
+
+
+                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "stock.move.line", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("move_id", "=", id)
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("id","qty_done","product_uom_id","date")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+                println("**************************  champs chantier = $list")
+
+
+
+
+                return list
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
+    }
+
+    class Receptionner : AsyncTask<String, Void,List<Any>?>(){
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        var idA:Int=0
+        var qte:String=""
+        var date:String=""
+
+
+
+        @SuppressLint("NewApi")
+        override fun doInBackground(vararg infos:String): List<Any>? {
+            var client = XmlRpcClient()
+            var common_config = XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL =
+                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int = client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(
+                                    String.format(
+                                        "%s/xmlrpc/2/object",
+                                        "http://sogesi.hopto.org:7013"
+                                    )
+                                )
+                            }
+                        })
+                    }
+                }
+
+
+
+                println("************************  datebbb = ${infos[1]}")
+
+
+
+
+                idA=infos[0].toInt()
+                qte=infos[1]
+                date=infos[2]
+
+
+                var q:Float= 0F
+
+                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "stock.move.line", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("move_id", "=", idA)
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("qty_done")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+                println("**************************  champs chantier = $list")
+
+                var jsonArray=JSONArray(list)
+                for (i1 in 0..(list!!.size) - 1) {
+
+
+
+                    var qte2 = jsonArray.getJSONObject(i1).getString("qty_done").toString().toFloat()
+                   q=qte2
+                    println("**************************  champs chantier = $q")
+                }
+
+
+                    q=q+qte.toFloat()
+
+                println("**************************  q = $q")
+
+
+
+var qteDone=q.toString()
+
+               var id2=models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "stock.move.line", "write",
+                    Arrays.asList(
+                        Arrays.asList(idA),
+                        object : HashMap<Any, Any>() { init {
+                            put("qty_done", qteDone)
+                            put("date",date)
+
+
+
+                        }
+                        }
+                    )
+                ))
+            } catch (e: MalformedURLException) {
+                Log.d(
+                    "MalformedURLException",
+                    "*********************************************************"
+                )
+                Log.d("MalformedURLException", e.toString())
+            } catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+    }
+
 
 }
 

@@ -55,7 +55,7 @@ class ListeArticleActivity : AppCompatActivity() {
 
 
 
-        val conn=Connexion().execute(url)
+        val conn=ListeArticleD().execute(url)
 
         val conn4= MonChantier.Article().execute(url)
         val conn5= MonChantier.Unite().execute(url)
@@ -85,7 +85,7 @@ class ListeArticleActivity : AppCompatActivity() {
 
         }
 
-        listView =findViewById(R.id.articleListe)
+        listView = findViewById(R.id.articleListe)
         articleAdapter = ArticleAdapter(applicationContext, 0)
         mesArticles = conn.get() as ArrayList<Article>
 
@@ -400,7 +400,7 @@ class ListeArticleActivity : AppCompatActivity() {
 
                    // println("**************************  article = $type2")
 
-                        listeArticleDem!!.add(Article(id,type2,qte+u2,date))
+                      //  listeArticleDem!!.add(Article(id,type2,qte+u2,date))
                     }
 
 
@@ -422,4 +422,170 @@ class ListeArticleActivity : AppCompatActivity() {
 
 
     }
+
+
+    class ListeArticleD : AsyncTask<String, Void, List<Any>?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
+
+        override fun doInBackground(vararg url: String?): List<Any>? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL =
+                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int = client.execute(
+                    common_config, "authenticate", Arrays.asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+                Log.d(
+                    "result",
+                    "*******************************************************************"
+                );
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(
+                                    String.format(
+                                        "%s/xmlrpc/2/object",
+                                        "http://sogesi.hopto.org:7013"
+                                    )
+                                )
+                            }
+                        })
+                    }
+                }
+                val list1 = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "purchase.order", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("origin", "=", "piscine_semi_olympique_ref")
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("id", "name")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+                println("**************************  champs chantier = $list1")
+                //liste des chantier
+                val jsonArray = JSONArray(list1)
+                var listeArticleDem = ArrayList<Article>()
+
+                for (i in 0..(list1.size) - 1) {
+
+                    var name = jsonArray.getJSONObject(i).getString("name").toString()
+
+
+                    val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                        db, uid, password,
+                        "stock.picking", "search_read",
+                        Arrays.asList(
+                            Arrays.asList(
+                                Arrays.asList("origin", "=", name)
+                            )
+                        ),
+                        object : HashMap<Any, Any>() {
+                            init {
+                                put(
+                                    "fields",
+                                    Arrays.asList("id", "state", "scheduled_date")
+                                )
+                            }
+                        }
+                    )) as Array<Any>)
+                    println("**************************  champs chantier = $list")
+                    val jsonArray2 = JSONArray(list)
+                    if (list != null) {
+                        for (i2 in 0..(list.size) - 1) {
+
+                            var idP = jsonArray2.getJSONObject(i2).getString("id").toInt()
+
+                            val list2 = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                                db, uid, password,
+                                "stock.move", "search_read",
+                                Arrays.asList(
+                                    Arrays.asList(
+                                        Arrays.asList("picking_id", "=", idP)
+                                    )
+                                ),
+                                object : HashMap<Any, Any>() {
+                                    init {
+                                        put(
+                                            "fields",
+                                            Arrays.asList(
+                                                "id",
+                                                "product_id",
+                                                "product_uom_qty",
+                                                "state",
+                                                "product_uom",
+                                                "date_expected"
+                                            )
+                                        )
+                                    }
+                                }
+                            )) as Array<Any>)
+
+                            println("**************************  champs chantier = $list")
+                            val jsonArray3 = JSONArray(list2)
+
+                            for (i1 in 0..(list2.size) - 1) {
+                                var state =
+                                    jsonArray3.getJSONObject(i1).getString("state").toString()
+                                var qte = jsonArray3.getJSONObject(i1).getString("product_uom_qty")
+                                    .toString()
+                                var idA = jsonArray3.getJSONObject(i1).getString("id").toInt()
+
+                                var typeObj =
+                                    jsonArray3.getJSONObject(i1).getString("product_id").toString()
+                                var type = typeObj.split("\"")[1]
+                                var type2 = type.split("\"")[0]
+                                var typeObj2 =
+                                    jsonArray3.getJSONObject(i1).getString("product_uom").toString()
+                                var u = typeObj2.split("\"")[1]
+                                var u2 = u.split("\"")[0]
+                                var date= jsonArray3.getJSONObject(i1).getString("date_expected").toString()
+
+                                // println("**************************  article = $type2")
+
+                                listeArticleDem!!.add(Article(idA, type2, qte + u2,date, state))
+                            }
+                        }
+                    }
+
+
+                }
+
+
+
+                //  println("**************************  article = $listeArticleDem ")
+                return listeArticleDem
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
+    }
+
+
+
 }
