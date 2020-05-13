@@ -28,6 +28,10 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager
 
+    lateinit var intt: Intent
+    var id_chantier:Int = 0
+    var id:Int = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +41,10 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Ordre de travail")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        intt = intent
+        id = intt.getIntExtra("id",0)
+        id_chantier = intt.getIntExtra("idChantier",0)
 
         tabLayout = findViewById(R.id.detailOTTabLayout)
         viewPager = findViewById(R.id.detailOTViewPager)
@@ -48,8 +56,6 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
         val refLot = findViewById<TextView>(R.id.refLotDetOTTV)
         val date = findViewById<TextView>(R.id.DateOTDetOTTV)
 
-        val i = intent
-        val id = i.getIntExtra("id",0)
 
         val conn = DetailOrdre().execute(id)
         val ordre = conn.get()
@@ -98,6 +104,7 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_home ->
             {
                 val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -105,6 +112,7 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_monCh->
             {
                 val intent = Intent(this, MonChantier::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -112,6 +120,7 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_materiel ->
             {
                 val intent = Intent(this, ListeMaterielsActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -119,6 +128,7 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_employe ->
             {
                 val intent = Intent(this, ListeEmployeActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -126,6 +136,7 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_article ->
             {
                 val intent = Intent(this, ListeArticleActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -133,6 +144,7 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_suiviJ ->
             {
                 val intent = Intent(this, ListeEmployeSuiviActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -140,6 +152,7 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_avance ->
             {
                 val intent = Intent(this, ListeAvanceEmployeActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -147,6 +160,7 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_ordreTravail ->
             {
                 val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true

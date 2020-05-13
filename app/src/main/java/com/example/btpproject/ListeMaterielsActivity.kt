@@ -57,6 +57,9 @@ class ListeMaterielsActivity : AppCompatActivity() {
     var mDatepickerD: DatePickerDialog? = null
     var mDatepickerF: DatePickerDialog? = null
 
+    lateinit var intt: Intent
+    var id_chantier:Int = 0
+
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +71,9 @@ class ListeMaterielsActivity : AppCompatActivity() {
         supportActionBar!!.setTitle("Demandes matériel")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        intt = intent
+        id_chantier = intt.getIntExtra("idChantier",0)
+
         listMateriels.add("")
 
         listView = findViewById(R.id.materielsListe)
@@ -76,7 +82,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
         //Faire la connexion avec le serveur
 
         //liste des demandes matériels
-        val conn = Connexion().execute(url)
+        val conn = Connexion().execute(id_chantier)
         val list = conn.get()
 
         val conn2= MonChantier.Materiel().execute(url)
@@ -124,6 +130,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
                     val id = jsonArray.getJSONObject(i).getString("id").toString()
 
                     intent.putExtra("id",id.toInt())
+                    intent.putExtra("idChantier", id_chantier)
                     // start your next activity
                     startActivity(intent)
                 }
@@ -295,6 +302,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_home ->
             {
                 val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -302,6 +310,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_monCh->
             {
                 val intent = Intent(this, MonChantier::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -310,6 +319,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_employe ->
             {
                 val intent = Intent(this, ListeEmployeActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -317,6 +327,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_article ->
             {
                 val intent = Intent(this, ListeArticleActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -324,6 +335,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_suiviJ ->
             {
                 val intent = Intent(this, ListeEmployeSuiviActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -331,6 +343,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_avance ->
             {
                 val intent = Intent(this, ListeAvanceEmployeActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -338,6 +351,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_ordreTravail ->
             {
                 val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -353,13 +367,13 @@ class ListeMaterielsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    class Connexion : AsyncTask<String, Void, List<Any>?>() {
+    class Connexion : AsyncTask<Int, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
 
 
-        override fun doInBackground(vararg url: String?): List<Any>? {
+        override fun doInBackground(vararg idCh: Int?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
@@ -391,7 +405,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
                     "chantier.materiel", "search_read",
                     asList(
                         asList(
-                            asList("chantier_id", "=", 2)
+                            asList("chantier_id", "=", idCh)
                         )
                     ),
                     object : HashMap<Any,Any>() {

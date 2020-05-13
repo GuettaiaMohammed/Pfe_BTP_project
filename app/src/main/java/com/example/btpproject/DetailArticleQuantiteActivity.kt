@@ -41,7 +41,12 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
     public var mesQtes: ArrayList<QuantiteArticle>? = null
     public var listView: ListView? = null
     public var qteAdapter: QuantiteArticleAdapter? = null
-      var qteRecu : String?=""
+    var qteRecu : String?=""
+
+    lateinit var i: Intent
+    var id_chantier:Int = 0
+    var id:Int = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +62,10 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
         val state=findViewById<TextView>(R.id.etat)
         val qteT=findViewById<TextView>(R.id.qteTraite)
 
+        i = intent
+        id = i.getIntExtra("id",0)
+        id_chantier = i.getIntExtra("idChantier",0)
 
-        val i=intent
-        val id=i.getIntExtra("id",0)
         // Toast.makeText(this, id.toString() , Toast.LENGTH_SHORT).show()
 
         var conn = DetailArticle2().execute(id)

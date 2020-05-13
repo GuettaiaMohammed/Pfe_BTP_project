@@ -49,44 +49,54 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.setTitle("BTP")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        val i = intent
+        val id_chantier = i.getIntExtra("idChantier",0)
+
 
         chantier.setOnClickListener {
             val intent = Intent(this, MonChantier::class.java)
+            intent.putExtra("idChantier", id_chantier)
             // start your next activity
             startActivity(intent)
         }
 
         employes.setOnClickListener {
             val intent = Intent(this, ListeEmployeActivity::class.java)
+            intent.putExtra("idChantier", id_chantier)
             // start your next activity
             startActivity(intent)
         }
 
         article.setOnClickListener {
             val intent = Intent(this, ListeArticleActivity::class.java)
+            intent.putExtra("idChantier", id_chantier)
             // start your next activity
             startActivity(intent)
         }
 
         materiels.setOnClickListener {
             val intent = Intent(this, ListeMaterielsActivity::class.java)
+            intent.putExtra("idChantier", id_chantier)
             // start your next activity
             startActivity(intent)
         }
 
         avancesEmploye.setOnClickListener {
             val intent = Intent(this, ListeAvanceEmployeActivity::class.java)
+            intent.putExtra("idChantier", id_chantier)
             // start your next activity
             startActivity(intent)
         }
 
         ordresDeTravail.setOnClickListener {
             val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
+            intent.putExtra("idChantier", id_chantier)
             // start your next activity
             startActivity(intent)
         }
         suivi.setOnClickListener {
             val intent = Intent(this, ListeEmployeSuiviActivity::class.java)
+            intent.putExtra("idChantier", id_chantier)
             // start your next activity
             startActivity(intent)
         }

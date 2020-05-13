@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:background="#FFFFFF">
 
+        <!--app:navigationIcon="@drawable/menu" -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="0dp"
@@ -19,11 +20,11 @@
             android:background="@color/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-        <!--app:navigationIcon="@drawable/menu" -->
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
         <FrameLayout
             style="?attr/actionButtonStyle"
             android:layout_width="wrap_content"
@@ -165,12 +166,12 @@
 
                     <TextView
                         android:id="@+id/textView4"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/imageView3"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
-                        android:gravity="center"
+                        android:gravity="bottom|center"
                         android:text="Demandes article"
                         android:textSize="20sp"
                         android:textStyle="bold"
@@ -295,8 +296,8 @@
 
                     <TextView
                         android:id="@+id/textView8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_below="@id/ordreT"
                         android:layout_marginTop="10dp"
                         android:gravity="center"
@@ -328,7 +329,7 @@
 
                     <TextView
                         android:id="@+id/textView9"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/demande"
                         android:layout_centerHorizontal="true"
@@ -409,7 +410,7 @@
 
                     <TextView
                         android:id="@+id/textView12"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/dashB"
                         android:layout_centerHorizontal="true"

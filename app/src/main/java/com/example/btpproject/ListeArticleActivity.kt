@@ -39,9 +39,16 @@ class ListeArticleActivity : AppCompatActivity() {
     private var mesArticles: ArrayList<Article>? = null
     private var listView: ListView? = null
     private var   articleAdapter: ArticleAdapter? = null
+
+    lateinit var intt: Intent
+    var id_chantier:Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liste_articles)
+
+        intt = intent
+        id_chantier = intt.getIntExtra("idChantier",0)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -101,6 +108,7 @@ class ListeArticleActivity : AppCompatActivity() {
                     val article = mesArticles!!.get(_i)
                    val idA=article.id
                     intent.putExtra("id",idA)
+                    intent.putExtra("idChantier", id_chantier)
                     // start your next activity
                    startActivity(intent)
                 }
@@ -237,6 +245,7 @@ class ListeArticleActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_home ->
             {
                 val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -244,6 +253,7 @@ class ListeArticleActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_monCh->
             {
                 val intent = Intent(this, MonChantier::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -251,6 +261,7 @@ class ListeArticleActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_materiel ->
             {
                 val intent = Intent(this, ListeMaterielsActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -258,6 +269,7 @@ class ListeArticleActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_employe ->
             {
                 val intent = Intent(this, ListeEmployeActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -265,6 +277,7 @@ class ListeArticleActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_article ->
             {
                 val intent = Intent(this, ListeArticleActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -272,6 +285,7 @@ class ListeArticleActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_suiviJ ->
             {
                 val intent = Intent(this, ListeEmployeSuiviActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -279,6 +293,7 @@ class ListeArticleActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_avance ->
             {
                 val intent = Intent(this, ListeAvanceEmployeActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -286,6 +301,7 @@ class ListeArticleActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_ordreTravail ->
             {
                 val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true

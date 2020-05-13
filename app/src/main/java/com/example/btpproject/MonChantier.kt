@@ -65,17 +65,19 @@ class MonChantier : AppCompatActivity() {
     var mDatepickerDMat: DatePickerDialog? = null
     var mDatepickerFMat: DatePickerDialog? = null
 
+    lateinit var i: Intent
+    var id_chantier: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mon_chantier2)
 
-           val nomChantier = findViewById<TextView>(R.id.nomChantier)
+        i = intent
+        id_chantier = i.getIntExtra("idChantier",0)
 
+        val nomChantier = findViewById<TextView>(R.id.nomChantier)
         val date_debut = findViewById<TextView>(R.id.date_debut)
-
         val date_fin_prev = findViewById<TextView>(R.id.date_fin_prev)
-
         val date_fin_reel = findViewById<TextView>(R.id.date_fin_reel)
 
 
@@ -84,8 +86,6 @@ class MonChantier : AppCompatActivity() {
         supportActionBar!!.title = "Mon chantier"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         //
-
-
         //remplire les listes de spinner
 
 
@@ -101,8 +101,8 @@ class MonChantier : AppCompatActivity() {
         mesLots = ArrayList()
         (mesLots as ArrayList<Lot>).add(Lot("Numero ","Lot","Etat"))
         //
-        val conn = Connexion().execute(url)
-        val conn1 = DetailChantier().execute(url)
+        val conn = Connexion().execute(id_chantier)
+        val conn1 = DetailChantier().execute(id_chantier)
         val conn2=Materiel().execute(url)
         val conn3=Metier().execute(url)
         val conn4=Article().execute(url)
@@ -533,6 +533,7 @@ mBuilder.dismiss()
             item!!.itemId == R.id.navigation_home ->
             {
                 val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -540,6 +541,7 @@ mBuilder.dismiss()
             item.itemId == R.id.navigation_monCh->
             {
                 val intent = Intent(this, MonChantier::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -547,6 +549,7 @@ mBuilder.dismiss()
             item.itemId == R.id.navigation_materiel ->
             {
                 val intent = Intent(this, ListeMaterielsActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -554,6 +557,7 @@ mBuilder.dismiss()
             item.itemId == R.id.navigation_employe ->
             {
                 val intent = Intent(this, ListeEmployeActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -561,6 +565,7 @@ mBuilder.dismiss()
             item.itemId == R.id.navigation_article ->
             {
                 val intent = Intent(this, ListeArticleActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -568,6 +573,7 @@ mBuilder.dismiss()
             item.itemId == R.id.navigation_suiviJ ->
             {
                 val intent = Intent(this, ListeEmployeSuiviActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -575,6 +581,7 @@ mBuilder.dismiss()
             item.itemId == R.id.navigation_avance ->
             {
                 val intent = Intent(this, ListeAvanceEmployeActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -582,6 +589,7 @@ mBuilder.dismiss()
             item.itemId == R.id.navigation_ordreTravail ->
             {
                 val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -615,12 +623,12 @@ mBuilder.dismiss()
 
 
 
-    class Connexion : AsyncTask<String, Void, List<Any>?>() {
+    class Connexion : AsyncTask<Int, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
 
-        override fun doInBackground(vararg url: String?): List<Any>? {
+        override fun doInBackground(vararg idCh: Int?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
@@ -655,7 +663,7 @@ mBuilder.dismiss()
                         "project.lot", "search_read",
                         asList(
                                 asList(
-                                        asList("chantier_id", "=", 2)
+                                        asList("chantier_id", "=", idCh)
                                 )
                         ),
                         object : java.util.HashMap<Any, Any>() {
@@ -682,12 +690,12 @@ mBuilder.dismiss()
 
     }
 
-    class DetailChantier : AsyncTask<String, Void, List<Any>?>() {
+    class DetailChantier : AsyncTask<Int, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
 
-        override fun doInBackground(vararg url: String?): List<Any>? {
+        override fun doInBackground(vararg idCh: Int?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
@@ -712,7 +720,7 @@ mBuilder.dismiss()
                 // récupérer détails de chantier
                 val record = (models.execute(
                         "execute_kw", asList(
-                        *arrayOf(db, uid, password, "project.chantier", "read", asList(2),
+                        *arrayOf(db, uid, password, "project.chantier", "read", asList(idCh),
                                 object : java.util.HashMap<Any,Any>() {
                             init {
                                 put("fields", asList("name", "date_debut", "date_fin_prev", "date_fin_reel"))

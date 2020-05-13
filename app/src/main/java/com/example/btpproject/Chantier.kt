@@ -1,3 +1,3 @@
 package com.example.btpproject
 
-class Chantier(var nom: String?, var avancement: Int?, var etat: String?)
+class Chantier(var id: String?, var nom: String?, var avancement: String?, var emplacement: String?)

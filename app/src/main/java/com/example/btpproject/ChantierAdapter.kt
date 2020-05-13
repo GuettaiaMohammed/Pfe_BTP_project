@@ -28,22 +28,22 @@ class ChantierAdapter(mcontext: Context,mdata: ArrayList<Chantier>, onNoteListen
 
     override fun onBindViewHolder(chantierAdapterHolder: ChantierAdapterHolder, position: Int) {
         chantierAdapterHolder.nom!!.text = mdata.get(position).nom
-        chantierAdapterHolder.etat!!.text = mdata.get(position).etat
-        chantierAdapterHolder.avancement!!.text = mdata.get(position).avancement.toString()
+        chantierAdapterHolder.emplac!!.text = mdata.get(position).emplacement
+        chantierAdapterHolder.avancement!!.text = mdata.get(position).avancement
     }
 
 
     class ChantierAdapterHolder: RecyclerView.ViewHolder, View.OnClickListener{
 
         var nom: TextView? = null
-        var etat: TextView? = null
+        var emplac: TextView? = null
         var avancement: TextView? = null
         var onNoteListener: OnNoteListener? = null
 
         constructor(itemView: View, onNoteListener: OnNoteListener) : super(itemView){
             this
             nom = itemView.findViewById(R.id.nomChantierListCh)
-            etat = itemView.findViewById(R.id.etatChantierListeTV)
+            emplac = itemView.findViewById(R.id.emplacChantierListeTV)
             avancement = itemView.findViewById(R.id.avancementChantierListeTV)
             this.onNoteListener = onNoteListener
 

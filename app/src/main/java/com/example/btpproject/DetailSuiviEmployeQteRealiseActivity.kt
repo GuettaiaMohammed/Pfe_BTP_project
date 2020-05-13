@@ -39,10 +39,17 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
     private var listView: ListView? = null
     private var qteAdapter: QteRealiseAdapter? = null
 
+    lateinit var i: Intent
+    var id_chantier:Int = 0
+    var id:Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_suivi)
 
+        i = intent
+        id = i.getIntExtra("id",0)
+        id_chantier = i.getIntExtra("idChantier",0)
 
         val name=findViewById<TextView>(R.id.name)
 
@@ -62,9 +69,6 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
         supportActionBar!!.setTitle("Detail suivi")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-
-        val i=intent
-        val id=i.getIntExtra("id",0)
         println(" ************** id = $id")
         // Toast.makeText(this, id.toString() , Toast.LENGTH_SHORT).show()
         var conn = Connexion().execute(id)
@@ -202,6 +206,7 @@ var idE:String=""
             item!!.getItemId() == R.id.navigation_home ->
             {
                 val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -209,6 +214,7 @@ var idE:String=""
             item!!.getItemId() == R.id.navigation_monCh->
             {
                 val intent = Intent(this, MonChantier::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -216,6 +222,7 @@ var idE:String=""
             item!!.getItemId() == R.id.navigation_materiel ->
             {
                 val intent = Intent(this, ListeMaterielsActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -223,6 +230,7 @@ var idE:String=""
             item!!.getItemId() == R.id.navigation_employe ->
             {
                 val intent = Intent(this, ListeEmployeActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -230,6 +238,7 @@ var idE:String=""
             item!!.getItemId() == R.id.navigation_article ->
             {
                 val intent = Intent(this, ListeArticleActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -237,6 +246,7 @@ var idE:String=""
             item!!.getItemId() == R.id.navigation_suiviJ ->
             {
                 val intent = Intent(this, ListeEmployeSuiviActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -244,6 +254,7 @@ var idE:String=""
             item!!.getItemId() == R.id.navigation_avance ->
             {
                 val intent = Intent(this, ListeAvanceEmployeActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -251,6 +262,7 @@ var idE:String=""
             item!!.getItemId() == R.id.navigation_ordreTravail ->
             {
                 val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true

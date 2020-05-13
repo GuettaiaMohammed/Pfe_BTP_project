@@ -59,6 +59,9 @@ class ListeEmployeActivity : AppCompatActivity() {
     var mDatepickerD: DatePickerDialog? = null
     var mDatepickerF: DatePickerDialog? = null
 
+    lateinit var intt: Intent
+    var id_chantier:Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liste_employe)
@@ -68,7 +71,8 @@ class ListeEmployeActivity : AppCompatActivity() {
         supportActionBar!!.setTitle("Demandes personnel")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-
+        intt = intent
+        id_chantier = intt.getIntExtra("idChantier",0)
 
         listMetiers.add("")
 
@@ -79,7 +83,7 @@ class ListeEmployeActivity : AppCompatActivity() {
         mesEmployes = ArrayList()
 
         // Liste des employées
-        val conn = Connexion().execute(url)
+        val conn = Connexion().execute(id_chantier)
         val conn3= MonChantier.Metier().execute(url)
         val listMetier=conn3.get()
 
@@ -276,6 +280,7 @@ class ListeEmployeActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_home ->
             {
                 val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -283,6 +288,7 @@ class ListeEmployeActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_monCh->
             {
                 val intent = Intent(this, MonChantier::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -290,6 +296,7 @@ class ListeEmployeActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_materiel ->
             {
                 val intent = Intent(this, ListeMaterielsActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -298,6 +305,7 @@ class ListeEmployeActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_article ->
             {
                 val intent = Intent(this, ListeArticleActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -305,6 +313,7 @@ class ListeEmployeActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_suiviJ ->
             {
                 val intent = Intent(this, ListeEmployeSuiviActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -312,6 +321,7 @@ class ListeEmployeActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_avance ->
             {
                 val intent = Intent(this, ListeAvanceEmployeActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -319,6 +329,7 @@ class ListeEmployeActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_ordreTravail ->
             {
                 val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -341,14 +352,14 @@ class ListeEmployeActivity : AppCompatActivity() {
 
 
 
-    class Connexion : AsyncTask<String, Void, List<Any>?>() {
+    class Connexion : AsyncTask<Int, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
   val ids:ArrayList<Int> =ArrayList<Int>()
         var listeEmp = ArrayList<Employe>()
 
-        override fun doInBackground(vararg url: String?): List<Any>? {
+        override fun doInBackground(vararg idCh: Int?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {

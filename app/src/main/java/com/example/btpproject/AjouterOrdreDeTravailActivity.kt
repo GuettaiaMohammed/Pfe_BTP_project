@@ -52,6 +52,8 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         supportActionBar!!.setTitle("Ordre de travail")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        val intt = intent
+        val id_chantier = intt.getIntExtra("idChantier",0)
 
         tabLayout = findViewById(R.id.ajoutOTTabLayout)
         viewPager = findViewById(R.id.ajoutOTViewPager)
@@ -65,7 +67,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         val spinnerE = findViewById <Spinner>(R.id.listeLotSpinner)
 
         //liste des Employé spinner
-        val connLot = ListeLotSpinner().execute(url)
+        val connLot = ListeLotSpinner().execute(id_chantier)
         val listLott = connLot.get()
         val jsonArray3 = JSONArray(listLott)
 
@@ -121,7 +123,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         }
 
         //Coté ajoute
-        val connRefMax = Reference().execute(url)
+        val connRefMax = Reference().execute(id_chantier)
         val ref= connRefMax.get().toInt()
         val refMax = ref+1
 
@@ -142,11 +144,11 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
             val num = numOt.text.toString()
 
             //get projet Id
-            val connIdp = ProjetId().execute(url)
+            val connIdp = ProjetId().execute(id_chantier)
             val projectID = connIdp.get()
 
             //get emplacement chantier id
-            val connIdE = EmplacementId().execute(url)
+            val connIdE = EmplacementId().execute(id_chantier)
             val emplacementID = connIdE.get()
             if(nom!="" && num!="" && nomLot!=""){
                 val connAjt = AjouterOT().execute(nom, num, projectID.toString(), idLot, emplacementID.toString(), nomLot, date)
@@ -170,12 +172,12 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         }
     }
 
-    class ListeLotSpinner : AsyncTask<String, Void, List<Any>?>() {
+    class ListeLotSpinner : AsyncTask<Int, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
 
-        override fun doInBackground(vararg url: String?): List<Any>? {
+        override fun doInBackground(vararg idCh: Int?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
@@ -205,7 +207,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                     "project.lot", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("chantier_id", "=", 2),
+                            Arrays.asList("chantier_id", "=", idCh),
                             Arrays.asList("state", "=", "en_cour")
                         )
                     ),
@@ -231,12 +233,12 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         }
     }
 
-    class ProjetId : AsyncTask<String, Void, Int>() {
+    class ProjetId : AsyncTask<Int, Void, Int>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
 
-        override fun doInBackground(vararg url: String?): Int {
+        override fun doInBackground(vararg idCh: Int?): Int {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
@@ -266,7 +268,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                     "project.chantier", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("id", "=", 2)
+                            Arrays.asList("id", "=", idCh)
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -300,12 +302,12 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         }
     }
 
-    class EmplacementId : AsyncTask<String, Void, Int>() {
+    class EmplacementId : AsyncTask<Int, Void, Int>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
 
-        override fun doInBackground(vararg url: String?): Int {
+        override fun doInBackground(vararg idCh: Int?): Int {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
@@ -332,10 +334,10 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                 //liste des chantier
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                     db, uid, password,
-                    "ordre.travail", "search_read",
+                    "project.chantier", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("chantier_id", "=", 2)
+                            Arrays.asList("chantier_id", "=", idCh)
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -350,7 +352,10 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
 
                 if(list.isNotEmpty()){
                     val jsonArray = JSONArray(list)
-                    val idE= jsonArray.getJSONObject(0).getString("id").toInt()
+                    val idEmp= jsonArray.getJSONObject(0).getString("property_stock_chantier").toString()
+                    val idEm = idEmp.split("[")[1]
+                    val idEmm = idEm.split(",")[0]
+                    val idE = idEmm.toInt()
                     println("**************************** id emplacement = ${idE.toString()}")
                     return idE
                 }
@@ -366,12 +371,12 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         }
     }
 
-    class Reference : AsyncTask<String, Void, Int>() {
+    class Reference : AsyncTask<Int, Void, Int>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
 
-        override fun doInBackground(vararg url: String?): Int {
+        override fun doInBackground(vararg idCh: Int?): Int {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
@@ -401,7 +406,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                     "ordre.travail", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("chantier_id", "=", 2)
+                            Arrays.asList("chantier_id", "=", idCh)
                         )
                     ),
                     object : HashMap<Any, Any>() {

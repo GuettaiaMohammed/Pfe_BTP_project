@@ -49,6 +49,8 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
     private val listUnites = arrayListOf<String>()
     private val listLots = arrayListOf<String>()
 
+    lateinit var intt: Intent
+    var id_chantier:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +61,8 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
         supportActionBar!!.setTitle("Suivi Employés")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        intt = intent
+        id_chantier = intt.getIntExtra("idChantier",0)
 
         //remplire les listes de spinner
         listEmployes.add("")
@@ -68,7 +72,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
 
         //
-        val conn = Connexion().execute(url)
+        val conn = Connexion().execute(id_chantier)
         val conn1=Employee().execute(url)
         val conn2= MonChantier.Unite().execute(url)
         val conn3=LignesLots().execute(url)
@@ -152,6 +156,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
 
                     intent.putExtra("id",id.toInt())
+                    intent.putExtra("idChantier", id_chantier)
                     // start your next activity
                     startActivity(intent)
                 }
@@ -308,6 +313,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_home ->
             {
                 val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -315,6 +321,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_monCh->
             {
                 val intent = Intent(this, MonChantier::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -322,6 +329,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_materiel ->
             {
                 val intent = Intent(this, ListeMaterielsActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -329,6 +337,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_employe ->
             {
                 val intent = Intent(this, ListeEmployeActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -336,6 +345,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_article ->
             {
                 val intent = Intent(this, ListeArticleActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -344,6 +354,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_avance ->
             {
                 val intent = Intent(this, ListeAvanceEmployeActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -351,6 +362,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             item!!.getItemId() == R.id.navigation_ordreTravail ->
             {
                 val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -374,12 +386,12 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
 
 
-    class Connexion : AsyncTask<String, Void, List<Any>?>() {
+    class Connexion : AsyncTask<Int, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
 
-        override fun doInBackground(vararg url: String?): List<Any>? {
+        override fun doInBackground(vararg idCh: Int?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
@@ -410,7 +422,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                         "reglement.employe", "search_read",
                         Arrays.asList(
                                 Arrays.asList(
-                                        Arrays.asList("chantier_id","=",2)
+                                        Arrays.asList("chantier_id","=",idCh)
                                 )
                         ),
                         object : HashMap<Any, Any>() {

@@ -42,6 +42,9 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
 
     var mDatepicker: DatePickerDialog? = null
 
+    lateinit var intt: Intent
+    var id_chantier:Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liste_avance_employe)
@@ -51,8 +54,8 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
         supportActionBar!!.setTitle("Demandes avance")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-
-
+        intt = intent
+        id_chantier = intt.getIntExtra("idChantier",0)
 
         listAvance = ArrayList<AvanceEmploye>()
         avanceAdapter = AvanceEmployeAdapter(applicationContext, 0)
@@ -60,7 +63,7 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
         listEmployes.add("")
 
         //liste des demandes matériels
-        val conn = ListeAvance().execute(url)
+        val conn = ListeAvance().execute(id_chantier)
         val list = conn.get()
 
         //recupéré l'objet JSON
@@ -251,6 +254,7 @@ if(name==empl)
             item!!.getItemId() == R.id.navigation_home ->
             {
                 val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -258,6 +262,7 @@ if(name==empl)
             item!!.getItemId() == R.id.navigation_monCh->
             {
                 val intent = Intent(this, MonChantier::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -265,6 +270,7 @@ if(name==empl)
             item!!.getItemId() == R.id.navigation_materiel ->
             {
                 val intent = Intent(this, ListeMaterielsActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -272,6 +278,7 @@ if(name==empl)
             item!!.getItemId() == R.id.navigation_employe ->
             {
                 val intent = Intent(this, ListeEmployeActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -279,6 +286,7 @@ if(name==empl)
             item!!.getItemId() == R.id.navigation_article ->
             {
                 val intent = Intent(this, ListeArticleActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -286,6 +294,7 @@ if(name==empl)
             item!!.getItemId() == R.id.navigation_suiviJ ->
             {
                 val intent = Intent(this, ListeEmployeSuiviActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -294,6 +303,7 @@ if(name==empl)
             item!!.getItemId() == R.id.navigation_ordreTravail ->
             {
                 val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
+                intent.putExtra("idChantier", id_chantier)
                 // start your next activity
                 startActivity(intent)
                 return true
@@ -309,13 +319,13 @@ if(name==empl)
         return super.onOptionsItemSelected(item)
     }
 
-    class ListeAvance : AsyncTask<String, Void, List<Any>?>() {
+    class ListeAvance : AsyncTask<Int, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
 
 
-        override fun doInBackground(vararg url: String?): List<Any>? {
+        override fun doInBackground(vararg idCh: Int?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
@@ -352,7 +362,7 @@ if(name==empl)
                     "demande.avance", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("chantier_id", "=", 2)
+                            Arrays.asList("chantier_id", "=", idCh)
                         )
                     ),
                     object : HashMap<Any, Any>() {
