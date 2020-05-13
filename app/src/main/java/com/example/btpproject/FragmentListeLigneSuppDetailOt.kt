@@ -101,7 +101,7 @@ class FragmentListeLigneSuppDetailOt(var idOT: Int): Fragment() {
 
 
                 val listLigneSupp = ArrayList<LigneSupplementaireOT>()
-                listLigneSupp!!.add(LigneSupplementaireOT("Description", "N°", "Ligne Parente","Unité", "Quantité réalisé"))
+                listLigneSupp!!.add(LigneSupplementaireOT("Description", "N°", "Ligne Parente","Unité", "Quantité réalisée"))
 
                 if(list.isNotEmpty()) {
                     val jsonArray3 = JSONArray(list)

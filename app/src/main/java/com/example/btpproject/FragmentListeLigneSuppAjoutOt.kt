@@ -124,7 +124,7 @@ class FragmentListeLigneSuppAjoutOt(var idLot: Int) : Fragment() {
 
             listViewArticle = mDialogView.findViewById(R.id.listeArtConsomLigneSuppOt)
             articleAdapter = ArticleLigneSuppAdapter(mBuilder.context, 0)
-            articleAdapter!!.add(ArticleOT("","","Ligne","","Article", "Unité", "Qte consomé"))
+            articleAdapter!!.add(ArticleOT("","","Ligne","","Article", "Unité", "Qte consommée"))
 
             val numLS = mDialogView.findViewById<TextInputEditText>(R.id.numLigneSuppET)
             val descLS = mDialogView.findViewById<TextInputEditText>(R.id.descLigneSuppET)

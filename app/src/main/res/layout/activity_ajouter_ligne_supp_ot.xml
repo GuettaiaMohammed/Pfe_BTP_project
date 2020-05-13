@@ -217,7 +217,7 @@
                                 android:layout_marginLeft="27dp"
                                 android:layout_marginRight="20dp"
 
-                                android:hint="Qantité réalisée"
+                                android:hint="Quantité réalisée"
                                 android:inputType="numberSigned|number"
                                 android:paddingLeft="5dp"
                                 android:textSize="20dp"
@@ -236,7 +236,7 @@
                         android:background="@color/colorPrimary"
                         android:paddingLeft="7dp"
                         android:paddingRight="7dp"
-                        android:text="Ajouter article consomé"
+                        android:text="Ajouter article consommée"
                         android:textColor="@color/design_default_color_background"
                         android:textSize="14sp" />
 

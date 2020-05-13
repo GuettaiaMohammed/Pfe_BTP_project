@@ -100,7 +100,7 @@ class FragmentListeLigneLotDetailOt(var idOT: Int): Fragment() {
 
 
                 val listLigneOt = ArrayList<LigneLotOT>()
-                listLigneOt!!.add(LigneLotOT("","N°", "Designation", "Unité", "Quantité réalisé"))
+                listLigneOt!!.add(LigneLotOT("","N°", "Designation", "Unité", "Quantité réalisée"))
 
                 if(list.isNotEmpty()) {
                     val jsonArray3 = JSONArray(list)

@@ -45,8 +45,8 @@
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Qte consomé"
-            android:textSize="14sp"
+            android:text="Qte consommée"
+            android:textSize="11sp"
             app:fontFamily="sans-serif" />
 
     </LinearLayout>
