@@ -146,7 +146,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
             //get projet Id
             val connIdp = ProjetId().execute(id_chantier)
             val projectID = connIdp.get()
-
+//
             //get emplacement chantier id
             val connIdE = EmplacementId().execute(id_chantier)
             val emplacementID = connIdE.get()
