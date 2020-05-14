@@ -14,7 +14,8 @@ import android.widget.ListView
 import android.widget.SearchView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
-import kotlinx.android.synthetic.main.activity_liste_ordre_de_travail.*
+import kotlinx.android.synthetic.main.activity_liste_ordres_de_travail.*
+
 import org.apache.xmlrpc.XmlRpcException
 import org.apache.xmlrpc.client.XmlRpcClient
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
@@ -42,7 +43,7 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_liste_ordre_de_travail)
+        setContentView(R.layout.activity_liste_ordres_de_travail)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)

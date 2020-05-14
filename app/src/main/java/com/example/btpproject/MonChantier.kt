@@ -230,6 +230,7 @@ class MonChantier : AppCompatActivity() {
             var idA:Int=0
             var idU:Int=0
             var ref:String="piscine_semi_olympique_ref"
+            var unite:String=""
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_article, null)
             //AlertDialogBuilder
@@ -275,6 +276,10 @@ class MonChantier : AppCompatActivity() {
 
                      var type2 = typeObj.get(1).toString()
 
+                        var type = typeObj.split("\"")[1]
+                        unite= type.split("\"")[0]
+
+
                        idU=type2.toInt()
 
                         nameA=name
@@ -287,9 +292,12 @@ class MonChantier : AppCompatActivity() {
 
 
 if (qte != "" && article !="") {
+   /// mDialogView.qte.setText( mDialogView.qte.text.toString()+unite)
     val demandeA =
         AjouterArticle().execute(ref, idA.toString(), idU.toString(), qte, d, nameA, prix)
-mBuilder.dismiss()
+    Toast.makeText(mBuilder.context, "Demande envoyée : \n"+"Article :"+nameA+" Quantité :"+qte+unite, Toast.LENGTH_SHORT).show()
+
+    mBuilder.dismiss()
 }else
 {
 

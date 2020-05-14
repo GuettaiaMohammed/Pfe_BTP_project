@@ -200,7 +200,7 @@
 
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:text="@string/articles"
+                android:text="@string/article"
                 android:textSize="18sp"
                 app:fontFamily="sans-serif" />
 
@@ -212,7 +212,7 @@
 
                 android:layout_marginLeft="105dp"
                 android:layout_marginTop="10dp"
-                android:text="Employés"
+                android:text="Employé"
                 android:textSize="18sp"
                 app:fontFamily="sans-serif" />
 
@@ -223,7 +223,7 @@
                 android:layout_below="@id/ajoutMateriel"
                 android:layout_marginLeft="220dp"
                 android:layout_marginTop="10dp"
-                android:text="Matériels"
+                android:text="Matériel"
                 android:textSize="18sp"
                 app:fontFamily="sans-serif" />
 

@@ -115,7 +115,7 @@ var idE:String=""
         qteAdapter = QteRealiseAdapter(applicationContext, 0)
 
         mesQtes = ArrayList();
-        (mesQtes as ArrayList<QuantiteRealise>).add(QuantiteRealise("Date",  "Qantitée réalisée", "Nb H Travaillé"))
+        (mesQtes as ArrayList<QuantiteRealise>).add(QuantiteRealise("Date",  "Quantité réalisée", "Nb H Travaillées"))
 
         for (i in 0..(Listdetails!!.size) - 1) {
             var Obj =
@@ -159,6 +159,11 @@ var idE:String=""
 
              if (nbhT!="" && qteRealise!="" )
               {
+                  if(nbhT.toInt()>8)
+                  {
+                      Toast.makeText(mBuilder.context, "Le nombre d'heures travaillées ne doit pas dépasser 8h", Toast.LENGTH_SHORT).show()
+
+                  }else{
                   val ajouterS = AjouterSuivi().execute(id.toString(),qteRealise,nbhT,d,idE)
                   qteAdapter!!.add(QuantiteRealise(d,""+mDialogView.qteR.text.toString()+" "+unite,""+mDialogView.nbH.text.toString()))
 //var q:Int=qteR.text.toString().toInt()+qteRealise.toInt()
@@ -173,7 +178,7 @@ var idE:String=""
                   overridePendingTransition(0,0)
                   startActivity(i)
                   overridePendingTransition(0,0)
-                  i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                  i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)}
 
 
               }else

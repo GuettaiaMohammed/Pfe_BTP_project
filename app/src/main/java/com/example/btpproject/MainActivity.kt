@@ -21,13 +21,20 @@ import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.AsyncTask
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import org.apache.xmlrpc.XmlRpcException
 import org.apache.xmlrpc.client.XmlRpcClient
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
+import org.json.JSONArray
 import java.net.MalformedURLException
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
@@ -36,8 +43,9 @@ class MainActivity : AppCompatActivity() {
     internal val db = "BTP_pfe"
     internal val username = "admin"
     internal val password = "pfe_chantier"
+var incr:Int=0
 
-
+    private var mesArticles: ArrayList<Article>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -101,20 +109,81 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-       // val conn = Connexion().execute(url)
 
+
+        //Notification
+        val Listnotifications = ArrayList<String>()
+
+        val conn = ListeMaterielsActivity.Connexion().execute(id_chantier)
+        val list = conn.get()
+        val jsonArray = JSONArray(list)
+
+
+
+       //récupérer les matériels
+        val c: SimpleDateFormat = SimpleDateFormat("yyyy-M-dd")
+        var d=c.format((Date()))
+        val calendar=Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR,+2)
+        val dAvant2= calendar.time
+        for (i in 0..(list!!.size) - 1) {
+            val dateD = jsonArray.getJSONObject(i).getString("date_debut").toString()
+
+            var typeObj =
+                jsonArray.getJSONObject(i).getString("materiel_id").toString()
+            var type = typeObj.split("\"")[1]
+            var type2 = type.split("\"")[0]
+            var etat=jsonArray.getJSONObject(i).getString("state").toString()
+            var sdf:SimpleDateFormat= SimpleDateFormat("yyyy-M-dd")
+            var d1:Date=sdf.parse(d)
+            var d2:Date=sdf.parse(dateD)
+            var diff1:Long=Math.abs(d2.getTime()-d1.getTime())
+            var diff=TimeUnit.DAYS.convert(diff1,TimeUnit.MILLISECONDS)
+            println("********* diff = $diff")
+
+           if(diff.toInt()==2 && etat=="attente" ){
+
+                Listnotifications.add("Le matériel : "+type2+" sera disponible après 2 jours")
+             incr++
+
+            }
+
+        }
+        //récupérer les articles
+
+        val con= ListeArticleActivity.ListeArticleD().execute(id_chantier)
+         mesArticles = con.get() as ArrayList<Article>
+
+        for (i in 0..(mesArticles!!.size-1))
+        {
+            if (mesArticles!!.get(i).etat=="assigned")
+            {
+               // notifications.set(incr,"L'Article : "+ mesArticles!!.get(i).nom+" est disponible ")
+
+Listnotifications.add("L'Article : "+ mesArticles!!.get(i).nom+" est disponible ")
+                incr++
+            }
+
+        }
+
+
+         // var notifications: Array<String>? = arrayOf(" ")
+        var notifications=Listnotifications.toTypedArray()
+
+        cart_badge.setText(incr.toString())
         notification.setOnClickListener {
             val myBuilder = AlertDialog.Builder(this)
             //DATA SOURCE
-            val notifications = arrayOf<CharSequence>("Notification 1", "Notification 2", "Notification 3", "Notification 4", "Notification 5", "Notification 6", "Notification 7")
             //SET PROPERTIES USING METHOD CHAINING
-            myBuilder.setTitle("Notifications").setItems(notifications) { dialogInterface, position -> Toast.makeText(this, notifications[position].toString(), Toast.LENGTH_SHORT).show() }
+            myBuilder.setTitle("Notifications")
+                myBuilder.setItems(notifications) { dialogInterface, position -> Toast.makeText(this, notifications!![position].toString(), Toast.LENGTH_SHORT).show() }
             //CREATE DIALOG
             var myDialog = myBuilder.create()
+            cart_badge.setText("0")
             //SHOW DIALOG
             myDialog.show()
         }
-        cart_badge.setText("2")
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -141,72 +210,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-  /*  class Connexion : AsyncTask<String, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
-
-        override fun doInBackground(vararg url: String?): List<Any>? {
-            var client =  XmlRpcClient()
-            var common_config  =  XmlRpcClientConfigImpl()
-            try {
-                //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
-
-                val uid: Int=  client.execute(
-                    common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
-                    )
-                ) as Int
-                Log.d(
-                    "result",
-                    "*******************************************************************"
-                )
-                Log.d("uid = ", Integer.toString(uid))
-                System.out.println("************************************    UID = " + uid)
-
-                val models = object : XmlRpcClient() {
-                    init {
-                        setConfig(object : XmlRpcClientConfigImpl() {
-                            init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
-                            }
-                        })
-                    }
-                }
-
-                //liste des chantier
-                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
-                    "mail.activity", "search_read",
-                    Arrays.asList(
-                        Arrays.asList(
-                            Arrays.asList("id", "!=", 0)
-                        )
-                    ),
-                    object : HashMap<Any, Any>() {
-                        init {
-                            put(
-                                "fields",
-                                Arrays.asList("activity_type_id","name","state")
-                            )
-                        }
-                    }
-                )) as Array<Any>)
-                println("**************************  champs chantier = $list")
-                return list
-
-            }catch (e: MalformedURLException) {
-                Log.d("MalformedURLException", "*********************************************************")
-                Log.d("MalformedURLException", e.toString())
-            }  catch (e: XmlRpcException) {
-                e.printStackTrace()
-            }
-            return null
-        }
-
-
-    }*/
 
 }
 

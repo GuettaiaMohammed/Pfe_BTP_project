@@ -62,7 +62,7 @@ class ListeArticleActivity : AppCompatActivity() {
 
 
 
-        val conn=ListeArticleD().execute(url)
+        val conn=ListeArticleD().execute(id_chantier)
 
         val conn4= MonChantier.Article().execute(url)
         val conn5= MonChantier.Unite().execute(url)
@@ -440,12 +440,12 @@ class ListeArticleActivity : AppCompatActivity() {
     }
 
 
-    class ListeArticleD : AsyncTask<String, Void, List<Any>?>() {
+    class ListeArticleD : AsyncTask<Int, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
 
-        override fun doInBackground(vararg url: String?): List<Any>? {
+        override fun doInBackground(vararg idCh: Int?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
@@ -479,12 +479,36 @@ class ListeArticleActivity : AppCompatActivity() {
                         })
                     }
                 }
+                val record= Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "project.chantier", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("id","=",idCh)
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("reference")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+                println("********* chantier =$record")
+                val json = JSONArray(record)
+                var  name:String= ""
+                name=json.getJSONObject(0).getString("reference").toString()
+
+
+                println("********* namer =$name")
                 val list1 = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                     db, uid, password,
                     "purchase.order", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("origin", "=", "piscine_semi_olympique_ref")
+                            Arrays.asList("origin", "=", name)
                         )
                     ),
                     object : HashMap<Any, Any>() {

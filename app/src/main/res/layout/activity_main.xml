@@ -172,7 +172,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         android:gravity="bottom|center"
-                        android:text="Demandes article"
+                        android:text="Demandes articles"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />
@@ -220,7 +220,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="10dp"
                         android:gravity="center"
-                        android:text="Demandes personnel"
+                        android:text="Demandes personnels"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />
@@ -255,7 +255,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="10dp"
                         android:gravity="center"
-                        android:text="Demandes matériel"
+                        android:text="Demandes matériels"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />
@@ -335,7 +335,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="3dp"
                         android:gravity="center"
-                        android:text="Demandes avance"
+                        android:text="Demandes avances"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />
