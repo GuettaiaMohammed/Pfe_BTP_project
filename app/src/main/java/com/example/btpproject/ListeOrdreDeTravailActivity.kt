@@ -106,7 +106,6 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
         fabOrdreDeTravail.setOnClickListener {
             val intent = Intent(this, AjouterOrdreDeTravailActivity::class.java)
             intent.putExtra("idChantier", id_chantier)
-            intent.putExtra("idChantier", id_chantier)
             // start your next activity
             startActivity(intent)
         }

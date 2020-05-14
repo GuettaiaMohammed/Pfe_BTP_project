@@ -160,6 +160,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                     fragmentLigneSupp.createLigneSupp(idNvOT.toInt())
 
                     val intent = Intent(this, ListeOrdreDeTravailActivity::class.java)
+                    intent.putExtra("idChantier", id_chantier)
                      //start your next activity
                     startActivity(intent)
                 }
