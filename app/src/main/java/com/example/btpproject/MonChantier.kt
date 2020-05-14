@@ -85,10 +85,21 @@ class MonChantier : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.title = "Mon chantier"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        //botton de documents
+        docBtn.setOnClickListener {
+            //val connPDf = PDFUrl().execute(id_chantier)
+            //val attach = connPDf.get() as String
+            //Toast.makeText(this, "Attach: $attach", Toast.LENGTH_SHORT).show()
+
+            val intent = Intent(this, PDFActivity::class.java)
+            // start your next activity
+            startActivity(intent)
+
+        }
+
         //
         //remplire les listes de spinner
-
-
         listArticles.add("")
         listUnites.add("")
         listMetiers.add("")
@@ -1326,7 +1337,79 @@ var idDemnd:Int=0
         }
     }
 
+    class PDFUrl : AsyncTask<Int, Void, String?>() {
+        val db = "BTP_pfe"
+        val username = "admin"
+        val password = "pfe_chantier"
 
+        override fun doInBackground(vararg idCh: Int?): String? {
+            var client =  XmlRpcClient()
+            var common_config  =  XmlRpcClientConfigImpl()
+            try {
+                //Testé l'authentification
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+                val uid: Int=  client.execute(
+                    common_config, "authenticate", asList(
+                        db, username, password, Collections.emptyMap<Any, Any>()
+                    )
+                ) as Int
+                Log.d(
+                    "result",
+                    "*******************************************************************"
+                )
+                Log.d("uid = ", Integer.toString(uid))
+                System.out.println("************************************    UID = " + uid)
+
+                val models = object : XmlRpcClient() {
+                    init {
+                        setConfig(object : XmlRpcClientConfigImpl() {
+                            init {
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            }
+                        })
+                    }
+                }
+
+                //liste des chantier
+                val list = asList(*models.execute("execute_kw", asList(
+                    db, uid, password,
+                    "project.lot", "search_read",
+                    asList(
+                        asList(
+                            asList("chantier_id", "=", idCh)
+                        )
+                    ),
+                    object : java.util.HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                asList("attachment_pdf")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+
+                if(list.isNotEmpty()){
+                    println("**************************  champs chantier = $list")
+                    val json=JSONArray(list)
+                    val attach =  json.getJSONObject(0).getString("attachment_pdf").toString()
+                    println("**************************  champs chantier = $attach")
+                    return attach
+                }
+
+
+            }catch (e: MalformedURLException) {
+                Log.d("MalformedURLException", "*********************************************************")
+                Log.d("MalformedURLException", e.toString())
+            }  catch (e: XmlRpcException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+
+    }
 }
 
 
