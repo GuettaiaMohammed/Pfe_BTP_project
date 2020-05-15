@@ -108,6 +108,12 @@ var incr:Int=0
             // start your next activity
             startActivity(intent)
         }
+        dash.setOnClickListener {
+            val intent = Intent(this, TableauDeBoardActivity::class.java)
+            intent.putExtra("idChantier", id_chantier)
+            // start your next activity
+            startActivity(intent)
+        }
 
 
 

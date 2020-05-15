@@ -23,7 +23,9 @@ android {
         }
     }
 }
-
+repositories {
+    maven { url 'https://jitpack.io' }
+}
 dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -46,6 +48,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.0.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.0.0'
     implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation files('libs/exist-dependency-ws-commons-util-1.0.2.jar')
     implementation files('libs/xmlrpc-client-3.1.jar')
     implementation files('libs/xmlrpc-common-3.1.jar')
