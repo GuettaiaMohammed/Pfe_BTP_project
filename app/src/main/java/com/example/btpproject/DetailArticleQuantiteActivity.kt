@@ -165,6 +165,7 @@ var qte2:String=""
                 var d=c.format((Date()))
 
 qteRecu=mDialogView.qteRecep.text.toString()
+                if(qteRecu!=""){
                 val receptQte =Receptionner()
                     .execute(id.toString(),qteRecu,d)
                 mBuilder.dismiss()
@@ -175,7 +176,7 @@ qteRecu=mDialogView.qteRecep.text.toString()
                 overridePendingTransition(0,0)
                 startActivity(i)
                 overridePendingTransition(0,0)
-                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)}
             }
 mDialogView.annuler.setOnClickListener {
     mBuilder.dismiss()
@@ -550,7 +551,7 @@ mDialogView.annuler.setOnClickListener {
 
                 var q:Float= 0F
 
-                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+         /*       val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                     db, uid, password,
                     "stock.move.line", "search_read",
                     Arrays.asList(
@@ -602,7 +603,63 @@ var qteDone=q.toString()
                         }
                         }
                     )
-                ))
+                ))*/
+
+
+
+                       val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                           db, uid, password,
+                           "stock.move", "search_read",
+                           Arrays.asList(
+                               Arrays.asList(
+                                   Arrays.asList("id", "=", idA)
+                               )
+                           ),
+                           object : HashMap<Any, Any>() {
+                               init {
+                                   put(
+                                       "fields",
+                                       Arrays.asList("quantity_done")
+                                   )
+                               }
+                           }
+                       )) as Array<Any>)
+                       println("**************************  champs chantier = $list")
+
+                       var jsonArray=JSONArray(list)
+                  if (list!=null){     for (i1 in 0..(list!!.size) - 1) {
+
+
+
+                           var qte2 = jsonArray.getJSONObject(i1).getString("quantity_done").toString().toFloat()
+                          q=qte2
+                           println("**************************  champs chantier = $q")
+                       }}
+
+
+                           q=q+qte.toFloat()
+
+                       println("**************************  q = $q")
+
+
+
+       var qteDone=q.toString()
+
+                      var id2=models.execute("execute_kw", Arrays.asList(
+                           db, uid, password,
+                           "stock.move", "write",
+                           Arrays.asList(
+                               Arrays.asList(idA),
+                               object : HashMap<Any, Any>() { init {
+                                   put("quantity_done", qteDone)
+                                   put("date",date)
+
+
+
+                               }
+                               }
+                           )
+                       ))
             } catch (e: MalformedURLException) {
                 Log.d(
                     "MalformedURLException",

@@ -124,7 +124,7 @@ class ListeArticleActivity : AppCompatActivity() {
             var prix:String=""
             var idA:Int=0
             var idU:Int=0
-            var ref:String="piscine_semi_olympique_ref"
+
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_article, null)
             //AlertDialogBuilder
@@ -181,7 +181,7 @@ class ListeArticleActivity : AppCompatActivity() {
 
                 if (qte != "" && article !="") {
                     val demandeA = MonChantier.AjouterArticle()
-                        .execute(ref,idA.toString(),idU.toString(),qte,d,nameA,prix)
+                        .execute(id_chantier.toString(),idA.toString(),idU.toString(),qte,d,nameA,prix)
 
                     mBuilder.dismiss()
                     val i:Intent=intent

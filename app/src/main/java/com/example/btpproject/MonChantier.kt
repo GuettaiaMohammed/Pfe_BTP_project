@@ -136,55 +136,55 @@ class MonChantier : AppCompatActivity() {
         val jsonArray3 = JSONArray(listM)
 
         //récupéré lles données de l'objet JSON
-        for (i in 0..(listM!!.size) - 1) {
+    if(listM!=null){    for (i in 0..(listM!!.size) - 1) {
 
             val name = jsonArray3.getJSONObject(i).getString("name").toString()
 
 
             listMateriels.add(name)
 
-        }
+        }}
 
 
         val jsonArray4 = JSONArray(listMetier)
 
         //récupéré lles données de l'objet JSON
-        for (i in 0..(listMetier!!.size) - 1) {
+     if(listMetier!=null){   for (i in 0..(listMetier!!.size) - 1) {
 
             val name = jsonArray4.getJSONObject(i).getString("name").toString()
 
 
             listMetiers.add(name)
 
-        }
+        }}
         val jsonArray8: JSONArray
         jsonArray8 = JSONArray(listArticle)
 
         //récupéré lles données de l'objet JSON
-       for (i in 0..(listArticle!!.size) - 1) {
+    if(listArticle!=null){   for (i in 0..(listArticle!!.size) - 1) {
 
             val name = jsonArray8.getJSONObject(i).getString("name").toString()
 
 
             listArticles.add(name)
 
-        }
+        }}
         val jsonArray6 = JSONArray(listU)
 
         //récupéré lles données de l'objet JSON
-        for (i in 0..(listU!!.size) - 1) {
+    if(listU!=null){    for (i in 0..(listU!!.size) - 1) {
 
             val name = jsonArray6.getJSONObject(i).getString("name").toString()
 
             listUnites.add(name)
 
-        }
+        }}
 
         //recupéré l'objet JSON
         val jsonArray = JSONArray(list)
 
         //récupéré lles données de l'objet JSON
-        for (i in 0..(list!!.size) - 1) {
+     if(list!=null){   for (i in 0..(list!!.size) - 1) {
             val num = jsonArray.getJSONObject(i).getString("num").toString()
             val name = jsonArray.getJSONObject(i).getString("name").toString()
             val state = jsonArray.getJSONObject(i).getString("state").toString()
@@ -193,28 +193,28 @@ class MonChantier : AppCompatActivity() {
 
 
             mesLots!!.add(Lot(num, name, state))
-        }
+        }}
         lotAdapter!!.addAll(mesLots)
         listView!!.adapter = lotAdapter
 
 
         val jsonArray2 = JSONArray(list2)
+if(list2!=null) {
+    for (i in 0..(list2!!.size) - 1) {
 
-        for (i in 0..(list2!!.size) - 1) {
+        val name = jsonArray2.getJSONObject(i).getString("name").toString()
+        val dateD = jsonArray2.getJSONObject(i).getString("date_debut").toString()
+        val dateFprev = jsonArray2.getJSONObject(i).getString("date_fin_prev").toString()
+        val dateFreel = jsonArray2.getJSONObject(i).getString("date_fin_reel").toString()
 
-            val name = jsonArray2.getJSONObject(i).getString("name").toString()
-            val dateD = jsonArray2.getJSONObject(i).getString("date_debut").toString()
-            val dateFprev = jsonArray2.getJSONObject(i).getString("date_fin_prev").toString()
-            val dateFreel = jsonArray2.getJSONObject(i).getString("date_fin_reel").toString()
-
-            nomChantier.setText(name)
-            date_debut.setText(dateD)
-            date_fin_prev.setText(dateFprev)
-            date_fin_reel.setText(dateFreel)
+        nomChantier.setText(name)
+        date_debut.setText(dateD)
+        date_fin_prev.setText(dateFprev)
+        date_fin_reel.setText(dateFreel)
 
 
-        }
-
+    }
+}
 
 
 
@@ -229,7 +229,6 @@ class MonChantier : AppCompatActivity() {
             var prix:String=""
             var idA:Int=0
             var idU:Int=0
-            var ref:String="piscine_semi_olympique_ref"
             var unite:String=""
             //Inflate the dialog with custom view
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_article, null)
@@ -294,7 +293,7 @@ class MonChantier : AppCompatActivity() {
 if (qte != "" && article !="") {
    /// mDialogView.qte.setText( mDialogView.qte.text.toString()+unite)
     val demandeA =
-        AjouterArticle().execute(ref, idA.toString(), idU.toString(), qte, d, nameA, prix)
+        AjouterArticle().execute(id_chantier.toString(), idA.toString(), idU.toString(), qte, d, nameA, prix)
     Toast.makeText(mBuilder.context, "Demande envoyée : \n"+"Article :"+nameA+" Quantité :"+qte+unite, Toast.LENGTH_SHORT).show()
 
     mBuilder.dismiss()
@@ -405,7 +404,7 @@ if (qte != "" && article !="") {
                 if (dateD != ""&& dateF != "" && metier != "" && n != "") {
 
                     val demandeE =
-                        AjouterEmploye().execute(id.toString(), dateD, dateF, nbr.toString())
+                        AjouterEmploye().execute(id_chantier.toString(),id.toString(), dateD, dateF, nbr.toString())
                     mBuilder.dismiss()
                 }else
                 {
@@ -519,7 +518,7 @@ if (qte != "" && article !="") {
                 }
 
                 if(type != "" && detail != "" && dateD != "" && dateF != "") {
-                    val demandeM = AjouterMateriel().execute(id.toString(), dateD, dateF, detail)
+                    val demandeM = AjouterMateriel().execute(id_chantier.toString(),id.toString(), dateD, dateF, detail)
               mBuilder.dismiss()
                 }else{
 
@@ -1042,6 +1041,7 @@ if (qte != "" && article !="") {
         var dateF:String=""
         var nbr:Int=0
         var idJob:Int=0
+        var idCh:Int=0
 
         @SuppressLint("NewApi")
         override fun doInBackground(vararg infos:String): List<Any>? {
@@ -1079,11 +1079,11 @@ if (qte != "" && article !="") {
     println("************************  datebbb = ${infos[1]}")
 
 
-
-                idJob = infos[0].toInt()
-                dateD = infos[1]
-                dateF = infos[2]
-                nbr =infos[3].toInt()
+idCh=infos[0].toInt()
+                idJob = infos[1].toInt()
+                dateD = infos[2]
+                dateF = infos[3]
+                nbr =infos[4].toInt()
 
 
 
@@ -1094,7 +1094,7 @@ if (qte != "" && article !="") {
                         "demande.appro_personnel", "create",
                         asList(object : java.util.HashMap<Any, Any>() {
                             init {
-                                put("chantier_id", 2)
+                                put("chantier_id", idCh)
                                 put("date_debut", dateD)
                                 put("date_fin", dateF)
 
@@ -1138,7 +1138,7 @@ if (qte != "" && article !="") {
         val username = "admin"
         val password = "pfe_chantier"
 
-
+var idCh:Int=0
         var dateD:String=""
         var dateF:String=""
         var detail:String=""
@@ -1180,11 +1180,11 @@ if (qte != "" && article !="") {
                 println("************************  datebbb = ${infos[1]}")
 
 
-
-                idM = infos[0].toInt()
-                dateD = infos[1]
-                dateF = infos[2]
-                detail =infos[3]
+idCh=infos[0].toInt()
+                idM = infos[1].toInt()
+                dateD = infos[2]
+                dateF = infos[3]
+                detail =infos[4]
 
 
 
@@ -1195,7 +1195,7 @@ if (qte != "" && article !="") {
                         "demande.appro_mat", "create",
                         asList(object : java.util.HashMap<Any, Any>() {
                             init {
-                                put("chantier_id", 2)
+                                put("chantier_id", idCh)
                                 put("type_materiel_id", idM)
                                 put("date_debut", dateD)
                                 put("date_fin", dateF)
@@ -1226,7 +1226,7 @@ if (qte != "" && article !="") {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
-
+var idCh:Int=0
 var idDemnd:Int=0
         var ref:String=""
         var dateD:String=""
@@ -1236,7 +1236,6 @@ var idDemnd:Int=0
         var idU:Int=0
         var qte:Int=0
 
-        @SuppressLint("NewApi")
         override fun doInBackground(vararg infos:String): List<Any>? {
             var client = XmlRpcClient()
             var common_config = XmlRpcClientConfigImpl()
@@ -1273,7 +1272,7 @@ var idDemnd:Int=0
 
 
 
-              ref = infos[0]
+              idCh = infos[0].toInt()
                 idA= infos[1].toInt()
                 idU= infos[2].toInt()
                 qte= infos[3].toInt()
@@ -1283,6 +1282,32 @@ var idDemnd:Int=0
 
 
 
+                val record= Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "project.chantier", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("id","=",idCh)
+                        )
+                    ),
+                    object : java.util.HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("reference","user_id")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+                println("********* chantier =$record")
+                val jsonn = JSONArray(record)
+                var  name:String= ""
+                var user:Int=0
+                name=jsonn.getJSONObject(0).getString("reference").toString()
+
+
+
+                println("********* namer =$user")
 
 
 
@@ -1293,8 +1318,7 @@ var idDemnd:Int=0
                     db, uid, password,
                     "purchase.order", "search_read",
                     asList(asList(
-                        asList("origin", "=", ref),
-                        asList("state","=","draft")
+                        asList("origin", "=", name)
                     )
                     ),
                     object : java.util.HashMap<Any,Any>() {
@@ -1306,11 +1330,10 @@ var idDemnd:Int=0
                 )) as Array<Any>)
                 println("************************  liste des données = $liste")
                 val json=JSONArray(liste)
-                for (i in 0..(liste.size)-1)
-                {
-                    idDemnd=json.getJSONObject(i).getString("id").toInt()
 
-                }
+
+                  idDemnd=json.getJSONObject(liste.size-1).getString("id").toString().toInt()
+//
 
 
                 var id1: Int = models.execute(
