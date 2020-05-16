@@ -79,11 +79,12 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
 
 
 var qte2:String=""
+        var qte:String=""
         val jsonArray = JSONArray(details)
         for (i1 in 0..(details!!.size) - 1) {
 
         var date= jsonArray.getJSONObject(i1).getString("date").toString()
-        var qte= jsonArray.getJSONObject(i1).getString("product_uom_qty").toString()
+         qte= jsonArray.getJSONObject(i1).getString("product_uom_qty").toString()
 
             var etat= jsonArray.getJSONObject(i1).getString("state").toString()
            qte2= jsonArray.getJSONObject(i1).getString("quantity_done").toString()
@@ -165,7 +166,16 @@ var qte2:String=""
                 var d=c.format((Date()))
 
 qteRecu=mDialogView.qteRecep.text.toString()
-                if(qteRecu!=""){
+                var qteF:Float=qte.toFloat()
+                var qte2F:Float=qte2.toFloat()
+                var qteRecuF:Float= qteRecu!!.toFloat()
+                var diff:Float=qteF-qte2F
+                if (qteRecuF+qte2F>qteF)
+                {
+                    Toast.makeText(mBuilder.context, "la quantité reçue ne doit pas dépasser :"+diff.toString(), Toast.LENGTH_SHORT).show()
+
+                }
+               else if(qteRecu!=""){
                 val receptQte =Receptionner()
                     .execute(id.toString(),qteRecu,d)
                 mBuilder.dismiss()
@@ -177,6 +187,10 @@ qteRecu=mDialogView.qteRecep.text.toString()
                 startActivity(i)
                 overridePendingTransition(0,0)
                 i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)}
+                else{
+                    Toast.makeText(mBuilder.context, "Veuillez remplire la quantité", Toast.LENGTH_SHORT).show()
+
+                }
             }
 mDialogView.annuler.setOnClickListener {
     mBuilder.dismiss()

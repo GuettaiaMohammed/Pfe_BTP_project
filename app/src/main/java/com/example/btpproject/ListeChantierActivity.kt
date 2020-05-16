@@ -23,6 +23,8 @@ class ListeChantierActivity : AppCompatActivity(), ChantierAdapter.OnNoteListene
     private var listeCh: ArrayList<Chantier>? = null
     private var recyclerView: RecyclerView? = null
     private var chantierAdapter: ChantierAdapter? = null
+    lateinit var intt: Intent
+    var idUser:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +32,10 @@ class ListeChantierActivity : AppCompatActivity(), ChantierAdapter.OnNoteListene
 
         recyclerView = findViewById(R.id.listeChantier)
         listeCh = ArrayList()
+        intt = intent
+        idUser = intt.getIntExtra("idUser",0)
 
-        val conn = Chantiers().execute("")
+        val conn = Chantiers().execute(idUser)
         val list = conn.get() as List<Any>
 
         if(list.isNotEmpty()){
@@ -73,12 +77,12 @@ class ListeChantierActivity : AppCompatActivity(), ChantierAdapter.OnNoteListene
         startActivity(intent)
     }
 
-    class Chantiers : AsyncTask<String, Void, List<Any>?>() {
+    class Chantiers : AsyncTask<Int, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
 
-        override fun doInBackground(vararg url: String?): List<Any>? {
+        override fun doInBackground(vararg idUser: Int?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
@@ -108,7 +112,7 @@ class ListeChantierActivity : AppCompatActivity(), ChantierAdapter.OnNoteListene
                     "project.chantier", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("user_id", "=", 2),
+                            Arrays.asList("user_id", "=", idUser),
                             Arrays.asList("state", "=", "en_cour")
                         )
                     ),
@@ -137,74 +141,4 @@ class ListeChantierActivity : AppCompatActivity(), ChantierAdapter.OnNoteListene
         }
     }
 
-    class userId : AsyncTask<String, Void, Int?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
-
-        override fun doInBackground(vararg url: String?): Int? {
-            var client =  XmlRpcClient()
-            var common_config  =  XmlRpcClientConfigImpl()
-            try {
-                //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
-
-                val uid: Int=  client.execute(
-                    common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
-                    )
-                ) as Int
-
-
-                val models = object : XmlRpcClient() {
-                    init {
-                        setConfig(object : XmlRpcClientConfigImpl() {
-                            init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
-                            }
-                        })
-                    }
-                }
-
-                //liste des chantier
-                val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
-                    "res.users", "search_read",
-                    Arrays.asList(
-                        Arrays.asList(
-                            Arrays.asList("name", "=", "Administrator")
-                        )
-                    ),
-                    object : HashMap<Any, Any>() {
-                        init {
-                            put(
-                                "fields",
-                                Arrays.asList("name")
-                            )
-                        }
-                    }
-                )) as Array<Any>)
-
-                if(list.isNotEmpty()){
-
-                        val jsonArray = JSONArray(list)
-                        val id = jsonArray.getJSONObject(0).getString("id")
-                            .toString()
-
-                        println("**************************** list = ${list.toString()}")
-                        println("**************************** id  = ${id.toString()}")
-
-                    return id.toInt()
-                }
-
-
-            }catch (e: MalformedURLException) {
-                Log.d("MalformedURLException", "*********************************************************")
-                Log.d("MalformedURLException", e.toString())
-            }  catch (e: XmlRpcException) {
-                e.printStackTrace()
-            }
-            return 0
-        }
-    }
 }

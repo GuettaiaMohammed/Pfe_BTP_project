@@ -90,12 +90,12 @@ class ListeEmployeActivity : AppCompatActivity() {
         val jsonArray4 = JSONArray(listMetier)
 
         //récupéré lles données de l'objet JSON
-        for (i in 0..(listMetier!!.size) - 1) {
+      if(listMetier!=null){  for (i in 0..(listMetier!!.size) - 1) {
 
             val name = jsonArray4.getJSONObject(i).getString("name").toString()
             listMetiers.add(name)
 
-        }
+        }}
         mesEmployes = conn.get() as ArrayList<Employe>
 
 

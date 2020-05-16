@@ -70,7 +70,7 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
         val jsonArray = JSONArray(list)
 
         //récupéré lles données de l'objet JSON
-        for (i in 0..(list!!.size) - 1) {
+     if(list!=null){   for (i in 0..(list!!.size) - 1) {
             val montant = jsonArray.getJSONObject(i).getString("mantant_demande").toString()
             val date = jsonArray.getJSONObject(i).getString("date").toString()
             var empObj =
@@ -82,7 +82,7 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
             println("**************************  montant = $montant")
 
             listAvance!!.add(AvanceEmploye(emp2, montant, date))
-        }
+        }}
 
         //liste des Employé spinner
         val connEmp = ListeEmploye().execute(url)
@@ -90,14 +90,14 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
         val jsonArray3 = JSONArray(listEmp)
 
         //récupéré lles données de l'objet JSON
-        for (i in 0..(listEmp!!.size) - 1) {
+       if(listEmp!=null){ for (i in 0..(listEmp!!.size) - 1) {
 
             val name = jsonArray3.getJSONObject(i).getString("name").toString()
 
 
             listEmployes.add(name)
 
-        }
+        }}
 
 
         listView!!.adapter = avanceAdapter
@@ -175,7 +175,7 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
                 empl=spinnerE.selectedItem.toString()
                 montant=mDialogView.montant.text.toString()
 
-                for (i in 0..(listEmp!!.size) - 1) {
+          if(listEmp!=null){      for (i in 0..(listEmp!!.size) - 1) {
 
                     val name = jsonArray3.getJSONObject(i).getString("name").toString()
 
@@ -186,7 +186,7 @@ if(name==empl)
 }
 
 
-                }
+                }}
                 if(montant != "" && date != "" && empl != "") {
                     val demandeAvance = AjouterDemandeAvance().execute(
                         idCh.toString(),

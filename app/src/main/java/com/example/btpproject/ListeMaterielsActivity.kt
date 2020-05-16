@@ -93,20 +93,20 @@ class ListeMaterielsActivity : AppCompatActivity() {
         val jsonArray3 = JSONArray(listM)
 
         //récupéré lles données de l'objet JSON
-        for (i in 0..(listM!!.size) - 1) {
+        if(listM!=null){ for (i in 0..(listM!!.size) - 1) {
 
             val name = jsonArray3.getJSONObject(i).getString("name").toString()
 
 
             listMateriels.add(name)
 
-        }
+        }}
 
         //recupéré l'objet JSON
         val jsonArray = JSONArray(list)
 
         //récupéré lles données de l'objet JSON
-        for (i in 0..(list!!.size) - 1) {
+   if(list!=null){     for (i in 0..(list!!.size) - 1) {
             val dateD = jsonArray.getJSONObject(i).getString("date_debut").toString()
             val dateF = jsonArray.getJSONObject(i).getString("date_fin").toString()
             var typeObj =
@@ -118,7 +118,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
             println("**************************  Date debut = $dateD")
 
             mesMateriels!!.add(Materiel(type2,detail, dateD, dateF))
-        }
+        }}
 
         materielAdapter!!.addAll(mesMateriels)
         listView!!.adapter = materielAdapter
@@ -223,7 +223,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
 
 
                 var id:Int=0
-                for (i in 0..(listM!!.size) - 1) {
+       if (list!=null){         for (i in 0..(listM!!.size) - 1) {
 
                     val name = jsonArray3.getJSONObject(i).getString("name").toString()
 
@@ -234,7 +234,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
 
                     }
 
-                }
+                }}
 
                 if(type != "" && detail != "" && dateD != "" && dateF != "") {
                     val demandeM = MonChantier.AjouterMateriel()

@@ -80,32 +80,32 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
         //liste des employés
         val listE=conn1.get()
         val jsonArray1 = JSONArray(listE)
-        for (i in 0..(listE!!.size) - 1) {
+     if(listE!=null){   for (i in 0..(listE!!.size) - 1) {
 
             val name = jsonArray1.getJSONObject(i).getString("name").toString()
 
 
             listEmployes.add(name)
 
-        }
+        }}
         //liste des unités
         val listU=conn2.get()
         val jsonArray6 = JSONArray(listU)
 
         //récupéré lles données de l'objet JSON
-        for (i in 0..(listU!!.size) - 1) {
+     if(listU!=null){   for (i in 0..(listU!!.size) - 1) {
 
             val name = jsonArray6.getJSONObject(i).getString("name").toString()
 
             listUnites.add(name)
 
-        }
+        }}
 
 
 ///liste lignes lots
         val listLigne=conn3.get()
         val jsonArray2 = JSONArray(listLigne)
-        for (i in 0..(listLigne!!.size) - 1){
+   if(listLigne!=null){    for (i in 0..(listLigne!!.size) - 1){
         var Obj1 =
             jsonArray2.getJSONObject(i).getString("name").toString()
       // var lot = Obj1.split("\"")[1]
@@ -113,7 +113,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
         listLots.add(Obj1)
 
-        }
+        }}
 
 
 
@@ -127,7 +127,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
         val jsonArray = JSONArray(list)
 
         //récupéré lles données de l'objet JSON
-        for (i in 0..(list!!.size) - 1) {
+       if(list!=null){ for (i in 0..(list!!.size) - 1) {
             var Obj =
                     jsonArray.getJSONObject(i).getString("employee_id").toString()
             var nom = Obj.split("\"")[1]
@@ -140,7 +140,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
 
             mesEmployes!!.add(Employe(nom2, lot2))
-        }
+        }}
 
 
 

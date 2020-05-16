@@ -73,24 +73,24 @@ class ListeArticleActivity : AppCompatActivity() {
         val jsonArray5 = JSONArray(listArticle)
 
         //récupéré lles données de l'objet JSON
-        for (i in 0..(listArticle!!.size) - 1) {
+       if(listArticle!=null) {for (i in 0..(listArticle!!.size) - 1) {
 
             val name = jsonArray5.getJSONObject(i).getString("name").toString()
 
 
             listArticles.add(name)
 
-        }
+        }}
         val jsonArray6 = JSONArray(listU)
 
         //récupéré lles données de l'objet JSON
-        for (i in 0..(listU!!.size) - 1) {
+    if(listU!=null)   { for (i in 0..(listU!!.size) - 1) {
 
             val name = jsonArray6.getJSONObject(i).getString("name").toString()
 
             listUnites.add(name)
 
-        }
+        }}
 
         listView = findViewById(R.id.articleListe)
         articleAdapter = ArticleAdapter(applicationContext, 0)
@@ -150,7 +150,7 @@ class ListeArticleActivity : AppCompatActivity() {
 
 
 
-
+if(listArticle!=null){
                 for (i in 0..(listArticle!!.size) - 1) {
 
                     val name = jsonArray5.getJSONObject(i).getString("name").toString()
@@ -174,7 +174,7 @@ class ListeArticleActivity : AppCompatActivity() {
 
                     }
 
-                }
+                }}
                 val c: SimpleDateFormat = SimpleDateFormat("dd/M/yyyy")
                 var d=c.format((Date()))
 
@@ -392,7 +392,7 @@ class ListeArticleActivity : AppCompatActivity() {
                             init {
                                 put(
                                     "fields",
-                                    Arrays.asList("id","product_id","product_qty","date_planned","product_uom")
+                                    Arrays.asList("id","product_id","product_qty","date_planned","product_uom","quantity_done")
                                 )
                             }
                         }
@@ -572,7 +572,8 @@ class ListeArticleActivity : AppCompatActivity() {
                                                 "product_uom_qty",
                                                 "state",
                                                 "product_uom",
-                                                "date_expected"
+                                                "date_expected",
+                                                "quantity_done"
                                             )
                                         )
                                     }
@@ -587,6 +588,7 @@ class ListeArticleActivity : AppCompatActivity() {
                                     jsonArray3.getJSONObject(i1).getString("state").toString()
                                 var qte = jsonArray3.getJSONObject(i1).getString("product_uom_qty")
                                     .toString()
+                                var qte2= jsonArray3.getJSONObject(i1).getString("quantity_done").toString()
                                 var idA = jsonArray3.getJSONObject(i1).getString("id").toInt()
 
                                 var typeObj =

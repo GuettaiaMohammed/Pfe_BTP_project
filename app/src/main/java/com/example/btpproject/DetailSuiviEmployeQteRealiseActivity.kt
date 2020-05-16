@@ -80,6 +80,10 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
         val jsonArray = JSONArray(details)
 
 var idE:String=""
+        var qtePrevu:String=""
+        var qteReal:String=""
+        var nbHprevu:String=""
+        var nbHtravail:String=""
         for (i in 0..(details!!.size) - 1) {
             var Obj =
                 jsonArray.getJSONObject(i).getString("employee_id").toString()
@@ -91,14 +95,14 @@ var idE:String=""
             var u = Obj2.split("\"")[1]
             var u1 = u.split("\"")[0]
 
-            val qtePrevu = jsonArray.getJSONObject(i).getString("qte_prev").toString()
-            val qteRealise = jsonArray.getJSONObject(i).getString("qte_realise").toString()
-            val nbHprevu = jsonArray.getJSONObject(i).getString("nb_h_prevu").toString()
-            val nbHtravail = jsonArray.getJSONObject(i).getString("nb_h_travail").toString()
+             qtePrevu = jsonArray.getJSONObject(i).getString("qte_prev").toString()
+             qteReal = jsonArray.getJSONObject(i).getString("qte_realise").toString()
+           nbHprevu = jsonArray.getJSONObject(i).getString("nb_h_prevu").toString()
+           nbHtravail = jsonArray.getJSONObject(i).getString("nb_h_travail").toString()
 
             name.setText(nom2)
             qtePrev.setText(qtePrevu)
-            qteR.setText(qteRealise)
+            qteR.setText(qteReal)
             nbHprev.setText(nbHprevu)
             nbHptrav.setText(nbHtravail)
             unite1.setText(u1)
@@ -126,66 +130,109 @@ var idE:String=""
             val date = jsonArray1.getJSONObject(i).getString("date").toString()
             val qteRealise = jsonArray1.getJSONObject(i).getString("qte_realise").toString()
             val montant = jsonArray1.getJSONObject(i).getString("montant_pris").toString()
-            val nbHtravail = jsonArray1.getJSONObject(i).getString("nb_h_travail").toString()
+            val nbHt = jsonArray1.getJSONObject(i).getString("nb_h_travail").toString()
 
-            mesQtes!!.add(QuantiteRealise(date,qteRealise+" "+unite,nbHtravail))
+            mesQtes!!.add(QuantiteRealise(date,qteRealise+" "+unite,nbHt))
 
         }
 
 
 
-
+if(qtePrevu==qteReal){
+    ajouterQteRealiserBtn.setEnabled(false)
+}
 
 
         ajouterQteRealiserBtn.setOnClickListener {
-            var qteRealise:String=""
-            var nbhT:String=""
+            var qteRealise: String = ""
+            var nbhT: String = ""
 
             //Inflate the dialog with custom view
-            val mDialogView = LayoutInflater.from(this).inflate(R.layout.activity_ajouter_qte_realise, null)
+            val mDialogView =
+                LayoutInflater.from(this).inflate(R.layout.activity_ajouter_qte_realise, null)
             //AlertDialogBuilder
             val mBuilder = AlertDialog.Builder(this).create()
-                mBuilder.setView(mDialogView)
+            mBuilder.setView(mDialogView)
             //.setTitle("Login Form")
             //show dialog
             mBuilder.show()
-          mDialogView.valider.setOnClickListener{
-              //pour ajouter la quantité receptionné et la date
-              val c: SimpleDateFormat = SimpleDateFormat("dd/M/yyyy")
-              var d=c.format((Date()))
-              qteRealise=mDialogView.qteR.text.toString()
-              nbhT=mDialogView.nbH.text.toString()
+            mDialogView.valider.setOnClickListener {
+                //pour ajouter la quantité receptionné et la date
+                val c: SimpleDateFormat = SimpleDateFormat("dd/M/yyyy")
+                var d = c.format((Date()))
+                qteRealise = mDialogView.qteR.text.toString()
+                nbhT = mDialogView.nbH.text.toString()
+
+                var qteRF: Float = qteRealise.toFloat()
+
+                var qteRealF: Float = qteReal.toFloat()
+                var qtePF: Float = qtePrevu.toFloat()
+                var diff = qtePF - qteRealF
 
 
-             if (nbhT!="" && qteRealise!="" )
-              {
-                  if(nbhT.toInt()>8)
-                  {
-                      Toast.makeText(mBuilder.context, "Le nombre d'heures travaillées ne doit pas dépasser 8h", Toast.LENGTH_SHORT).show()
+                var n: Float =nbhT.toFloat()
 
-                  }else{
-                  val ajouterS = AjouterSuivi().execute(id.toString(),qteRealise,nbhT,d,idE)
-                  qteAdapter!!.add(QuantiteRealise(d,""+mDialogView.qteR.text.toString()+" "+unite,""+mDialogView.nbH.text.toString()))
-//var q:Int=qteR.text.toString().toInt()+qteRealise.toInt()
-  //           var n:Int=nbHptrav.text.toString().toInt()+nbhT.toInt()
-             // qteR.setText(q.toString())
-               //   nbHptrav.setText(n.toString())
+                var nbhPF: Float = nbHprevu.toFloat()
+                var nbrtF: Float = nbHtravail.toFloat()
+                var diff1: Float = nbhPF - nbrtF
+                if (nbhT != "" && qteRealise != "") {
+                if (qteRF + qteRealF > qtePF) {
 
-                  mBuilder.dismiss()
+                    Toast.makeText(
+                        mBuilder.context,
+                        "La quantité réalisée ne doit pas dépasser :" + diff,
+                        Toast.LENGTH_SHORT
+                    ).show()
 
-                  val i:Intent=intent
-                  finish()
-                  overridePendingTransition(0,0)
-                  startActivity(i)
-                  overridePendingTransition(0,0)
-                  i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)}
+                }
+                else if (n + nbrtF > nbhPF) {
+                    Toast.makeText(
+                        mBuilder.context,
+                        "Le nombre d'heures ne doit pas dépasser :" + diff1,
+                        Toast.LENGTH_SHORT
+                    ).show()}
+                   else if (n > 8F) {
+                        Toast.makeText(
+                            mBuilder.context,
+                            "Le nombre d'heures travaillées ne doit pas dépasser 8h",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                    }
+                else{
 
 
-              }else
-              {
-                  Toast.makeText(mBuilder.context, "Veuillez remplire tout les cases", Toast.LENGTH_SHORT).show()
-              }
 
+                    val ajouterS = AjouterSuivi().execute(id.toString(), qteRealise, nbhT, d, idE)
+                    qteAdapter!!.add(
+                        QuantiteRealise(
+                            d,
+                            "" + mDialogView.qteR.text.toString() + " " + unite,
+                            "" + mDialogView.nbH.text.toString()
+                        )
+                    )
+
+
+
+                    mBuilder.dismiss()
+
+                    val i: Intent = intent
+                    finish()
+                    overridePendingTransition(0, 0)
+                    startActivity(i)
+                    overridePendingTransition(0, 0)
+                    i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                }}
+
+
+            else
+            {
+                Toast.makeText(
+                    mBuilder.context,
+                    "Veuillez remplire tout les cases",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
 
 
 

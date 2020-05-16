@@ -61,7 +61,6 @@
             android:layout_marginRight="25dp"
 
             app:backgroundTint="@color/colorPrimary"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/layoutOrdre"
             app:layout_constraintStart_toStartOf="@+id/layoutOrdre"
@@ -69,29 +68,19 @@
             app:maxImageSize="70dp"
             app:srcCompat="@android:drawable/ic_menu_add" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout3"
-            android:layout_width="416dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutMateriel"
-            tools:ignore="MissingConstraints">
+
 
 
             <ListView
                 android:id="@+id/ordreDeTravailListe"
-                android:layout_width="match_parent"
-                android:layout_height="540dp">
-
+                android:layout_width="0dp"
+                android:layout_height="530dp"
+                android:layout_marginTop="165dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
             </ListView>
 
-        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

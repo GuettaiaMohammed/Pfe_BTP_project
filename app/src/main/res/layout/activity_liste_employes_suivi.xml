@@ -66,28 +66,19 @@
             app:maxImageSize="70dp"
             app:srcCompat="@android:drawable/ic_menu_add" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
 
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutEmplye"
-            tools:ignore="MissingConstraints">
 
             <ListView
                 android:id="@+id/empl"
-                android:layout_width="match_parent"
-                android:layout_height="540dp"
-                android:padding="10dp"
-                tools:layout_editor_absoluteX="10dp">
+                android:layout_width="0dp"
+                android:layout_height="530dp"
+                android:layout_marginTop="165dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
             </ListView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
