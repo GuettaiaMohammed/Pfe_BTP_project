@@ -410,13 +410,13 @@
 
                     <TextView
                         android:id="@+id/textView12"
-                        android:layout_width="100dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/dashB"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="3dp"
                         android:gravity="center"
-                        android:text="Tableaux de bord"
+                        android:text="Statistiques"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />
@@ -424,7 +424,7 @@
                     <ImageView
                         android:id="@+id/dashB"
                         android:layout_width="75dp"
-                        android:layout_height="50dp"
+                        android:layout_height="70dp"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         app:srcCompat="@drawable/dash" />

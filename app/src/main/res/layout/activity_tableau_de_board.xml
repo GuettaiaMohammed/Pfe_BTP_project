@@ -28,7 +28,8 @@
             android:layout_height="wrap_content"
             android:text="Articles demandés"
             android:gravity = "center"
-            android:paddingTop="20dp"/>
+            android:paddingTop="20dp"
+            android:textColor="@color/design_default_color_on_secondary"/>
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pieChart"
@@ -44,7 +45,9 @@
             android:layout_height="wrap_content"
             android:text="Nombre employés demandé par métier"
             android:gravity = "center"
-            android:paddingTop="20dp" />
+            android:paddingTop="50dp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/design_default_color_on_secondary"/>
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/barChart"
@@ -58,12 +61,30 @@
             android:layout_height="wrap_content"
             android:text="Employé / Quantité prévue, Quantité réalisée"
             android:gravity = "center"
-            android:paddingTop="20dp" />
+            android:paddingTop="50dp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/design_default_color_on_secondary"/>
 
         <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barChart2"
+            android:id="@+id/barChartG"
             android:layout_width="match_parent"
             android:layout_height="500sp"
+            android:layout_marginBottom="20dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ligne Lot / Quantité prévue, Quantité réalisée"
+            android:gravity = "center"
+            android:paddingTop="50dp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/design_default_color_on_secondary"/>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barChartMult"
+            android:layout_width="match_parent"
+            android:layout_height="550sp"
             android:layout_marginBottom="20dp"
             />
 
