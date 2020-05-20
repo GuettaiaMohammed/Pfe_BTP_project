@@ -41,8 +41,9 @@ class LoginActivity : AppCompatActivity() {
 
 
         loginBtn.setOnClickListener {
-            var user:String=utilisateur.getText().toString()
-            var pass:String=mdp.getText().toString()
+            var user:String=utilisateur.text.toString()
+
+            var pass:String=mdp.text.toString()
             var idUser:Int=0
             if(list!=null){
                 for(i in 0..(list.size-1)){

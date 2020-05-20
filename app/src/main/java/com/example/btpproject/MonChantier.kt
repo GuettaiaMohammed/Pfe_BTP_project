@@ -650,7 +650,6 @@ if (qte != "" && article !="") {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
-                //Testé l'authentification
                 common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
 
                 val uid: Int=  client.execute(
@@ -658,13 +657,6 @@ if (qte != "" && article !="") {
                         db, username, password, Collections.emptyMap<Any, Any>()
                 )
                 ) as Int
-                Log.d(
-                        "result",
-                        "*******************************************************************"
-                )
-                Log.d("uid = ", Integer.toString(uid))
-                System.out.println("************************************    UID = " + uid)
-
                 val models = object : XmlRpcClient() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
@@ -693,7 +685,7 @@ if (qte != "" && article !="") {
                             }
                         }
                 )) as Array<Any>)
-                println("**************************  champs chantier = $list")
+
                 return list
 
             }catch (e: MalformedURLException) {
@@ -1336,7 +1328,7 @@ var idDemnd:Int=0
 //
 
 
-                var id1: Int = models.execute(
+                var id: Int = models.execute(
                     "execute_kw", asList(
                         db, uid, password,
                         "purchase.order.line", "create",
@@ -1349,12 +1341,10 @@ var idDemnd:Int=0
                                 put("product_qty",qte)
                                 put("date_planned",dateD)
                                 put("price_unit",prix)
-
-
                             }
                         })
                     ))as Int
-                println("************************  liste des données = $id1")
+
             } catch (e: MalformedURLException) {
                 Log.d(
                     "MalformedURLException",
