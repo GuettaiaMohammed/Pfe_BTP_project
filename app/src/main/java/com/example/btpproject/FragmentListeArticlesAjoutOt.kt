@@ -129,64 +129,122 @@ class FragmentListeArticlesAjoutOt(var idLot: Int) : Fragment() {
                     val ligneIds =
                         jsonArray3.getJSONObject(0).toString()
 
-                    val ids = ligneIds.split("[")[1]
-                    val ids2 = ids.split("]")[0]
-                    //liste final des ids
-                    val idd: List<String> = ids2.split(",")
+                    if(ligneIds.indexOf(",") >= 0) {
+                        val ids = ligneIds.split("[")[1]
+                        val ids2 = ids.split("]")[0]
+                        //liste final des ids
+                        val idd: List<String> = ids2.split(",")
 
-                    if(idd[0] != "") {
+                        if(idd[0] != "") {
 
-                        // recupéré les champ nom unite num des ligne par chaque Id
-                        for (i in 0..(idd!!.size) - 1) {
-                            val idInt = idd[i].toInt()
-                            val listLigne = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                                db, uid, password,
-                                "ligne.article.lot", "search_read",
-                                Arrays.asList(
+                            // recupéré les champ nom unite num des ligne par chaque Id
+                            for (i in 0..(idd!!.size) - 1) {
+                                val idInt = idd[i].toInt()
+                                val listLigne = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                                    db, uid, password,
+                                    "ligne.article.lot", "search_read",
                                     Arrays.asList(
-                                        Arrays.asList("ligne_lot_id", "=", idInt)
-                                    )
-                                ),
-                                object : HashMap<Any, Any>() {
-                                    init {
-                                        put(
-                                            "fields",
-                                            Arrays.asList("name", "unite", "ligne_lot_id", "product_id")
+                                        Arrays.asList(
+                                            Arrays.asList("ligne_lot_id", "=", idInt)
                                         )
+                                    ),
+                                    object : HashMap<Any, Any>() {
+                                        init {
+                                            put(
+                                                "fields",
+                                                Arrays.asList("name", "unite", "ligne_lot_id", "product_id")
+                                            )
+                                        }
                                     }
+                                )) as Array<Any>)
+
+                                if(listLigne.isNotEmpty()) {
+                                    //liste des champs
+                                    val jsonArray4 = JSONArray(listLigne)
+                                    val prod =
+                                        jsonArray4.getJSONObject(0).getString("product_id").toString()
+                                    var prod1 = prod.split("[")[1]
+                                    var prod2 = prod1.split(",")[0]
+
+                                    val ligneObj =
+                                        jsonArray4.getJSONObject(0).getString("ligne_lot_id").toString()
+                                    var ligne1 = ligneObj.split("[")[1]
+                                    var ligneid = ligne1.split(",")[0]
+
+                                    var ligneN = ligneObj.split("\"")[1]
+                                    var ligneNom = ligneN.split("\"")[0]
+
+                                    val unite =
+                                        jsonArray4.getJSONObject(0).getString("unite").toString()
+                                    var unit = unite.split("\"")[1]
+                                    var unit2 = unit.split("\"")[0]
+
+                                    val name = jsonArray4.getJSONObject(0).getString("name").toString()
+                                    val id = jsonArray4.getJSONObject(0).getString("id").toString()
+
+
+                                    listArticleOt.add(ArticleOT(id,ligneid, ligneNom, prod2, name, unit2, "0"))
                                 }
-                            )) as Array<Any>)
-
-                            if(listLigne.isNotEmpty()) {
-                                //liste des champs
-                                val jsonArray4 = JSONArray(listLigne)
-                                val prod =
-                                    jsonArray4.getJSONObject(0).getString("product_id").toString()
-                                var prod1 = prod.split("[")[1]
-                                var prod2 = prod1.split(",")[0]
-
-                                val ligneObj =
-                                    jsonArray4.getJSONObject(0).getString("ligne_lot_id").toString()
-                                var ligne1 = ligneObj.split("[")[1]
-                                var ligneid = ligne1.split(",")[0]
-
-                                var ligneN = ligneObj.split("\"")[1]
-                                var ligneNom = ligneN.split("\"")[0]
-
-                                val unite =
-                                    jsonArray4.getJSONObject(0).getString("unite").toString()
-                                var unit = unite.split("\"")[1]
-                                var unit2 = unit.split("\"")[0]
-
-                                val name = jsonArray4.getJSONObject(0).getString("name").toString()
-                                val id = jsonArray4.getJSONObject(0).getString("id").toString()
-
-
-                                listArticleOt.add(ArticleOT(id,ligneid, ligneNom, prod2, name, unit2, "0"))
                             }
+
                         }
 
+                    }else{
+                        val ids = ligneIds.split("[")[1]
+                        val ids2 = ids.split("]")[0]
+
+                        if(ids2 != "") {
+
+                            // recupéré les champ nom unite num des ligne par chaque Id
+                                val idInt = ids2.toInt()
+                                val listLigne = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                                    db, uid, password,
+                                    "ligne.article.lot", "search_read",
+                                    Arrays.asList(
+                                        Arrays.asList(
+                                            Arrays.asList("ligne_lot_id", "=", idInt)
+                                        )
+                                    ),
+                                    object : HashMap<Any, Any>() {
+                                        init {
+                                            put(
+                                                "fields",
+                                                Arrays.asList("name", "unite", "ligne_lot_id", "product_id")
+                                            )
+                                        }
+                                    }
+                                )) as Array<Any>)
+
+                                if(listLigne.isNotEmpty()) {
+                                    //liste des champs
+                                    val jsonArray4 = JSONArray(listLigne)
+                                    val prod =
+                                        jsonArray4.getJSONObject(0).getString("product_id").toString()
+                                    var prod1 = prod.split("[")[1]
+                                    var prod2 = prod1.split(",")[0]
+
+                                    val ligneObj =
+                                        jsonArray4.getJSONObject(0).getString("ligne_lot_id").toString()
+                                    var ligne1 = ligneObj.split("[")[1]
+                                    var ligneid = ligne1.split(",")[0]
+
+                                    var ligneN = ligneObj.split("\"")[1]
+                                    var ligneNom = ligneN.split("\"")[0]
+
+                                    val unite =
+                                        jsonArray4.getJSONObject(0).getString("unite").toString()
+                                    var unit = unite.split("\"")[1]
+                                    var unit2 = unit.split("\"")[0]
+
+                                    val name = jsonArray4.getJSONObject(0).getString("name").toString()
+                                    val id = jsonArray4.getJSONObject(0).getString("id").toString()
+
+
+                                    listArticleOt.add(ArticleOT(id,ligneid, ligneNom, prod2, name, unit2, "0"))
+                                }
+                            }
                     }
+
 
                 }
                 return listArticleOt

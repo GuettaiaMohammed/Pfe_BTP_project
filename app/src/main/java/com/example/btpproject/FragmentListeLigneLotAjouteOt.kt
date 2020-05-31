@@ -136,57 +136,105 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                     val ligneIds =
                         jsonArray3.getJSONObject(0).toString()
 
-                    val ids = ligneIds.split("[")[1]
-                    val ids2 = ids.split("]")[0]
-                    //liste final des ids
-                    val idd: List<String> = ids2.split(",")
+                    var idd: List<String> = emptyList()
+                    if(ligneIds.indexOf(",") >= 0) {
 
+                        val ids = ligneIds.split("[")[1]
+                        val ids2 = ids.split("]")[0]
+                        //liste final des ids
+                        idd = ids2.split(",")
 
-                    if (idd[0] != "") {
+                        if (idd[0] != "") {
 
-                        // recupéré les champ nom unite num des ligne par chaque Id
-                        for (i in 0..(idd!!.size) - 1) {
-                            val idInt = idd[i].toInt()
-                            val listLigne =
-                                Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                                    db, uid, password,
-                                    "ligne.lot", "search_read",
-                                    Arrays.asList(
+                            // recupéré les champ nom unite num des ligne par chaque Id
+                            for (i in 0..(idd!!.size) - 1) {
+                                val idInt = idd[i].toInt()
+                                val listLigne =
+                                    Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                                        db, uid, password,
+                                        "ligne.lot", "search_read",
                                         Arrays.asList(
-                                            Arrays.asList("id", "=", idInt)
-                                        )
-                                    ),
-                                    object : HashMap<Any, Any>() {
-                                        init {
-                                            put(
-                                                "fields",
-                                                Arrays.asList(
-                                                    "name",
-                                                    "num",
-                                                    "unite"
-                                                )
+                                            Arrays.asList(
+                                                Arrays.asList("id", "=", idInt)
                                             )
+                                        ),
+                                        object : HashMap<Any, Any>() {
+                                            init {
+                                                put(
+                                                    "fields",
+                                                    Arrays.asList(
+                                                        "name",
+                                                        "num",
+                                                        "unite"
+                                                    )
+                                                )
+                                            }
                                         }
-                                    }
-                                )) as Array<Any>)
+                                    )) as Array<Any>)
 
-                            if(listLigne.isNotEmpty()) {
-                                //liste des champs
-                                val jsonArray4 = JSONArray(listLigne)
-                                val unite =
-                                    jsonArray4.getJSONObject(0).getString("unite").toString()
-                                var unit = unite.split("\"")[1]
-                                var unit2 = unit.split("\"")[0]
+                                if(listLigne.isNotEmpty()) {
+                                    //liste des champs
+                                    val jsonArray4 = JSONArray(listLigne)
+                                    val unite =
+                                        jsonArray4.getJSONObject(0).getString("unite").toString()
+                                    var unit = unite.split("\"")[1]
+                                    var unit2 = unit.split("\"")[0]
 
-                                val num = jsonArray4.getJSONObject(0).getString("num").toString()
-
-                                val name = jsonArray4.getJSONObject(0).getString("name").toString()
-
-
-                                listLigneOt.add(LigneLotOT(idInt.toString(), num, name, unit2, "0"))
+                                    val num = jsonArray4.getJSONObject(0).getString("num").toString()
+                                    val name = jsonArray4.getJSONObject(0).getString("name").toString()
+                                    listLigneOt.add(LigneLotOT(idInt.toString(), num, name, unit2, "0"))
+                                }
                             }
                         }
+
+                    }else{
+
+                        val ids = ligneIds.split("[")[1]
+                        val id = ids.split("]")[0]
+
+                        if (id != "") {
+
+                            // recupéré les champ nom unite num des ligne par chaque Id
+
+                                val idInt = id.toInt()
+                                val listLigne =
+                                    Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                                        db, uid, password,
+                                        "ligne.lot", "search_read",
+                                        Arrays.asList(
+                                            Arrays.asList(
+                                                Arrays.asList("id", "=", idInt)
+                                            )
+                                        ),
+                                        object : HashMap<Any, Any>() {
+                                            init {
+                                                put(
+                                                    "fields",
+                                                    Arrays.asList(
+                                                        "name",
+                                                        "num",
+                                                        "unite"
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    )) as Array<Any>)
+
+                                if(listLigne.isNotEmpty()) {
+                                    //liste des champs
+                                    val jsonArray4 = JSONArray(listLigne)
+                                    val unite =
+                                        jsonArray4.getJSONObject(0).getString("unite").toString()
+                                    var unit = unite.split("\"")[1]
+                                    var unit2 = unit.split("\"")[0]
+
+                                    val num = jsonArray4.getJSONObject(0).getString("num").toString()
+                                    val name = jsonArray4.getJSONObject(0).getString("name").toString()
+                                    listLigneOt.add(LigneLotOT(idInt.toString(), num, name, unit2, "0"))
+                                }
+                            }
                     }
+
                 }
                 return listLigneOt
 
