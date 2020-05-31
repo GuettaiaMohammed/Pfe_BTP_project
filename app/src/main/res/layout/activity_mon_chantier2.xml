@@ -51,7 +51,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingTop="35dp"
-            android:text="Mon chantier"
+            android:text="Chantier"
             android:textSize="30sp"
             android:textStyle="bold"
             app:fontFamily="sans-serif" />

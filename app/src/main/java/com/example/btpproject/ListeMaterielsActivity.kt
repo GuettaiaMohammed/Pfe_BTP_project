@@ -238,7 +238,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
 
                 if(type != "" && detail != "" && dateD != "" && dateF != "") {
                     val demandeM = MonChantier.AjouterMateriel()
-                        .execute(id.toString(), dateD, dateF, detail)
+                        .execute(id_chantier.toString(),id.toString(), dateD, dateF, detail)
                     mBuilder.dismiss()
                     val i:Intent=intent
                     finish()
