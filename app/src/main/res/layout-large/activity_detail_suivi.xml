@@ -24,7 +24,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="260dp"
             android:layout_marginTop="60dp"
             android:gravity="center|center_horizontal|center_vertical"
             app:layout_constraintTop_toTopOf="parent"
@@ -44,7 +44,7 @@
                     android:gravity="center"
                     android:padding="5dp"
                     android:text="Guettaia Mohammed"
-                    android:textSize="24sp"
+                    android:textSize="30sp"
                     android:textStyle="bold"
                     app:fontFamily="sans-serif" />
 
@@ -54,10 +54,10 @@
         </RelativeLayout>
 
         <androidx.cardview.widget.CardView
-            android:layout_width="340dp"
-            android:layout_height="80dp"
+            android:layout_width="380dp"
+            android:layout_height="120dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="220dp"
+            android:layout_marginTop="260dp"
             android:layout_weight="1"
             android:longClickable="false"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +81,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="Quantité prévue"
-                        android:textSize="14sp"
+                        android:textSize="18sp"
                         app:fontFamily="sans-serif" />
 
                     <LinearLayout
@@ -94,23 +94,24 @@
                             android:id="@+id/qteP"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="25dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="100"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="14sp"
+                            android:textSize="18sp"
                             app:fontFamily="sans-serif" />
 
                         <TextView
                             android:id="@+id/unit2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="25dp"
                             android:layout_marginRight="3dp"
+                            android:gravity="center"
                             android:text="m3"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="14sp"
+                            android:textSize="18sp"
                             app:fontFamily="sans-serif" />
                     </LinearLayout>
 
@@ -129,7 +130,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="Quantité réalisée"
-                        android:textSize="14sp"
+                        android:textSize="18sp"
                         app:fontFamily="sans-serif" />
 
                     <LinearLayout
@@ -142,24 +143,24 @@
                             android:id="@+id/qteR"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="25dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="72"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="14sp"
+                            android:textSize="18sp"
                             app:fontFamily="sans-serif" />
 
                         <TextView
                             android:id="@+id/unit1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="25dp"
                             android:layout_marginRight="3dp"
                             android:gravity="center"
                             android:text="m3"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="14sp"
+                            android:textSize="18sp"
                             app:fontFamily="sans-serif" />
                     </LinearLayout>
 
@@ -178,7 +179,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="Nb heures prévues"
-                        android:textSize="14sp"
+                        android:textSize="18sp"
                         app:fontFamily="sans-serif" />
 
                     <TextView
@@ -189,7 +190,7 @@
                         android:gravity="center"
                         android:text="20"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="14sp"
+                        android:textSize="18sp"
                         app:fontFamily="sans-serif" />
 
                 </LinearLayout>
@@ -206,7 +207,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="Nb heures travaillées"
-                        android:textSize="14sp"
+                        android:textSize="18sp"
                         app:fontFamily="sans-serif" />
 
                     <TextView
@@ -217,7 +218,7 @@
                         android:gravity="center"
                         android:text="20"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="14sp"
+                        android:textSize="18sp"
                         app:fontFamily="sans-serif" />
 
                 </LinearLayout>
@@ -227,7 +228,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="320dp"
+            android:layout_marginTop="380dp"
 
             android:gravity="center"
             android:orientation="vertical"
@@ -238,7 +239,7 @@
             <ListView
                 android:id="@+id/qteRealise"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="280dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginEnd="5dp"
@@ -252,8 +253,8 @@
 
             <Button
                 android:id="@+id/ajouterQteRealiserBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_width="160dp"
+                android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="15dp"
@@ -262,7 +263,7 @@
                 android:shadowColor="@color/design_default_color_primary_dark"
                 android:text="Ajouter"
                 android:textColor="@android:color/background_light"
-                android:textSize="10sp" />
+                android:textSize="18sp" />
         </LinearLayout>
 
     </RelativeLayout>

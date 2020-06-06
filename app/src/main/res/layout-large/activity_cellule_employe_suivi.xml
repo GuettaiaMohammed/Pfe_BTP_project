@@ -20,7 +20,7 @@
             android:paddingBottom="5dp"
             android:text="TextView"
             android:textColor="@color/design_default_color_on_secondary"
-            android:textSize="18sp"
+            android:textSize="30sp"
             android:textStyle="bold"
             app:fontFamily="sans-serif" />
 
@@ -32,7 +32,7 @@
             android:paddingLeft="5dp"
             android:paddingBottom="5dp"
             android:text="TextView"
-            android:textSize="14sp"
+            android:textSize="24sp"
             app:fontFamily="sans-serif" />
     </LinearLayout>
 

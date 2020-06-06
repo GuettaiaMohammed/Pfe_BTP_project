@@ -11,6 +11,7 @@
         android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:textSize="18sp"
         app:fontFamily="sans-serif" />
 
     <TextView
@@ -20,6 +21,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="TextView"
+        android:textSize="18sp"
         app:fontFamily="sans-serif" />
 
     <TextView
@@ -29,6 +31,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="TextView"
+        android:textSize="18sp"
         app:fontFamily="sans-serif" />
 
     <EditText
@@ -37,7 +40,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="center"
-        android:inputType="numberSigned|number" />
+        android:inputType="numberSigned|number"
+        android:textSize="18sp" />
 
 
 </LinearLayout>

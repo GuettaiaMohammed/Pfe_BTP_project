@@ -29,10 +29,10 @@
 
             android:layout_marginStart="50dp"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:text="Ajouter un employé"
             android:textColor="@color/design_default_color_background"
-            android:textSize="22sp"
+            android:textSize="30sp"
             android:textStyle="bold"
             app:fontFamily="sans-serif"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="15dp">
 
                 <TextView
                     android:id="@+id/textView5"
@@ -71,12 +71,12 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:text="Employé"
-                    android:textSize="20sp" />
+                    android:textSize="24sp" />
 
                 <Spinner
                     android:id="@+id/spinnerEmploye"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
 
                     android:layout_weight="1" />
             </LinearLayout>
@@ -85,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="15dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -94,12 +94,12 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:text="@string/unite"
-                    android:textSize="20sp" />
+                    android:textSize="24sp" />
 
                 <Spinner
                     android:id="@+id/spinnerUnite"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
 
                     android:layout_weight="1" />
             </LinearLayout>
@@ -108,7 +108,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="15dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -117,12 +117,12 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:text="@string/ligneLot"
-                    android:textSize="20sp" />
+                    android:textSize="24sp" />
 
                 <Spinner
                     android:id="@+id/spinnerLigneLot"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
 
                     android:layout_weight="1" />
             </LinearLayout>
@@ -139,7 +139,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/quantitePrevue"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:textSize="24sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -153,7 +154,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/nbHPrevues"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:textSize="24sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -167,24 +169,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/pu"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:textSize="24sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="50dp"
                 android:layout_marginBottom="30dp"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/button"
-                    android:layout_width="120dp"
-                    android:layout_height="40dp"
+                    android:layout_width="160dp"
+                    android:layout_height="60dp"
                     android:layout_weight="1"
                     android:background="@drawable/button"
-                    android:text="Valider" />
+                    android:text="Valider"
+                    android:textSize="18sp" />
 
             </LinearLayout>
         </LinearLayout>

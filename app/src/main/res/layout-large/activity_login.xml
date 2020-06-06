@@ -33,16 +33,16 @@
 
     <TextView
         android:id="@+id/textView20"
-        android:layout_width="300dp"
+        android:layout_width="370dp"
         android:layout_height="wrap_content"
 
-        android:layout_marginTop="170dp"
+        android:layout_marginTop="140dp"
         android:gravity="center"
         android:lineSpacingExtra="6sp"
         android:padding="15dp"
         android:text="Gérez vos chantiers en mobilité avec l'application  BTP"
         android:textColor="@color/design_default_color_background"
-        android:textSize="18sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:fontFamily="sans-serif"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +52,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="270dp"
+        android:layout_marginTop="290dp"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -64,36 +64,39 @@
 
         <EditText
             android:id="@+id/utilisateur"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
+            android:layout_width="340dp"
+            android:layout_height="70dp"
             android:layout_gravity="center"
             android:background="@drawable/login_edit"
             android:ems="10"
             android:hint="Nom d'utilisateur"
             android:inputType="textPersonName"
-            android:paddingLeft="20dp" />
+            android:paddingLeft="20dp"
+            android:textSize="24sp" />
 
         <EditText
             android:id="@+id/motPass"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
+            android:layout_width="340dp"
+            android:layout_height="70dp"
             android:layout_gravity="center"
             android:layout_marginTop="25dp"
             android:background="@drawable/login_edit"
             android:ems="10"
             android:hint="Mot de passe"
             android:inputType="textPassword"
-            android:paddingLeft="20dp" />
+            android:paddingLeft="20dp"
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/loginBtn"
-            android:layout_width="200dp"
-            android:layout_height="40dp"
+            android:layout_width="220dp"
+            android:layout_height="55dp"
             android:layout_gravity="center"
             android:layout_marginTop="40dp"
             android:background="@drawable/button2"
             android:text="Se connecter"
-            android:textColor="@color/design_default_color_background" />
+            android:textColor="@color/design_default_color_background"
+            android:textSize="18sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

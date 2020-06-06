@@ -29,10 +29,10 @@
 
             android:layout_marginStart="50dp"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:text="Demander une avance"
             android:textColor="@color/design_default_color_background"
-            android:textSize="22sp"
+            android:textSize="30sp"
             android:textStyle="bold"
             app:fontFamily="sans-serif"
             app:layout_constraintStart_toStartOf="parent"
@@ -54,11 +54,10 @@
 
 
             <androidx.cardview.widget.CardView
-                android:layout_width="329dp"
+                android:layout_width="400dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:longClickable="false"
-                tools:layout_marginLeft="10dp">
+                android:longClickable="false">
 
                 <LinearLayout
                     android:id="@+id/l1"
@@ -70,7 +69,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
-                        android:padding="10dp">
+                        android:padding="15dp">
 
                         <TextView
                             android:id="@+id/textView5"
@@ -81,13 +80,13 @@
                             android:gravity="start"
                             android:paddingLeft="20dp"
                             android:text="Employé"
-                            android:textSize="20sp"
+                            android:textSize="24sp"
                             app:fontFamily="sans-serif" />
 
                         <Spinner
                             android:id="@+id/spinnerEmploye"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
 
                             android:layout_weight="1" />
                     </LinearLayout>
@@ -97,7 +96,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="10dp">
+                        android:padding="15dp">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -105,7 +104,7 @@
                             android:layout_weight="1"
                             android:paddingLeft="20dp"
                             android:text="@string/date"
-                            android:textSize="20sp" />
+                            android:textSize="24sp" />
 
                         <Button
                             android:id="@+id/dateDAvBtn"
@@ -116,7 +115,7 @@
                             android:background="@color/design_default_color_background"
                             android:drawableRight="@drawable/ic_date_range_orange_24dp"
                             android:text="Choisir une date"
-                            android:textSize="8sp" />
+                            android:textSize="12sp" />
 
                     </LinearLayout>
 
@@ -139,7 +138,7 @@
                                 android:layout_marginRight="20dp"
                                 android:hint="Montant demandé"
                                 android:inputType="number"
-                                android:textSize="20sp" />
+                                android:textSize="24sp" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 
@@ -147,17 +146,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="50dp"
                         android:layout_marginBottom="30dp"
                         android:orientation="horizontal">
 
                         <Button
                             android:id="@+id/button"
-                            android:layout_width="120dp"
-                            android:layout_height="40dp"
+                            android:layout_width="160dp"
+                            android:layout_height="60dp"
                             android:layout_weight="1"
                             android:background="@drawable/button"
-                            android:text="Valider" />
+                            android:text="Valider"
+                            android:textSize="18sp" />
 
                     </LinearLayout>
                 </LinearLayout>

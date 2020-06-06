@@ -18,7 +18,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="N°"
-            android:textSize="14sp"
+            android:textSize="18sp"
             app:fontFamily="sans-serif" />
 
         <TextView
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Désignation"
-            android:textSize="14sp"
+            android:textSize="18sp"
             app:fontFamily="sans-serif" />
 
         <TextView
@@ -37,16 +37,16 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Unité"
-            android:textSize="14sp"
+            android:textSize="18sp"
             app:fontFamily="sans-serif" />
 
         <TextView
             android:id="@+id/textView17"
-            android:layout_width="60dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Qte réalisée"
-            android:textSize="14sp"
+            android:textSize="18sp"
             app:fontFamily="sans-serif" />
 
     </LinearLayout>

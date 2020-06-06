@@ -11,6 +11,7 @@
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:textSize="18sp"
         app:fontFamily="sans-serif" />
 
     <TextView
@@ -20,6 +21,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="TextView"
+        android:textSize="18sp"
         app:fontFamily="sans-serif" />
 
     <TextView
@@ -29,6 +31,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="TextView"
+        android:textSize="18sp"
         app:fontFamily="sans-serif" />
 
     <TextView
@@ -38,6 +41,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="TextView"
+        android:textSize="18sp"
         app:fontFamily="sans-serif" />
 
 </LinearLayout>

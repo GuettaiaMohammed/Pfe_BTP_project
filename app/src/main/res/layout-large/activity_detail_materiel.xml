@@ -19,13 +19,13 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="280dp"
         android:layout_marginTop="50dp"
         android:gravity="center|center_horizontal|center_vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="match_parent"
             android:background="@drawable/gardien_background"
             android:gravity="center"
             android:orientation="vertical">
@@ -37,7 +37,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Grue"
-                android:textSize="24sp"
+                android:textSize="30sp"
                 android:textStyle="bold"
                 app:fontFamily="sans-serif" />
 
@@ -48,10 +48,10 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/ajouter"
-        android:layout_width="320dp"
-        android:layout_height="80dp"
+        android:layout_width="360dp"
+        android:layout_height="120dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="205dp"
+        android:layout_marginTop="260dp"
         android:layout_weight="1"
         android:longClickable="false">
 
@@ -73,7 +73,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Etat"
-                    android:textSize="14sp"
+                    android:textSize="24sp"
                     app:fontFamily="sans-serif" />
 
                 <TextView
@@ -84,7 +84,7 @@
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
+                    android:textSize="24sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
 
@@ -101,7 +101,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Commentaire"
-                    android:textSize="14sp"
+                    android:textSize="24sp"
                     app:fontFamily="sans-serif" />
 
                 <TextView
@@ -112,7 +112,7 @@
                     android:gravity="center"
                     android:text="21/03/2020"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
+                    android:textSize="24sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
         </LinearLayout>
@@ -121,7 +121,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="320dp"
+        android:layout_marginTop="390dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -135,15 +135,17 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 app:srcCompat="@drawable/ic_date_range_orange_24dp" />
 
             <TextView
                 android:id="@+id/textView13"
                 android:layout_width="30dp"
-                android:layout_height="50dp"
+                android:layout_height="70dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="Début" />
+                android:text="Début"
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/date_debut"
@@ -153,7 +155,7 @@
                 android:layout_weight="1"
                 android:paddingLeft="15dp"
                 android:text="25/03/2020"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -169,15 +171,17 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 app:srcCompat="@drawable/ic_date_range_orange_24dp" />
 
             <TextView
                 android:id="@+id/textView33"
                 android:layout_width="30dp"
-                android:layout_height="50dp"
+                android:layout_height="70dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="Fin" />
+                android:text="Fin"
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/date_fin"
@@ -187,7 +191,7 @@
                 android:layout_weight="1"
                 android:paddingLeft="15dp"
                 android:text="09/04/2020"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -203,15 +207,17 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 app:srcCompat="@drawable/ic_update_black_24dp" />
 
             <TextView
                 android:id="@+id/textView34"
                 android:layout_width="30dp"
-                android:layout_height="50dp"
+                android:layout_height="70dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="Durée" />
+                android:text="Durée"
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/duree"
@@ -221,15 +227,15 @@
                 android:layout_weight="1"
                 android:paddingLeft="15dp"
                 android:text="15 jrs"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
         <Button
             android:id="@+id/receptionMateriel"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_width="160dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="15dp"
@@ -238,7 +244,7 @@
             android:shadowColor="@color/design_default_color_primary_dark"
             android:text="receptionner"
             android:textColor="@android:color/background_light"
-            android:textSize="14sp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 </RelativeLayout>

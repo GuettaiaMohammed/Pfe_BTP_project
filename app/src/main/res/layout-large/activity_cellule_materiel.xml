@@ -24,7 +24,7 @@
                 android:padding="10dp"
                 android:text="TextView"
                 android:textColor="@android:color/background_dark"
-                android:textSize="18sp"
+                android:textSize="30sp"
                 android:textStyle="bold"
                 app:fontFamily="sans-serif" />
 
@@ -38,7 +38,8 @@
                     android:id="@+id/textView21"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="De" />
+                    android:text="De"
+                    android:textSize="24sp" />
 
                 <TextView
                     android:id="@+id/type"
@@ -47,6 +48,7 @@
                     android:paddingLeft="15dp"
                     android:paddingBottom="10dp"
                     android:text="TextView"
+                    android:textSize="24sp"
                     app:fontFamily="sans-serif" />
 
                 <TextView
@@ -54,7 +56,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="15dp"
-                    android:text="à" />
+                    android:text="à"
+                    android:textSize="24sp" />
 
                 <TextView
                     android:id="@+id/date"
@@ -62,6 +65,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="15dp"
                     android:text="TextView"
+                    android:textSize="24sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
 

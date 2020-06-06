@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="15dp"
                 app:layout_constraintTop_toBottomOf="@+id/l1">
 
                 <TextView
@@ -59,13 +59,13 @@
                     android:gravity="start"
                     android:paddingLeft="15dp"
                     android:text="Lot"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     app:fontFamily="sans-serif" />
 
                 <Spinner
                     android:id="@+id/listeLotSpinner"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:layout_marginRight="20dp" />
 
             </LinearLayout>
@@ -81,7 +81,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
-                    android:hint="@string/nom" />
+                    android:hint="@string/nom"
+                    android:textSize="24sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -97,7 +98,8 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="7dp"
                     android:hint="N° OT"
-                    android:inputType="textPersonName|text" />
+                    android:inputType="textPersonName|text"
+                    android:textSize="24sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -114,24 +116,25 @@
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/ajoutOTViewPager"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="320dp"
                 android:layout_marginTop="3dp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="45dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="30dp"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/validerAjtOtBtn"
-                    android:layout_width="120dp"
-                    android:layout_height="40dp"
+                    android:layout_width="160dp"
+                    android:layout_height="60dp"
                     android:layout_weight="1"
                     android:background="@drawable/button"
-                    android:text="Valider" />
+                    android:text="Valider"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 

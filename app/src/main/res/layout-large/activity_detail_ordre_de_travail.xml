@@ -19,13 +19,13 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="260dp"
         android:layout_marginTop="50dp"
         android:gravity="center|center_horizontal|center_vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="match_parent"
             android:background="@drawable/gardien_background"
             android:gravity="center"
             android:orientation="vertical">
@@ -37,7 +37,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Ordre de travail 3"
-                android:textSize="24sp"
+                android:textSize="36sp"
                 android:textStyle="bold"
                 app:fontFamily="sans-serif" />
 
@@ -48,10 +48,10 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/ajouter"
-        android:layout_width="320dp"
-        android:layout_height="80dp"
+        android:layout_width="360dp"
+        android:layout_height="120dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="205dp"
+        android:layout_marginTop="250dp"
         android:layout_weight="1"
         android:longClickable="false">
 
@@ -73,7 +73,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Référence"
-                    android:textSize="14sp"
+                    android:textSize="24sp"
                     app:fontFamily="sans-serif" />
 
                 <TextView
@@ -84,7 +84,7 @@
                     android:gravity="center"
                     android:text="ot_3"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
+                    android:textSize="24sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
 
@@ -101,7 +101,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Lot"
-                    android:textSize="14sp"
+                    android:textSize="24sp"
                     app:fontFamily="sans-serif" />
 
                 <TextView
@@ -112,7 +112,7 @@
                     android:gravity="center"
                     android:text="2"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
+                    android:textSize="24sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
 
@@ -125,22 +125,22 @@
                 <TextView
                     android:id="@+id/textView26"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Date"
-                    android:textSize="14sp"
+                    android:textSize="24sp"
                     app:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/DateOTDetOTTV"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="25/02/2020"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
+                    android:textSize="22sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
         </LinearLayout>
@@ -150,7 +150,7 @@
         android:id="@+id/detailOTTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="370dp"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/colorPrimary"
         app:tabMode="fixed" />
@@ -159,7 +159,7 @@
         android:id="@+id/detailOTViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="352dp" />
+        android:layout_marginTop="420dp" />
 
 
 </RelativeLayout>

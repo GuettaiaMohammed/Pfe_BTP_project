@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="15dp"
             android:text="@string/ligneLot"
-            android:textSize="14sp"
+            android:textSize="18sp"
             app:fontFamily="sans-serif" />
 
         <TextView
@@ -27,7 +27,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Article"
-            android:textSize="13sp"
+            android:textSize="18sp"
             app:fontFamily="sans-serif" />
 
         <TextView
@@ -37,16 +37,16 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Unité"
-            android:textSize="14sp"
+            android:textSize="18sp"
             app:fontFamily="sans-serif" />
 
         <TextView
             android:id="@+id/textView17"
-            android:layout_width="60dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Qte consommée"
-            android:textSize="11sp"
+            android:textSize="18sp"
             app:fontFamily="sans-serif" />
 
     </LinearLayout>
