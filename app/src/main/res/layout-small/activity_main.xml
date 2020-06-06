@@ -220,7 +220,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="3dp"
                         android:gravity="center"
-                        android:text="Demandes personnels"
+                        android:text="Demandes personnel"
                         android:textSize="8sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />
@@ -254,7 +254,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="3dp"
                         android:gravity="center"
-                        android:text="Demandes matériels"
+                        android:text="Demandes      matériel"
                         android:textSize="8sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />

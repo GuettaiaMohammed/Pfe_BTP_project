@@ -62,7 +62,6 @@
             android:orientation="horizontal">
 
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -72,7 +71,7 @@
                 <TextView
                     android:id="@+id/textView24"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Quantité demandée"
@@ -82,13 +81,15 @@
                 <TextView
                     android:id="@+id/qteDemand"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="100"
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -98,7 +99,7 @@
                 <TextView
                     android:id="@+id/textView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Quantité traitée"
@@ -108,13 +109,15 @@
                 <TextView
                     android:id="@+id/qteTraite"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="100"
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     app:fontFamily="sans-serif" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -124,7 +127,7 @@
                 <TextView
                     android:id="@+id/state"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Etat"
@@ -134,7 +137,8 @@
                 <TextView
                     android:id="@+id/etat"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="100"
                     android:textColor="@color/colorPrimary"
@@ -151,7 +155,7 @@
                 <TextView
                     android:id="@+id/textView26"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -162,7 +166,8 @@
                 <TextView
                     android:id="@+id/date"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="01/03/2020"
                     android:textColor="@color/colorPrimary"
