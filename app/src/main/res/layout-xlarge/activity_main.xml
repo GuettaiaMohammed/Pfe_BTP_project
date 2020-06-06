@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D6D7D7"
+    android:background="#C9FFC107"
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +16,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="100dp"
             android:background="@color/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -29,8 +29,8 @@
             style="?attr/actionButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="270dp"
-            android:layout_marginLeft="270dp"
+            android:layout_marginStart="500dp"
+            android:layout_marginLeft="500dp"
             android:clipToPadding="false"
             android:focusable="auto"
             app:layout_constraintBottom_toTopOf="@+id/imageView"
@@ -73,7 +73,7 @@
             android:layout_marginTop="18dp"
             android:gravity="center"
             android:text="Accueil"
-            android:textSize="30sp"
+            android:textSize="60sp"
             android:textStyle="bold"
             app:fontFamily="sans-serif"
             app:layout_constraintEnd_toStartOf="@+id/imageView"
@@ -88,6 +88,7 @@
             android:layout_marginLeft="20dp"
             android:gravity="center"
             android:text="Gestion de chantier"
+            android:textSize="36sp"
             app:fontFamily="sans-serif"
             app:layout_constraintEnd_toStartOf="@+id/imageView"
             app:layout_constraintStart_toStartOf="parent"
@@ -96,7 +97,7 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="0dp"
-            android:layout_height="75dp"
+            android:layout_height="140dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -107,7 +108,8 @@
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/gardien_background"
             android:orientation="horizontal"
             android:padding="10dp"
@@ -131,20 +133,32 @@
 
                     <TextView
                         android:id="@+id/textView3"
-                        android:layout_width="100dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/monChantier"
                         android:layout_centerHorizontal="true"
                         android:gravity="bottom|center"
-                        android:text="Consulter chantier"
-                        android:textSize="20sp"
+                        android:text="Consulter"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        app:fontFamily="sans-serif" />
+
+                    <TextView
+                        android:id="@+id/textView39"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/textView3"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="chantier"
+                        android:textSize="36sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/monChantier"
-                        android:layout_width="100dp"
-                        android:layout_height="60dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
                         android:layout_centerHorizontal="true"
                         android:baselineAlignBottom="false"
                         app:srcCompat="@drawable/casque" />
@@ -165,21 +179,32 @@
 
                     <TextView
                         android:id="@+id/textView4"
-                        android:layout_width="100dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/imageView3"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="5dp"
                         android:gravity="bottom|center"
-                        android:text="Demandes articles"
-                        android:textSize="20sp"
+                        android:text="Demandes"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        app:fontFamily="sans-serif" />
+
+                    <TextView
+                        android:id="@+id/textView40"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/textView4"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="articles"
+                        android:textSize="36sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/imageView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="60dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
                         android:layout_centerHorizontal="true"
                         app:srcCompat="@drawable/articles" />
                 </RelativeLayout>
@@ -189,7 +214,7 @@
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="0dp"
-            android:layout_height="155dp"
+            android:layout_height="250dp"
             android:background="#C9FFC107"
             android:orientation="horizontal"
             android:padding="10dp"
@@ -216,17 +241,29 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/employe"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="2dp"
                         android:gravity="center"
-                        android:text="Demandes personnels"
-                        android:textSize="20sp"
+                        android:text="Demandes"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        app:fontFamily="sans-serif" />
+
+                    <TextView
+                        android:id="@+id/textView41"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/textView6"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text=" personnel"
+                        android:textSize="36sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/employe"
-                        android:layout_width="100dp"
-                        android:layout_height="50dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         app:srcCompat="@drawable/empls" />
@@ -251,17 +288,29 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/materiel"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="10dp"
                         android:gravity="center"
-                        android:text="Demandes matériels"
-                        android:textSize="20sp"
+                        android:paddingTop="2dp"
+                        android:text="Demandes"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        app:fontFamily="sans-serif" />
+
+                    <TextView
+                        android:id="@+id/textView42"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/materielsTV"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="matériel"
+                        android:textSize="36sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/materiel"
-                        android:layout_width="100dp"
-                        android:layout_height="55dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
                         android:layout_centerHorizontal="true"
                         app:srcCompat="@drawable/materiel" />
                 </RelativeLayout>
@@ -271,7 +320,7 @@
         <LinearLayout
             android:id="@+id/layout3"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="250dp"
             android:background="#C9FFC107"
             android:orientation="horizontal"
             android:padding="10dp"
@@ -295,18 +344,30 @@
                     <TextView
                         android:id="@+id/textView8"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_below="@id/ordreT"
                         android:gravity="center"
-                        android:text="Ordres                      de travail"
-                        android:textSize="20sp"
+                        android:text="Ordres de"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        app:fontFamily="sans-serif" />
+
+                    <TextView
+                        android:id="@+id/textView44"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/textView8"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="travail"
+                        android:textSize="36sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/ordreT"
-                        android:layout_width="100dp"
-                        android:layout_height="60dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
                         android:layout_centerHorizontal="true"
                         app:srcCompat="@drawable/employe" />
                 </RelativeLayout>
@@ -326,21 +387,33 @@
 
                     <TextView
                         android:id="@+id/textView9"
-                        android:layout_width="100dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/demande"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="3dp"
                         android:gravity="center"
-                        android:text="Demandes avances"
-                        android:textSize="20sp"
+                        android:text="Demandes"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        app:fontFamily="sans-serif" />
+
+                    <TextView
+                        android:id="@+id/textView45"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/textView9"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="avance"
+                        android:textSize="36sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/demande"
-                        android:layout_width="75dp"
-                        android:layout_height="50dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         app:srcCompat="@drawable/avc" />
@@ -350,7 +423,7 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="250dp"
             android:background="#C9FFC107"
             android:orientation="horizontal"
             android:padding="10dp"
@@ -380,14 +453,14 @@
                         android:layout_marginTop="5dp"
                         android:gravity="center"
                         android:text="Suivi/Jour"
-                        android:textSize="20sp"
+                        android:textSize="36sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/suiviJ"
-                        android:layout_width="100dp"
-                        android:layout_height="75dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
                         android:layout_centerHorizontal="true"
                         app:srcCompat="@drawable/suivie" />
                 </RelativeLayout>
@@ -407,21 +480,21 @@
 
                     <TextView
                         android:id="@+id/textView12"
-                        android:layout_width="110dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/dashB"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="3dp"
                         android:gravity="center"
                         android:text="Statistiques"
-                        android:textSize="20sp"
+                        android:textSize="36sp"
                         android:textStyle="bold"
                         app:fontFamily="sans-serif" />
 
                     <ImageView
                         android:id="@+id/dashB"
-                        android:layout_width="100dp"
-                        android:layout_height="70dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         app:srcCompat="@drawable/dash" />
