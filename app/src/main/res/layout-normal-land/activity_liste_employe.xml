@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        <!--app:navigationIcon="@drawable/menu" -->
+
+
+    <LinearLayout
+        android:id="@+id/layoutEmplye"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/gardien_background"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="Liste des personnels demandés"
+            android:textColor="@color/design_default_color_background"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:fontFamily="sans-serif" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/fabEmploye"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="550dp"
+        android:layout_marginTop="130dp"
+        android:background="@drawable/add_btn"
+        android:text="+"
+        android:textColor="@color/design_default_color_secondary"
+        android:textSize="36sp" />
+
+    <ListView
+        android:id="@+id/empl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="165dp">
+
+    </ListView>
+
+
+</RelativeLayout>

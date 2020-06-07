@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp">
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="165dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:text="@string/ligneLot"
+            android:textSize="14sp"
+            app:fontFamily="sans-serif" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Article"
+            android:textSize="13sp"
+            app:fontFamily="sans-serif" />
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Unité"
+            android:textSize="14sp"
+            app:fontFamily="sans-serif" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Qte consommée"
+            android:textSize="11sp"
+            app:fontFamily="sans-serif" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listeArticleAjoutOt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
