@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.activity_ajouter_article.*
 import kotlinx.android.synthetic.main.activity_ajouter_article.view.*
 import kotlinx.android.synthetic.main.activity_ajouter_article.view.button
 import kotlinx.android.synthetic.main.activity_ajouter_employe.view.*
+import kotlinx.android.synthetic.main.activity_ajouter_employe_suivi.*
 import kotlinx.android.synthetic.main.activity_ajouter_materiel.view.*
 import kotlinx.android.synthetic.main.activity_detail_materiel.view.*
 import kotlinx.android.synthetic.main.activity_mon_chantier2.*
@@ -381,6 +382,7 @@ if (qte != "" && article !="") {
             }
 
 
+
             //button valider
             mDialogView.button.setOnClickListener {
 
@@ -403,9 +405,46 @@ if (qte != "" && article !="") {
                 }
                 if (dateD != ""&& dateF != "" && metier != "" && n != "") {
 
-                    val demandeE =
-                        AjouterEmploye().execute(id_chantier.toString(),id.toString(), dateD, dateF, nbr.toString())
-                    mBuilder.dismiss()
+                    val dateDT = dateDBtn.text
+                    val dateFT = dateFBtn.text
+
+                    val jDateDT = dateDT.split("/")[0]
+                    val mDateDT = dateDT.split("/")[1]
+                    val aDateDT = dateDT.split("/")[2]
+
+                    val jDateFT = dateFT.split("/")[0]
+                    val mDateFT = dateFT.split("/")[1]
+                    val aDateFT = dateFT.split("/")[2]
+
+                    val dateDC: Calendar = Calendar.getInstance()
+                    dateDC.set(Calendar.DATE, jDateDT.toInt())
+                    dateDC.set(Calendar.MONTH, mDateDT.toInt())
+                    dateDC.set(Calendar.YEAR, aDateDT.toInt())
+
+                    val debutDate: Date = dateDC.time
+
+                    val dateFC: Calendar = Calendar.getInstance()
+                    dateFC.set(Calendar.DATE, jDateFT.toInt())
+                    dateFC.set(Calendar.MONTH, mDateFT.toInt())
+                    dateFC.set(Calendar.YEAR, aDateFT.toInt())
+
+                    val finDate: Date = dateFC.time
+
+                    if(debutDate.compareTo(finDate) > 0){
+
+                        Toast.makeText(mBuilder.context, "La date de début est supérieur à la date de fin", Toast.LENGTH_SHORT).show()
+
+                    }else {
+                        val demandeE =
+                            AjouterEmploye().execute(
+                                id_chantier.toString(),
+                                id.toString(),
+                                dateD,
+                                dateF,
+                                nbr.toString()
+                            )
+                        mBuilder.dismiss()
+                    }
                 }else
                 {
 
@@ -518,8 +557,47 @@ if (qte != "" && article !="") {
                 }
 
                 if(type != "" && detail != "" && dateD != "" && dateF != "") {
-                    val demandeM = AjouterMateriel().execute(id_chantier.toString(),id.toString(), dateD, dateF, detail)
-              mBuilder.dismiss()
+
+                    val dateDT = dateDBtn.text
+                    val dateFT = dateFBtn.text
+
+                    val jDateDT = dateDT.split("/")[0]
+                    val mDateDT = dateDT.split("/")[1]
+                    val aDateDT = dateDT.split("/")[2]
+
+                    val jDateFT = dateFT.split("/")[0]
+                    val mDateFT = dateFT.split("/")[1]
+                    val aDateFT = dateFT.split("/")[2]
+
+                    val dateDC: Calendar = Calendar.getInstance()
+                    dateDC.set(Calendar.DATE, jDateDT.toInt())
+                    dateDC.set(Calendar.MONTH, mDateDT.toInt())
+                    dateDC.set(Calendar.YEAR, aDateDT.toInt())
+
+                    val debutDate: Date = dateDC.time
+
+                    val dateFC: Calendar = Calendar.getInstance()
+                    dateFC.set(Calendar.DATE, jDateFT.toInt())
+                    dateFC.set(Calendar.MONTH, mDateFT.toInt())
+                    dateFC.set(Calendar.YEAR, aDateFT.toInt())
+
+                    val finDate: Date = dateFC.time
+
+                    if(debutDate.compareTo(finDate) > 0){
+
+                        Toast.makeText(mBuilder.context, "La date de début est supérieur à la date de fin", Toast.LENGTH_SHORT).show()
+
+                    }else {
+
+                        val demandeM = AjouterMateriel().execute(
+                            id_chantier.toString(),
+                            id.toString(),
+                            dateD,
+                            dateF,
+                            detail
+                        )
+                        mBuilder.dismiss()
+                    }
                 }else{
 
 

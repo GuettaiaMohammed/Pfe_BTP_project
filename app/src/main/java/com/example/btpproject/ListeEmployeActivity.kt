@@ -219,16 +219,47 @@ class ListeEmployeActivity : AppCompatActivity() {
 
 
                 if (dateD != ""&& dateF != "" && metier != "" && n != "") {
+                    val dateDT = dateDBtn.text
+                    val dateFT = dateFBtn.text
 
-                    val demandeE =
-                        MonChantier.AjouterEmploye().execute(id.toString(), dateD, dateF, nbr.toString())
-                    mBuilder.dismiss()
-                    val i:Intent=intent
-                    finish()
-                    overridePendingTransition(0,0)
-                    startActivity(i)
-                    overridePendingTransition(0,0)
-                    i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    val jDateDT = dateDT.split("/")[0]
+                    val mDateDT = dateDT.split("/")[1]
+                    val aDateDT = dateDT.split("/")[2]
+
+                    val jDateFT = dateFT.split("/")[0]
+                    val mDateFT = dateFT.split("/")[1]
+                    val aDateFT = dateFT.split("/")[2]
+
+                    val dateDC: Calendar = Calendar.getInstance()
+                    dateDC.set(Calendar.DATE, jDateDT.toInt())
+                    dateDC.set(Calendar.MONTH, mDateDT.toInt())
+                    dateDC.set(Calendar.YEAR, aDateDT.toInt())
+
+                    val debutDate: Date = dateDC.time
+
+                    val dateFC: Calendar = Calendar.getInstance()
+                    dateFC.set(Calendar.DATE, jDateFT.toInt())
+                    dateFC.set(Calendar.MONTH, mDateFT.toInt())
+                    dateFC.set(Calendar.YEAR, aDateFT.toInt())
+
+                    val finDate: Date = dateFC.time
+
+                    if(debutDate.compareTo(finDate) > 0){
+
+                        Toast.makeText(mBuilder.context, "La date de début est supérieur à la date de fin !!! ", Toast.LENGTH_SHORT).show()
+
+                    }else{
+                        val demandeE =
+                            MonChantier.AjouterEmploye()
+                                .execute(id.toString(), dateD, dateF, nbr.toString())
+                        mBuilder.dismiss()
+                        val i: Intent = intent
+                        finish()
+                        overridePendingTransition(0, 0)
+                        startActivity(i)
+                        overridePendingTransition(0, 0)
+                        i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    }
                 }else
                 {
 

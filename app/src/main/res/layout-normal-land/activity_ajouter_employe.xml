@@ -54,7 +54,7 @@
 
 
             <androidx.cardview.widget.CardView
-                android:layout_width="329dp"
+                android:layout_width="500dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:longClickable="false"
@@ -64,7 +64,8 @@
                     android:id="@+id/l1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -111,8 +112,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
 
-                            android:layout_weight="1"
                             android:layout_marginRight="20dp"
+                            android:layout_weight="1"
                             android:background="@color/design_default_color_background"
                             android:drawableRight="@drawable/ic_date_range_orange_24dp"
                             android:text="Choisir une date"
@@ -139,14 +140,15 @@
                             android:id="@+id/dateFEmpBtn"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:layout_marginRight="20dp"
+                            android:layout_weight="1"
                             android:background="@color/design_default_color_background"
                             android:drawableRight="@drawable/ic_date_range_orange_24dp"
                             android:text="Choisir une date"
                             android:textSize="8sp" />
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -175,7 +177,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="30dp"
                         android:orientation="horizontal">
 

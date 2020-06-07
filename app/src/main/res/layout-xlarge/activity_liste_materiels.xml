@@ -45,7 +45,7 @@
         android:layout_height="100dp"
         android:layout_marginLeft="600dp"
         android:layout_marginTop="200dp"
-        android:background="@drawable/ic_launcher_background"
+        android:background="@drawable/add_btn"
         android:shadowRadius="@dimen/material_emphasis_disabled"
         android:text="+"
         android:textColor="@color/design_default_color_background"
