@@ -1400,9 +1400,60 @@ var idDemnd:Int=0
                 )) as Array<Any>)
                 println("************************  liste des données = $liste")
                 val json=JSONArray(liste)
+//demende
 
 
-                  idDemnd=json.getJSONObject(liste.size-1).getString("id").toString().toInt()
+                var id2: Int = models.execute(
+                    "execute_kw", asList(
+                        db, uid, password,
+                        "demande.appro.article", "create",
+                        asList(object : java.util.HashMap<Any, Any>() {
+                            init {
+
+                                put("chantier_id", idCh)
+
+                            }
+                        })
+                    ))as Int
+
+                println("********* idDemnd =$id2")
+
+//ligne demande article
+                var id: Int = models.execute(
+                    "execute_kw", asList(
+                        db, uid, password,
+                        "ligne.demande.appro.article", "create",
+                        asList(object : java.util.HashMap<Any, Any>() {
+                            init {
+                                put("chantier_id", idCh)
+
+                                put("demande_appro_article",id2)
+                                put("product_id", idA)
+                                put("unite",idU)
+                                put("qte",qte)
+
+                            }
+                        })
+                    ))as Int
+
+                println("********* idLigne =$id")
+
+
+                var id3: Int = models.execute(
+                    "execute_kw", asList(
+                        db, uid, password,
+                        "purchase.order", "create",
+                        asList(object : java.util.HashMap<Any, Any>() {
+                            init {
+                                put("demandes_prix", id2)
+                                put("partner_id", 2)
+                                put("date_planned","08/06/2020")
+                                put("origin",name)
+                            }
+                        })
+                    ))as Int
+                println("********* idorder =$id3")
+                /*  idDemnd=json.getJSONObject(liste.size-1).getString("id").toString().toInt()
 //
 
 
@@ -1421,7 +1472,7 @@ var idDemnd:Int=0
                                 put("price_unit",prix)
                             }
                         })
-                    ))as Int
+                    ))as Int*/
 
             } catch (e: MalformedURLException) {
                 Log.d(
