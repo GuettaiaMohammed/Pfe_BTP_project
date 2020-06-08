@@ -53,7 +53,7 @@ class DetailMaterielActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar2)
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Matériel")
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
         intt = intent
         id = intt.getIntExtra("id",0)

@@ -48,7 +48,7 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Ordres de travail")
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
         i = intent
         id_chantier = i.getIntExtra("idChantier",0)

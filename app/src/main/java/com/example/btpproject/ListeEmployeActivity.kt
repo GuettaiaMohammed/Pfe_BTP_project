@@ -69,7 +69,7 @@ class ListeEmployeActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Demandes personnel")
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
         intt = intent
         id_chantier = intt.getIntExtra("idChantier",0)

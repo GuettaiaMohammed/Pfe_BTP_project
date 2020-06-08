@@ -54,7 +54,7 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar2)
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Article")
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
         val nom=findViewById<TextView>(R.id.name)
         val dateD=findViewById<TextView>(R.id.date)

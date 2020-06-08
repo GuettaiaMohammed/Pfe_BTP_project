@@ -67,7 +67,7 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Detail suivi")
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
         println(" ************** id = $id")
         // Toast.makeText(this, id.toString() , Toast.LENGTH_SHORT).show()

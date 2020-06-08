@@ -52,7 +52,7 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Demandes avance")
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
         intt = intent
         id_chantier = intt.getIntExtra("idChantier",0)

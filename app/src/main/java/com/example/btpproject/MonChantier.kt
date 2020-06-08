@@ -85,7 +85,7 @@ class MonChantier : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar2)
         setSupportActionBar(toolbar)
         supportActionBar!!.title = "Mon chantier"
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
         //botton de documents
         docBtn.setOnClickListener {

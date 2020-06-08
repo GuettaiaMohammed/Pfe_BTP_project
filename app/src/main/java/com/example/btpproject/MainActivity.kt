@@ -55,7 +55,7 @@ var incr:Int=0
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("BTP")
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
         val i = intent
         val id_chantier = i.getIntExtra("idChantier",0)
