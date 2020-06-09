@@ -40,7 +40,7 @@
         android:gravity="center"
         android:lineSpacingExtra="6sp"
         android:padding="7dp"
-        android:text="Gérez vos chantiers en mobilité avec l'application  BTP"
+        android:text="La gestion de vos chantiers entre vos mains"
         android:textColor="@color/design_default_color_background"
         android:textSize="10sp"
         android:textStyle="bold"
