@@ -56,17 +56,20 @@ class LoginActivity : AppCompatActivity() {
                         Toast.makeText(this, "Veuillez entrer votre nom d'utilisateur et mot de passe ", Toast.LENGTH_SHORT).show()
 
                     }else{
-                    if(user==name&&pass==login){
+                    if(user!=name&&pass!=login){
+                        //  erreur.setText("Nom d'utilisteur ou mot de passe incorrect")
+                        //   erreur.setTextColor(Color.RED)
+                        utilisateur.setText("")
+                        mdp.setText("")
+                    } else{
+
+
+                        erreur.setText("Connecté")
+                        erreur.setTextColor(Color.GREEN)
                         val intent = Intent(this, ListeChantierActivity::class.java)
                         // start your next activity
                         intent.putExtra("idUser", idUser)
                         startActivity(intent)
-                    } else{
-
-                        erreur.setText("Nom d'utilisteur ou mot de passe incorrect")
-                        erreur.setTextColor(Color.RED)
-                        utilisateur.setText("")
-                        mdp.setText("")
                     }}
 
                 }}

@@ -244,9 +244,9 @@ class ListeEmployeActivity : AppCompatActivity() {
 
                     val finDate: Date = dateFC.time
 
-                    if(debutDate.compareTo(finDate) > 0){
+                    if(debutDate.compareTo(finDate) >= 0){
 
-                        Toast.makeText(mBuilder.context, "La date de début est supérieur à la date de fin !!! ", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(mBuilder.context, "La date fin  doit etre supérieur à la date début", Toast.LENGTH_SHORT).show()
 
                     }else{
                         val demandeE =

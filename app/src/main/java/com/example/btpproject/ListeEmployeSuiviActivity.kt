@@ -75,8 +75,8 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
         val conn = Connexion().execute(id_chantier)
         val conn1=Employee().execute(url)
         val conn2= MonChantier.Unite().execute(url)
-        val conn3=LignesLots().execute(url)
-
+        val conn3=LignesLots().execute(id_chantier)
+        val conn4=LigneLots2().execute(id_chantier)
         //liste des employés
         val listE=conn1.get()
         val jsonArray1 = JSONArray(listE)
@@ -103,15 +103,16 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
 
 ///liste lignes lots
-        val listLigne=conn3.get()
-        val jsonArray2 = JSONArray(listLigne)
+        val listLigne=conn4.get()
+       // val jsonArray2 = JSONArray(listLigne)
    if(listLigne!=null){    for (i in 0..(listLigne!!.size) - 1){
-        var Obj1 =
+       /* var Obj1 =
             jsonArray2.getJSONObject(i).getString("name").toString()
       // var lot = Obj1.split("\"")[1]
-       // var lot2 = lot.split("\"")[0]
+       // var lot2 = lot.split("\"")[0]*/
+       println("************ ${listLigne[i]}")
 
-        listLots.add(Obj1)
+        listLots.add(listLigne[i].designation.toString())
 
         }}
 
@@ -218,13 +219,14 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                     lLot=spinnerL.selectedItem.toString()
 
                 for (i in 0..(listLigne!!.size) - 1){
-                    var name =
-                        jsonArray2.getJSONObject(i).getString("name").toString()
+                    var name =listLigne[i].designation
+                        //jsonArray2.getJSONObject(i).getString("name").toString()
 
 
                   if(name==lLot)
                   {
-                      idlLot=jsonArray2.getJSONObject(i).getString("id").toInt()
+                      idlLot= listLigne[i].id!!.toInt()
+                          //jsonArray2.getJSONObject(i).getString("id").toInt()
                   }
 
                 }
@@ -514,12 +516,12 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
 
     }
-    class LignesLots : AsyncTask<String, Void, List<Any>?>() {
+    class LignesLots : AsyncTask<Int, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
 
-        override fun doInBackground(vararg url: String?): List<Any>? {
+        override fun doInBackground(vararg idCh: Int?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
@@ -544,6 +546,69 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                     }
                 }
 
+             /*   val listLot = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    db, uid, password,
+                    "project.lot", "search_read",
+                    Arrays.asList(
+                        Arrays.asList(
+                            Arrays.asList("chantier_id","=",idCh),
+                            Arrays.asList("state","=","en_cour")
+
+                        )
+                    ),
+                    object : HashMap<Any, Any>() {
+                        init {
+                            put(
+                                "fields",
+                                Arrays.asList("ligne_lot_ids")
+                            )
+                        }
+                    }
+                )) as Array<Any>)
+
+println("**************** $listLot")
+
+var json=JSONArray(listLot)
+                for(i in 0..(listLot.size -1))
+                {
+                    var idL=json.getJSONObject(i).getString("ligne_lot_ids").toInt()
+                    println("**************** $idL")
+                }
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 //liste des chantier
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                     db, uid, password,
@@ -551,6 +616,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                     Arrays.asList(
                         Arrays.asList(
                             Arrays.asList("id","!=",0)
+
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -671,6 +737,216 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
         }
     }
 
+class LigneLots2:AsyncTask<Int,Void,List<LigneLot>?>()
+{
+    val db = "BTP_pfe"
+    val username = "admin"
+    val password = "pfe_chantier"
+    val listLigneLot = ArrayList<LigneLot>()
 
+    override fun doInBackground(vararg idCh: Int?): List<LigneLot>? {
+        var client =  XmlRpcClient()
+        var common_config  =  XmlRpcClientConfigImpl()
+        try {
+            //Testé l'authentification
+            common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+
+            val uid: Int=  client.execute(
+                common_config, "authenticate", Arrays.asList(
+                    db, username, password, Collections.emptyMap<Any, Any>()
+                )
+            ) as Int
+
+
+
+            val models = object : XmlRpcClient() {
+                init {
+                    setConfig(object : XmlRpcClientConfigImpl() {
+                        init {
+                            serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                        }
+                    })
+                }
+            }
+
+            val listLot = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                db, uid, password,
+                "project.lot", "search_read",
+                Arrays.asList(
+                    Arrays.asList(
+                        Arrays.asList("chantier_id","=",idCh),
+                        Arrays.asList("state","=","en_cour")
+
+                    )
+                ),
+                object : HashMap<Any, Any>() {
+                    init {
+                        put(
+                            "fields",
+                            Arrays.asList("id")
+                        )
+                    }
+                }
+            )) as Array<Any>)
+
+            println("**************** $listLot")
+
+            var json=JSONArray(listLot)
+
+
+            for(i in 0..(listLot.size -1)) {
+                var idL = json.getJSONObject(i).getString("id").toInt()
+                println("**************** $idL")
+
+
+                   //liste des id des lignes
+                   val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                       db, uid, password,
+                       "project.lot", "search_read",
+                       Arrays.asList(
+                           Arrays.asList(
+                               Arrays.asList("id", "=", idL)
+                           )
+                       ),
+                       object : HashMap<Any, Any>() {
+                           init {
+                               put(
+                                   "fields",
+                                   Arrays.asList("ligne_lot_ids")
+                               )
+                           }
+                       }
+                   )) as Array<Any>)
+
+
+                   if(list.isNotEmpty()) {
+
+                       val jsonArray3 = JSONArray(list)
+                       val ligneIds =
+                           jsonArray3.getJSONObject(0).toString()
+
+                       var idd: List<String> = emptyList()
+                       if(ligneIds.indexOf(",") >= 0) {
+
+                           val ids = ligneIds.split("[")[1]
+                           val ids2 = ids.split("]")[0]
+                           //liste final des ids
+                           idd = ids2.split(",")
+
+                           if (idd[0] != "") {
+
+                               // recupéré les champ nom unite num des ligne par chaque Id
+                               for (i in 0..(idd!!.size) - 1) {
+                                   val idInt = idd[i].toInt()
+                                   val listLigne =
+                                       Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                                           db, uid, password,
+                                           "ligne.lot", "search_read",
+                                           Arrays.asList(
+                                               Arrays.asList(
+                                                   Arrays.asList("id", "=", idInt)
+                                               )
+                                           ),
+                                           object : HashMap<Any, Any>() {
+                                               init {
+                                                   put(
+                                                       "fields",
+                                                       Arrays.asList(
+                                                           "name",
+                                                           "num",
+                                                           "unite"
+                                                       )
+                                                   )
+                                               }
+                                           }
+                                       )) as Array<Any>)
+
+                                   if(listLigne.isNotEmpty()) {
+                                       //liste des champs
+                                       val jsonArray4 = JSONArray(listLigne)
+                                       val unite =
+                                           jsonArray4.getJSONObject(0).getString("unite").toString()
+                                       var unit = unite.split("\"")[1]
+                                       var unit2 = unit.split("\"")[0]
+
+                                       val num = jsonArray4.getJSONObject(0).getString("num").toString()
+                                       val name = jsonArray4.getJSONObject(0).getString("name").toString()
+                                       println("*************************$idInt  ,  $num , $name")
+                                       listLigneLot.add(LigneLot(idInt.toString(),name))
+                                   }
+                               }
+                           }
+
+                       }else{
+
+                           val ids = ligneIds.split("[")[1]
+                           val id = ids.split("]")[0]
+
+                           if (id != "") {
+
+                               // recupéré les champ nom unite num des ligne par chaque Id
+
+                                   val idInt = id.toInt()
+                                   val listLigne =
+                                       Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                                           db, uid, password,
+                                           "ligne.lot", "search_read",
+                                           Arrays.asList(
+                                               Arrays.asList(
+                                                   Arrays.asList("id", "=", idInt)
+                                               )
+                                           ),
+                                           object : HashMap<Any, Any>() {
+                                               init {
+                                                   put(
+                                                       "fields",
+                                                       Arrays.asList(
+                                                           "name",
+                                                           "num",
+                                                           "unite"
+                                                       )
+                                                   )
+                                               }
+                                           }
+                                       )) as Array<Any>)
+
+                                   if(listLigne.isNotEmpty()) {
+                                       //liste des champs
+                                       val jsonArray4 = JSONArray(listLigne)
+                                       val unite =
+                                           jsonArray4.getJSONObject(0).getString("unite").toString()
+                                       var unit = unite.split("\"")[1]
+                                       var unit2 = unit.split("\"")[0]
+
+                                       val num = jsonArray4.getJSONObject(0).getString("num").toString()
+                                       val name = jsonArray4.getJSONObject(0).getString("name").toString()
+                                       println("*************************$idInt  ,  $num , $name")
+                                       listLigneLot.add(LigneLot(idInt.toString(), name))
+                                   }
+                               }
+                       }
+
+                   }
+
+
+
+            }
+
+            return listLigneLot
+        }catch (e: MalformedURLException) {
+            Log.d("MalformedURLException", "*********************************************************")
+            Log.d("MalformedURLException", e.toString())
+        }  catch (e: XmlRpcException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+
+
+
+
+
+}
 
 }

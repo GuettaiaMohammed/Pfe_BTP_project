@@ -320,7 +320,7 @@ if(listArticle!=null){
 
 
 
-    class Connexion : AsyncTask<String, Void, List<Any>?>() {
+ /*  class Connexion : AsyncTask<String, Void, List<Any>?>() {
         val db = "BTP_pfe"
         val username = "admin"
         val password = "pfe_chantier"
@@ -437,7 +437,7 @@ if(listArticle!=null){
         }
 
 
-    }
+    }*/
 
 
     class ListeArticleD : AsyncTask<Int, Void, List<Any>?>() {
