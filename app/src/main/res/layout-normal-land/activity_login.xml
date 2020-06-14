@@ -78,7 +78,7 @@
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="7dp"
             android:background="@drawable/login_edit"
             android:ems="10"
             android:hint="Mot de passe"
@@ -90,9 +90,19 @@
             android:layout_width="200dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/button2"
             android:text="Se connecter"
+            android:textColor="@color/design_default_color_background" />
+
+        <Button
+            android:id="@+id/configBtn2"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button2"
+            android:text="Configuration"
             android:textColor="@color/design_default_color_background" />
     </LinearLayout>
 

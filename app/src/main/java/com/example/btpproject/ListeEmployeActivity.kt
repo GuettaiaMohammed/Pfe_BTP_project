@@ -17,9 +17,11 @@ import kotlinx.android.synthetic.main.activity_ajouter_employe.view.*
 import kotlinx.android.synthetic.main.activity_liste_employe.*
 import java.util.*
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.AsyncTask
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -41,12 +43,6 @@ import kotlin.collections.HashMap
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class ListeEmployeActivity : AppCompatActivity() {
 
-    //
-    internal val url = "http://sogesi.hopto.org:7013/"
-    internal val db = "BTP_pfe"
-    internal val username = "admin"
-    internal val password = "pfe_chantier"
-
     private var mesEmployes: ArrayList<Employe>? = null
     private var listView: ListView? = null
     private var employeAdapter: EmployeAdapter? = null
@@ -62,6 +58,8 @@ class ListeEmployeActivity : AppCompatActivity() {
     lateinit var intt: Intent
     var id_chantier:Int = 0
 
+    lateinit var mPreferences : SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liste_employe)
@@ -74,6 +72,12 @@ class ListeEmployeActivity : AppCompatActivity() {
         intt = intent
         id_chantier = intt.getIntExtra("idChantier",0)
 
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
+
         listMetiers.add("")
 
 
@@ -83,8 +87,8 @@ class ListeEmployeActivity : AppCompatActivity() {
         mesEmployes = ArrayList()
 
         // Liste des employées
-        val conn = Connexion().execute(id_chantier)
-        val conn3= MonChantier.Metier().execute(url)
+        val conn = Connexion().execute(id_chantier.toString(), url, db, username, password)
+        val conn3= MonChantier.Metier().execute(url, db, username, password)
         val listMetier=conn3.get()
 
         val jsonArray4 = JSONArray(listMetier)
@@ -251,7 +255,7 @@ class ListeEmployeActivity : AppCompatActivity() {
                     }else{
                         val demandeE =
                             MonChantier.AjouterEmploye()
-                                .execute(id.toString(), dateD, dateF, nbr.toString())
+                                .execute(id_chantier.toString(), id.toString(), dateD, dateF, nbr.toString(), url, db, username, password)
                         mBuilder.dismiss()
                         val i: Intent = intent
                         finish()
@@ -383,23 +387,21 @@ class ListeEmployeActivity : AppCompatActivity() {
 
 
 
-    class Connexion : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
-  val ids:ArrayList<Int> =ArrayList<Int>()
+    class Connexion : AsyncTask<String, Void, List<Any>?>() {
+
+        val ids:ArrayList<Int> =ArrayList<Int>()
         var listeEmp = ArrayList<Employe>()
 
-        override fun doInBackground(vararg idCh: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                         common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                 )
                 ) as Int
                 Log.d(
@@ -413,7 +415,7 @@ class ListeEmployeActivity : AppCompatActivity() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -421,7 +423,7 @@ class ListeEmployeActivity : AppCompatActivity() {
 
 
                 val listId = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "demande.appro_personnel", "search_read",
                     Arrays.asList(
                         Arrays.asList(
@@ -452,7 +454,7 @@ class ListeEmployeActivity : AppCompatActivity() {
 
 
                     val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                        db, uid, password,
+                        v[2], uid, v[4],
                         "ligne.demande.appro_personnel", "search_read",
                         Arrays.asList(
                             Arrays.asList(
@@ -490,7 +492,7 @@ class ListeEmployeActivity : AppCompatActivity() {
                     var empId = emp2.toInt()
 
                     var nomJson = asList(models.execute("execute_kw", asList(
-                        db, uid, password,
+                        v[2], uid, v[4],
                         "hr.employee", "read",
                         asList(empId),
                         object : HashMap<Any, Any>() {

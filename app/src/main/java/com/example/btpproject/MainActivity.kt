@@ -1,6 +1,7 @@
 package com.example.btpproject
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -22,6 +23,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.AsyncTask
 import android.os.Build
+import android.preference.PreferenceManager
 import android.util.Log
 import androidx.annotation.RequiresApi
 import org.apache.xmlrpc.XmlRpcException
@@ -39,11 +41,8 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
-    internal val url = "http://sogesi.hopto.org:7013/"
-    internal val db = "BTP_pfe"
-    internal val username = "admin"
-    internal val password = "pfe_chantier"
 var incr:Int=0
+    lateinit var mPreferences : SharedPreferences
 
     private var mesArticles: ArrayList<Article>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +50,11 @@ var incr:Int=0
         setContentView(R.layout.activity_main)
 
 
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -120,7 +124,7 @@ var incr:Int=0
         //Notification
         val Listnotifications = ArrayList<String>()
 
-        val conn = ListeMaterielsActivity.Connexion().execute(id_chantier)
+        val conn = ListeMaterielsActivity.Connexion().execute(id_chantier.toString(), url, db, username, password)
         val list = conn.get()
         val jsonArray = JSONArray(list)
 
@@ -132,32 +136,35 @@ var incr:Int=0
         val calendar=Calendar.getInstance()
         calendar.add(Calendar.DAY_OF_YEAR,+2)
         val dAvant2= calendar.time
-        for (i in 0..(list!!.size) - 1) {
-            val dateD = jsonArray.getJSONObject(i).getString("date_debut").toString()
 
-            var typeObj =
-                jsonArray.getJSONObject(i).getString("materiel_id").toString()
-            var type = typeObj.split("\"")[1]
-            var type2 = type.split("\"")[0]
-            var etat=jsonArray.getJSONObject(i).getString("state").toString()
-            var sdf:SimpleDateFormat= SimpleDateFormat("yyyy-M-dd")
-            var d1:Date=sdf.parse(d)
-            var d2:Date=sdf.parse(dateD)
-            var diff1:Long=Math.abs(d2.getTime()-d1.getTime())
-            var diff=TimeUnit.DAYS.convert(diff1,TimeUnit.MILLISECONDS)
-            println("********* diff = $diff")
+        if (list != null) {
+            for (i in 0..(list!!.size) - 1) {
+                val dateD = jsonArray.getJSONObject(i).getString("date_debut").toString()
 
-           if(diff.toInt()==2 && etat=="attente" ){
+                var typeObj =
+                    jsonArray.getJSONObject(i).getString("materiel_id").toString()
+                var type = typeObj.split("\"")[1]
+                var type2 = type.split("\"")[0]
+                var etat = jsonArray.getJSONObject(i).getString("state").toString()
+                var sdf: SimpleDateFormat = SimpleDateFormat("yyyy-M-dd")
+                var d1: Date = sdf.parse(d)
+                var d2: Date = sdf.parse(dateD)
+                var diff1: Long = Math.abs(d2.getTime() - d1.getTime())
+                var diff = TimeUnit.DAYS.convert(diff1, TimeUnit.MILLISECONDS)
+                println("********* diff = $diff")
 
-                Listnotifications.add("Le matériel : "+type2+" sera disponible après 2 jours")
-             incr++
+                if (diff.toInt() == 2 && etat == "attente") {
+
+                    Listnotifications.add("Le matériel : " + type2 + " sera disponible après 2 jours")
+                    incr++
+
+                }
 
             }
-
         }
         //récupérer les articles
 
-        val con= ListeArticleActivity.ListeArticleD().execute(id_chantier)
+        val con= ListeArticleActivity.ListeArticleD().execute(id_chantier.toString(), url, db, username, password)
          mesArticles = con.get() as ArrayList<Article>
 
         for (i in 0..(mesArticles!!.size-1))

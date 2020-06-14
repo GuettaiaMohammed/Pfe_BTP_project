@@ -1,9 +1,11 @@
 package com.example.btpproject
 
 import android.annotation.TargetApi
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +28,8 @@ class FragmentListeLigneLotDetailOt(var idOT: Int): Fragment() {
     private var listView: ListView? = null
     private var ligneLotAdapter: FragmentLigneLotAdapterDetailOt? = null
 
+    lateinit var mPreferences : SharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +40,13 @@ class FragmentListeLigneLotDetailOt(var idOT: Int): Fragment() {
         listView = view.findViewById(R.id.ListLigneLotDetailOT)
         ligneLotAdapter = FragmentLigneLotAdapterDetailOt(view.context,0)
 
-        val conn = ListeLigneOtt().execute(idOT)
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(view.context)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
+
+        val conn = ListeLigneOtt().execute(idOT.toString(), url, db, username, password)
         lignes = conn.get() as ArrayList<LigneLotOT>?
 
         if(lignes != null) {
@@ -48,23 +58,20 @@ class FragmentListeLigneLotDetailOt(var idOT: Int): Fragment() {
         return view
     }
 
-    class ListeLigneOtt : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class ListeLigneOtt : AsyncTask<String, Void, List<Any>?>() {
 
         @TargetApi(Build.VERSION_CODES.KITKAT)
         @RequiresApi(Build.VERSION_CODES.KITKAT)
-        override fun doInBackground(vararg id: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -73,7 +80,7 @@ class FragmentListeLigneLotDetailOt(var idOT: Int): Fragment() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -81,11 +88,11 @@ class FragmentListeLigneLotDetailOt(var idOT: Int): Fragment() {
 
                 //liste des id des lignes
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "ordre.travail", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("id", "=", id)
+                            Arrays.asList("id", "=", v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -122,7 +129,7 @@ class FragmentListeLigneLotDetailOt(var idOT: Int): Fragment() {
                             println("************************ id int= ${idInt}")
                             val listLigne =
                                 Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                                    db, uid, password,
+                                    v[2], uid, v[4],
                                     "ligne.ordre.travail", "search_read",
                                     Arrays.asList(
                                         Arrays.asList(

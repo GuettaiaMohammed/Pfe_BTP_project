@@ -2,6 +2,7 @@ package com.example.btpproject
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,6 +22,7 @@ import java.util.*
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.preference.PreferenceManager
 import android.widget.*
 import java.text.SimpleDateFormat
 
@@ -35,12 +37,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
     private var articleAdapter: ArticleLigneSuppAdapter? = null
     private var listViewArticle: ListView? = null
     private var listArticles: ArrayList<ArticleOT>? = null
-
-    val db = "BTP_pfe"
-    val username = "admin"
-    val password = "pfe_chantier"
-    val url = "http://sogesi.hopto.org:7013"
-
+    lateinit var mPreferences : SharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +47,13 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Ordre de travail")
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
+
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
 
         val intt = intent
         val id_chantier = intt.getIntExtra("idChantier",0)
@@ -67,7 +70,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         val spinnerE = findViewById <Spinner>(R.id.listeLotSpinner)
 
         //liste des Employé spinner
-        val connLot = ListeLotSpinner().execute(id_chantier)
+        val connLot = ListeLotSpinner().execute(id_chantier.toString(), url, db, username, password)
         val listLott = connLot.get()
         val jsonArray3 = JSONArray(listLott)
 
@@ -123,7 +126,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         }
 
         //Coté ajoute
-        val connRefMax = Reference().execute(id_chantier)
+        val connRefMax = Reference().execute(id_chantier.toString(), url, db, username, password)
         val ref= connRefMax.get().toInt()
         val refMax = ref+1
 
@@ -144,14 +147,14 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
             val num = numOt.text.toString()
 
             //get projet Id
-            val connIdp = ProjetId().execute(id_chantier)
+            val connIdp = ProjetId().execute(id_chantier.toString(), url, db, username, password)
             val projectID = connIdp.get()
 //
             //get emplacement chantier id
-            val connIdE = EmplacementId().execute(id_chantier)
+            val connIdE = EmplacementId().execute(id_chantier.toString(), url, db, username, password)
             val emplacementID = connIdE.get()
             if(nom!="" && num!="" && nomLot!=""){
-                val connAjt = AjouterOT().execute(nom, num, projectID.toString(), idLot, emplacementID.toString(), nomLot, date)
+                val connAjt = AjouterOT().execute(nom, num, projectID.toString(), idLot, emplacementID.toString(), nomLot, date, url, db, username, password)
 
                 if(connAjt.get() != 0) {
                     val idNvOT = connAjt.get()
@@ -173,21 +176,18 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         }
     }
 
-    class ListeLotSpinner : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class ListeLotSpinner : AsyncTask<String, Void, List<Any>?>() {
 
-        override fun doInBackground(vararg idCh: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -196,7 +196,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -204,11 +204,11 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
 
                 //liste des chantier
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "project.lot", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("chantier_id", "=", idCh),
+                            Arrays.asList("chantier_id", "=", v[0]!!.toInt()),
                             Arrays.asList("state", "=", "en_cour")
                         )
                     ),
@@ -234,21 +234,18 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         }
     }
 
-    class ProjetId : AsyncTask<Int, Void, Int>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class ProjetId : AsyncTask<String, Void, Int>() {
 
-        override fun doInBackground(vararg idCh: Int?): Int {
+        override fun doInBackground(vararg v: String?): Int {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -257,7 +254,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -265,11 +262,11 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
 
                 //liste des chantier
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "project.chantier", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("id", "=", idCh)
+                            Arrays.asList("id", "=", v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -303,21 +300,18 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         }
     }
 
-    class EmplacementId : AsyncTask<Int, Void, Int>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class EmplacementId : AsyncTask<String, Void, Int>() {
 
-        override fun doInBackground(vararg idCh: Int?): Int {
+        override fun doInBackground(vararg v: String?): Int {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -326,7 +320,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -334,11 +328,11 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
 
                 //liste des chantier
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "project.chantier", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("chantier_id", "=", idCh)
+                            Arrays.asList("chantier_id", "=", v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -372,21 +366,18 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
         }
     }
 
-    class Reference : AsyncTask<Int, Void, Int>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class Reference : AsyncTask<String, Void, Int>() {
 
-        override fun doInBackground(vararg idCh: Int?): Int {
+        override fun doInBackground(vararg v: String?): Int {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -395,7 +386,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -403,11 +394,11 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
 
                 //liste des chantier
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[1], uid, v[4],
                     "ordre.travail", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("chantier_id", "=", idCh)
+                            Arrays.asList("chantier_id", "=", v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -454,10 +445,6 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
     }
 
     class AjouterOT : AsyncTask<String, Void,Int?>(){
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
-
 
         var nom:String=""
         var ref:Int=0
@@ -474,11 +461,11 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
             try {
                 //Testé l'authentification
                 common_config.serverURL =
-                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                    URL(String.format("%s/xmlrpc/2/common", infos[7]))
 
                 val uid: Int = client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        infos[8], infos[9], infos[10], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -490,7 +477,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
                                 serverURL = URL(
                                     String.format(
                                         "%s/xmlrpc/2/object",
-                                        "http://sogesi.hopto.org:7013"
+                                        infos[7]
                                     )
                                 )
                             }
@@ -518,7 +505,7 @@ class AjouterOrdreDeTravailActivity : AppCompatActivity() {
 
                 var id: Int = models.execute(
                     "execute_kw", Arrays.asList(
-                        db, uid, password,
+                        infos[8], uid, infos[10],
                         "ordre.travail", "create",
                         Arrays.asList(object : HashMap<Any, Any>() {
                             init {

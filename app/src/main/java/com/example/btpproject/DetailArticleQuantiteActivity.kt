@@ -2,10 +2,12 @@ package com.example.btpproject
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -47,6 +49,7 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
     var id_chantier:Int = 0
     var id:Int = 0
 
+    lateinit var mPreferences : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +58,12 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Article")
         supportActionBar!!.setDisplayHomeAsUpEnabled(false)
+
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
 
         val nom=findViewById<TextView>(R.id.name)
         val dateD=findViewById<TextView>(R.id.date)
@@ -68,12 +77,12 @@ class DetailArticleQuantiteActivity : AppCompatActivity() {
 
         // Toast.makeText(this, id.toString() , Toast.LENGTH_SHORT).show()
 
-        var conn = DetailArticle2().execute(id)
+        var conn = DetailArticle2().execute(id.toString(), url, db, username, password)
         var details  = conn.get()
 
 
 
-        var conn1=QuantiteRec().execute(id)
+        var conn1=QuantiteRec().execute(id.toString(), url, db, username, password)
         var listQte=conn1.get()
 
 
@@ -165,7 +174,7 @@ var qte2:String=""
                 val c: SimpleDateFormat =SimpleDateFormat("dd/M/yyyy")
                 var d=c.format((Date()))
 
-qteRecu=mDialogView.qteRecep.text.toString()
+                qteRecu=mDialogView.qteRecep.text.toString()
                 var qteF:Float=qte.toFloat()
                 var qte2F:Float=qte2.toFloat()
                 var qteRecuF:Float= qteRecu!!.toFloat()
@@ -177,7 +186,7 @@ qteRecu=mDialogView.qteRecep.text.toString()
                 }
                else if(qteRecu!=""){
                 val receptQte =Receptionner()
-                    .execute(id.toString(),qteRecu,d)
+                    .execute(id.toString(), qteRecu, d, url, db, username, password)
                 mBuilder.dismiss()
                 if(qteD.getText()==qteRecu)
                     receptionArticle.setEnabled(false)
@@ -192,10 +201,10 @@ qteRecu=mDialogView.qteRecep.text.toString()
 
                 }
             }
-mDialogView.annuler.setOnClickListener {
-    mBuilder.dismiss()
-}
-//pour désactiver le button receptionner
+            mDialogView.annuler.setOnClickListener {
+                mBuilder.dismiss()
+            }
+            //pour désactiver le button receptionner
 
 
 
@@ -359,21 +368,18 @@ mDialogView.annuler.setOnClickListener {
     }
 
 
-    class DetailArticle2 : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class DetailArticle2 : AsyncTask<String, Void, List<Any>?>() {
 
-        override fun doInBackground(vararg id: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
                 Log.d(
@@ -387,7 +393,7 @@ mDialogView.annuler.setOnClickListener {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -399,11 +405,11 @@ mDialogView.annuler.setOnClickListener {
 
 
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "stock.move", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("id", "=", id)
+                            Arrays.asList("id", "=", v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -434,21 +440,18 @@ mDialogView.annuler.setOnClickListener {
 
     }
 
-    class QuantiteRec : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class QuantiteRec : AsyncTask<String, Void, List<Any>?>() {
 
-        override fun doInBackground(vararg id: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
                 Log.d(
@@ -462,7 +465,7 @@ mDialogView.annuler.setOnClickListener {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -474,11 +477,11 @@ mDialogView.annuler.setOnClickListener {
 
 
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "stock.move.line", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("move_id", "=", id)
+                            Arrays.asList("move_id", "=", v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -510,9 +513,6 @@ mDialogView.annuler.setOnClickListener {
     }
 
     class Receptionner : AsyncTask<String, Void,List<Any>?>(){
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
 
         var idA:Int=0
         var qte:String=""
@@ -527,11 +527,11 @@ mDialogView.annuler.setOnClickListener {
             try {
                 //Testé l'authentification
                 common_config.serverURL =
-                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                    URL(String.format("%s/xmlrpc/2/common", infos[3]))
 
                 val uid: Int = client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        infos[4], infos[5], infos[6], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -543,7 +543,7 @@ mDialogView.annuler.setOnClickListener {
                                 serverURL = URL(
                                     String.format(
                                         "%s/xmlrpc/2/object",
-                                        "http://sogesi.hopto.org:7013"
+                                        infos[3]
                                     )
                                 )
                             }
@@ -622,7 +622,7 @@ var qteDone=q.toString()
 
 
                        val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                           db, uid, password,
+                           infos[4], uid, infos[6],
                            "stock.move", "search_read",
                            Arrays.asList(
                                Arrays.asList(
@@ -660,7 +660,7 @@ var qteDone=q.toString()
        var qteDone=q.toString()
 
                       var id2=models.execute("execute_kw", Arrays.asList(
-                           db, uid, password,
+                           infos[4], uid, infos[6],
                            "stock.move", "write",
                            Arrays.asList(
                                Arrays.asList(idA),

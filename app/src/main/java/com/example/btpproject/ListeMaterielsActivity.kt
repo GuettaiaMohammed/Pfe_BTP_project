@@ -3,6 +3,7 @@ package com.example.btpproject
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 
 import android.os.Bundle
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_liste_materiels.*
 import java.util.*
 import android.os.AsyncTask
 import android.os.Build
+import android.preference.PreferenceManager
 import android.util.Log
 import androidx.annotation.IntegerRes
 import androidx.annotation.RequiresApi
@@ -45,12 +47,6 @@ class ListeMaterielsActivity : AppCompatActivity() {
     private var listView: ListView? = null
     private var materielAdapter: MaterielAdapter? = null
 
-
-    val db = "BTP_pfe"
-    val username = "admin"
-    val password = "pfe_chantier"
-    val url = "http://sogesi.hopto.org:7013"
-
     //liste de spinner
     private val listMateriels = arrayListOf<String>()
 
@@ -59,6 +55,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
 
     lateinit var intt: Intent
     var id_chantier:Int = 0
+    lateinit var mPreferences : SharedPreferences
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     @SuppressLint("NewApi")
@@ -74,6 +71,12 @@ class ListeMaterielsActivity : AppCompatActivity() {
         intt = intent
         id_chantier = intt.getIntExtra("idChantier",0)
 
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
+
         listMateriels.add("")
 
         listView = findViewById(R.id.materielsListe)
@@ -82,10 +85,10 @@ class ListeMaterielsActivity : AppCompatActivity() {
         //Faire la connexion avec le serveur
 
         //liste des demandes matériels
-        val conn = Connexion().execute(id_chantier)
+        val conn = Connexion().execute(id_chantier.toString(), url, db, username, password)
         val list = conn.get()
 
-        val conn2= MonChantier.Materiel().execute(url)
+        val conn2= MonChantier.Materiel().execute(url, db, username, password)
         //liste type matériels
         val listM =conn2.get()
 
@@ -269,7 +272,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
 
                     }else {
                         val demandeM = MonChantier.AjouterMateriel()
-                            .execute(id_chantier.toString(), id.toString(), dateD, dateF, detail)
+                            .execute(id_chantier.toString(), id.toString(), dateD, dateF, detail, url, db, username, password)
                         mBuilder.dismiss()
                         val i: Intent = intent
                         finish()
@@ -399,22 +402,18 @@ class ListeMaterielsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    class Connexion : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class Connexion : AsyncTask<String, Void, List<Any>?>() {
 
-
-        override fun doInBackground(vararg idCh: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                         common_config, "authenticate", asList(
-                db, username, password, emptyMap<Any, Any>()
+                v[2], v[3], v[4], emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -423,7 +422,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -433,11 +432,11 @@ class ListeMaterielsActivity : AppCompatActivity() {
 
                 //liste des demandes matériels
                 val list = asList(*models.execute("execute_kw", asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "chantier.materiel", "search_read",
                     asList(
                         asList(
-                            asList("chantier_id", "=", idCh)
+                            asList("chantier_id", "=", v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any,Any>() {
@@ -450,7 +449,7 @@ class ListeMaterielsActivity : AppCompatActivity() {
                     }
                 )) as Array<Any>)
 
-println("*************** list = $list")
+                println("*************** list = $list")
 
                 return list
 

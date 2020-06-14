@@ -1,10 +1,12 @@
 package com.example.btpproject
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.EventLogTags
 import android.util.Log
 import android.view.Menu
@@ -42,6 +44,8 @@ class TableauDeBoardActivity : AppCompatActivity() {
     lateinit var barG: BarChart
     lateinit var barMult: BarChart
 
+    lateinit var mPreferences : SharedPreferences
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +57,13 @@ class TableauDeBoardActivity : AppCompatActivity() {
         i = intent
         id_chantier = i.getIntExtra("idChantier", 0)
 
-        val conn = ListeArticleD().execute(id_chantier)
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
+
+        val conn = ListeArticleD().execute(id_chantier.toString(), url, db, username, password)
         mesArticles = conn.get() as ArrayList<Article>
 
         // PIE
@@ -113,14 +123,14 @@ class TableauDeBoardActivity : AppCompatActivity() {
 
 
         // BAR
-        val conn2 = Metiers().execute(id_chantier)
+        val conn2 = Metiers().execute(id_chantier.toString(), url, db, username, password)
         mesMetiers = conn2.get() as ArrayList<Employe>
 
         bar = findViewById(R.id.barChart)
         var barEntries: ArrayList<BarEntry> = ArrayList()
         var metiers: ArrayList<String> = ArrayList()
 
-        val conn3 = MonChantier.Metier().execute("")
+        val conn3 = MonChantier.Metier().execute(url, db, username, password)
         val listMetier = conn3.get()
 
         val jsonArray4 = JSONArray(listMetier)
@@ -181,7 +191,7 @@ class TableauDeBoardActivity : AppCompatActivity() {
 
         // Group bar
         val listEmpQte: ArrayList<EmpQte>
-        val conn4 = QteEmploye().execute(id_chantier)
+        val conn4 = QteEmploye().execute(id_chantier.toString(), url, db, username, password)
         listEmpQte = conn4.get() as ArrayList<EmpQte>
 
         barG = findViewById(R.id.barChartG)
@@ -362,22 +372,19 @@ class TableauDeBoardActivity : AppCompatActivity() {
         }
 
 
-    class ListeArticleD : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class ListeArticleD : AsyncTask<String, Void, List<Any>?>() {
 
-        override fun doInBackground(vararg idCh: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
                 common_config.serverURL =
-                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                    URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int = client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
                 Log.d(
@@ -394,7 +401,7 @@ class TableauDeBoardActivity : AppCompatActivity() {
                                 serverURL = URL(
                                     String.format(
                                         "%s/xmlrpc/2/object",
-                                        "http://sogesi.hopto.org:7013"
+                                        v[1]
                                     )
                                 )
                             }
@@ -402,11 +409,11 @@ class TableauDeBoardActivity : AppCompatActivity() {
                     }
                 }
                 val record= Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "project.chantier", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("id","=",idCh)
+                            Arrays.asList("id","=",v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -426,7 +433,7 @@ class TableauDeBoardActivity : AppCompatActivity() {
 
                 println("********* namer =$name")
                 val list1 = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "purchase.order", "search_read",
                     Arrays.asList(
                         Arrays.asList(
@@ -453,7 +460,7 @@ class TableauDeBoardActivity : AppCompatActivity() {
 
 
                     val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                        db, uid, password,
+                        v[2], uid, v[4],
                         "stock.picking", "search_read",
                         Arrays.asList(
                             Arrays.asList(
@@ -477,7 +484,7 @@ class TableauDeBoardActivity : AppCompatActivity() {
                             var idP = jsonArray2.getJSONObject(i2).getString("id").toInt()
 
                             val list2 = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                                db, uid, password,
+                                v[2], uid, v[4],
                                 "stock.move", "search_read",
                                 Arrays.asList(
                                     Arrays.asList(
@@ -543,23 +550,21 @@ class TableauDeBoardActivity : AppCompatActivity() {
     }
 
 
-    class Metiers : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class Metiers : AsyncTask<String, Void, List<Any>?>() {
+
         val ids:ArrayList<Int> =ArrayList<Int>()
         var listeEmp = ArrayList<Employe>()
 
-        override fun doInBackground(vararg idCh: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
                 Log.d(
@@ -581,12 +586,12 @@ class TableauDeBoardActivity : AppCompatActivity() {
 
 
                 val listId = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "demande.appro_personnel", "search_read",
                     Arrays.asList(
                         Arrays.asList(
 
-                            Arrays.asList("chantier_id", "=", idCh)
+                            Arrays.asList("chantier_id", "=", v[0]!!.toInt())
 
                         )
                     ),
@@ -612,7 +617,7 @@ class TableauDeBoardActivity : AppCompatActivity() {
 
 
                     val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                        db, uid, password,
+                        v[2], uid, v[4],
                         "ligne.demande.appro_personnel", "search_read",
                         Arrays.asList(
                             Arrays.asList(
@@ -666,21 +671,18 @@ class TableauDeBoardActivity : AppCompatActivity() {
 
     }
 
-    class QteEmploye : AsyncTask<Int, Void, ArrayList<EmpQte>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class QteEmploye : AsyncTask<String, Void, ArrayList<EmpQte>?>() {
 
-        override fun doInBackground(vararg idCh: Int?):ArrayList<EmpQte>?{
+        override fun doInBackground(vararg v: String?):ArrayList<EmpQte>?{
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -690,7 +692,7 @@ class TableauDeBoardActivity : AppCompatActivity() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -698,11 +700,11 @@ class TableauDeBoardActivity : AppCompatActivity() {
 
                 //liste des chantier
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "reglement.employe", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("chantier_id","=",idCh)
+                            Arrays.asList("chantier_id","=",v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {

@@ -1,8 +1,10 @@
 package com.example.btpproject
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -26,13 +28,6 @@ import java.util.*
 
 class ListeArticleActivity : AppCompatActivity() {
 
-    //
-    internal val url = "http://sogesi.hopto.org:7013/"
-    internal val db = "BTP_pfe"
-    internal val username = "admin"
-    internal val password = "pfe_chantier"
-    //
-
     private val listArticles = arrayListOf<String>()
     private val listUnites = arrayListOf<String>()
     //
@@ -43,12 +38,20 @@ class ListeArticleActivity : AppCompatActivity() {
     lateinit var intt: Intent
     var id_chantier:Int = 0
 
+    lateinit var mPreferences : SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liste_articles)
 
         intt = intent
         id_chantier = intt.getIntExtra("idChantier",0)
+
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -62,10 +65,10 @@ class ListeArticleActivity : AppCompatActivity() {
 
 
 
-        val conn=ListeArticleD().execute(id_chantier)
+        val conn=ListeArticleD().execute(id_chantier.toString(), url, db, username, password)
 
-        val conn4= MonChantier.Article().execute(url)
-        val conn5= MonChantier.Unite().execute(url)
+        val conn4= MonChantier.Article().execute(url, db, username, password)
+        val conn5= MonChantier.Unite().execute(url, db, username, password)
         val listArticle=conn4.get()
         //liste des unités
         val listU=conn5.get()
@@ -181,7 +184,7 @@ if(listArticle!=null){
 
                 if (qte != "" && article !="") {
                     val demandeA = MonChantier.AjouterArticle()
-                        .execute(id_chantier.toString(),idA.toString(),idU.toString(),qte,d,nameA,prix)
+                        .execute(id_chantier.toString(),idA.toString(),idU.toString(),qte,d,nameA,prix, url, db, username, password)
 
                     mBuilder.dismiss()
                     val i:Intent=intent
@@ -440,22 +443,19 @@ if(listArticle!=null){
     }*/
 
 
-    class ListeArticleD : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class ListeArticleD : AsyncTask<String, Void, List<Any>?>() {
 
-        override fun doInBackground(vararg idCh: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
                 common_config.serverURL =
-                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                    URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int = client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
                 Log.d(
@@ -472,7 +472,7 @@ if(listArticle!=null){
                                 serverURL = URL(
                                     String.format(
                                         "%s/xmlrpc/2/object",
-                                        "http://sogesi.hopto.org:7013"
+                                        v[1]
                                     )
                                 )
                             }
@@ -480,11 +480,11 @@ if(listArticle!=null){
                     }
                 }
                 val record= Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "project.chantier", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("id","=",idCh)
+                            Arrays.asList("id","=",v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -504,7 +504,7 @@ if(listArticle!=null){
 
                 println("********* namer =$name")
                 val list1 = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "purchase.order", "search_read",
                     Arrays.asList(
                         Arrays.asList(
@@ -531,7 +531,7 @@ if(listArticle!=null){
 
 
                     val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                        db, uid, password,
+                        v[2], uid, v[4],
                         "stock.picking", "search_read",
                         Arrays.asList(
                             Arrays.asList(
@@ -555,7 +555,7 @@ if(listArticle!=null){
                             var idP = jsonArray2.getJSONObject(i2).getString("id").toInt()
 
                             val list2 = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                                db, uid, password,
+                                v[2], uid, v[4],
                                 "stock.move", "search_read",
                                 Arrays.asList(
                                     Arrays.asList(

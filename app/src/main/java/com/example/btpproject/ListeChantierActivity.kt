@@ -1,9 +1,11 @@
 package com.example.btpproject
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +28,8 @@ class ListeChantierActivity : AppCompatActivity(), ChantierAdapter.OnNoteListene
     lateinit var intt: Intent
     var idUser:Int = 0
 
+    lateinit var mPreferences : SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liste_chantier)
@@ -35,7 +39,13 @@ class ListeChantierActivity : AppCompatActivity(), ChantierAdapter.OnNoteListene
         intt = intent
         idUser = intt.getIntExtra("idUser",0)
 
-        val conn = Chantiers().execute(idUser)
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
+
+        val conn = Chantiers().execute(idUser.toString(), url, db, username, password)
         val list = conn.get() as List<Any>
 
         if(list.isNotEmpty()){
@@ -77,21 +87,18 @@ class ListeChantierActivity : AppCompatActivity(), ChantierAdapter.OnNoteListene
         startActivity(intent)
     }
 
-    class Chantiers : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class Chantiers : AsyncTask<String, Void, List<Any>?>() {
 
-        override fun doInBackground(vararg idUser: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -100,7 +107,7 @@ class ListeChantierActivity : AppCompatActivity(), ChantierAdapter.OnNoteListene
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -108,11 +115,11 @@ class ListeChantierActivity : AppCompatActivity(), ChantierAdapter.OnNoteListene
 
                 //liste des chantier
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "project.chantier", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("user_id", "=", idUser),
+                            Arrays.asList("user_id", "=", v[0]!!.toInt()),
                             Arrays.asList("state", "=", "en_cour")
                         )
                     ),

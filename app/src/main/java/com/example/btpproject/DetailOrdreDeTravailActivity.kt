@@ -1,10 +1,12 @@
 package com.example.btpproject
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -32,6 +34,7 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
     var id_chantier:Int = 0
     var id:Int = 0
 
+    lateinit var mPreferences : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +49,12 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
         id = intt.getIntExtra("id",0)
         id_chantier = intt.getIntExtra("idChantier",0)
 
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
+
         tabLayout = findViewById(R.id.detailOTTabLayout)
         viewPager = findViewById(R.id.detailOTViewPager)
 
@@ -57,7 +66,7 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
         val date = findViewById<TextView>(R.id.DateOTDetOTTV)
 
 
-        val conn = DetailOrdre().execute(id)
+        val conn = DetailOrdre().execute(id.toString(), url, db, username, password)
         val ordre = conn.get()
 
         val jsonArray = JSONArray(ordre)
@@ -72,7 +81,7 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
             var idLot = lotObj.split(",")[0]
             var id2 = idLot.split("[")[1]
 
-            val conn2 = RefLot().execute(id2.toInt())
+            val conn2 = RefLot().execute(id2, url, db, username, password)
             val refLott = conn2.get()
 
             nom.text = name
@@ -176,23 +185,19 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    class DetailOrdre : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
-
+    class DetailOrdre : AsyncTask<String, Void, List<Any>?>() {
 
         @RequiresApi(Build.VERSION_CODES.KITKAT)
-        override fun doInBackground(vararg id: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -201,7 +206,7 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -230,11 +235,11 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
 
                 //liste des demandes matériels
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "ordre.travail", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("id", "=", id)
+                            Arrays.asList("id", "=", v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -262,23 +267,19 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
         }
     }
 
-    class RefLot : AsyncTask<Int, Void, String?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
-
+    class RefLot : AsyncTask<String, Void, String?>() {
 
         @RequiresApi(Build.VERSION_CODES.KITKAT)
-        override fun doInBackground(vararg id: Int?): String? {
+        override fun doInBackground(vararg v: String?): String? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -287,7 +288,7 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -297,9 +298,9 @@ class DetailOrdreDeTravailActivity : AppCompatActivity() {
                 //lecture des champs
                 val record = (models.execute(
                     "execute_kw", Arrays.asList(
-                        db, uid, password,
+                        v[2], uid, v[4],
                         "project.lot", "read",
-                        Arrays.asList(id)
+                        Arrays.asList(v[0]!!.toInt())
                     )
                 ) as Array<Any>)[0] as Map<*, *>
 

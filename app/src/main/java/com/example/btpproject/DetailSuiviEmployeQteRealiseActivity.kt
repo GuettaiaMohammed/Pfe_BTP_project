@@ -2,10 +2,12 @@ package com.example.btpproject
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -42,6 +44,7 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
     lateinit var i: Intent
     var id_chantier:Int = 0
     var id:Int = 0
+    lateinit var mPreferences : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,14 +54,16 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
         id = i.getIntExtra("id",0)
         id_chantier = i.getIntExtra("idChantier",0)
 
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
+
         val name=findViewById<TextView>(R.id.name)
-
         val qtePrev=findViewById<TextView>(R.id.qteP)
-
         val qteR=findViewById<TextView>(R.id.qteR)
-
         val nbHprev=findViewById<TextView>(R.id.nbHp)
-
         val nbHptrav=findViewById<TextView>(R.id.nbHt)
         val unite1=findViewById<TextView>(R.id.unit1)
         val unite2=findViewById<TextView>(R.id.unit2)
@@ -71,15 +76,15 @@ class DetailSuiviEmployeQteRealiseActivity : AppCompatActivity() {
 
         println(" ************** id = $id")
         // Toast.makeText(this, id.toString() , Toast.LENGTH_SHORT).show()
-        var conn = Connexion().execute(id)
+        var conn = Connexion().execute(id.toString(), url, db, username, password, id_chantier.toString())
         var details  = conn.get()
-        var conn1 = ListDetails().execute(id)
+        var conn1 = ListDetails().execute(id.toString(), url, db, username, password, id_chantier.toString())
         var Listdetails  = conn1.get()
 
 
         val jsonArray = JSONArray(details)
 
-var idE:String=""
+        var idE:String=""
         var qtePrevu:String=""
         var qteReal:String=""
         var nbHprevu:String=""
@@ -97,8 +102,8 @@ var idE:String=""
 
              qtePrevu = jsonArray.getJSONObject(i).getString("qte_prev").toString()
              qteReal = jsonArray.getJSONObject(i).getString("qte_realise").toString()
-           nbHprevu = jsonArray.getJSONObject(i).getString("nb_h_prevu").toString()
-           nbHtravail = jsonArray.getJSONObject(i).getString("nb_h_travail").toString()
+             nbHprevu = jsonArray.getJSONObject(i).getString("nb_h_prevu").toString()
+             nbHtravail = jsonArray.getJSONObject(i).getString("nb_h_travail").toString()
 
             name.setText(nom2)
             qtePrev.setText(qtePrevu)
@@ -203,7 +208,7 @@ if(qtePrevu==qteReal){
 
 
 
-                    val ajouterS = AjouterSuivi().execute(id.toString(), qteRealise, nbhT, d, idE)
+                    val ajouterS = AjouterSuivi().execute(id.toString(), qteRealise, nbhT, d, idE, url, db, username, password, id_chantier.toString())
                     qteAdapter!!.add(
                         QuantiteRealise(
                             d,
@@ -333,21 +338,18 @@ if(qtePrevu==qteReal){
 
 
 
-    class Connexion : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class Connexion : AsyncTask<String, Void, List<Any>?>() {
 
-        override fun doInBackground(vararg id: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -355,7 +357,7 @@ if(qtePrevu==qteReal){
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -363,12 +365,12 @@ if(qtePrevu==qteReal){
 
                 //liste des chantier
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "reglement.employe", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("chantier_id","=",2)
-                            ,Arrays.asList("id","=",id)
+                            Arrays.asList("chantier_id","=",v[5]!!.toInt())
+                            ,Arrays.asList("id","=",v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -394,21 +396,18 @@ if(qtePrevu==qteReal){
 
 
     }
-    class ListDetails : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class ListDetails : AsyncTask<String, Void, List<Any>?>() {
 
-        override fun doInBackground(vararg id: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -417,7 +416,7 @@ if(qtePrevu==qteReal){
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -425,12 +424,12 @@ if(qtePrevu==qteReal){
 
                 //liste des chantier
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "reg.employe", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("chantier_id","=",2)
-                            ,Arrays.asList("reglement_employe_id","=",id)
+                            Arrays.asList("chantier_id","=",v[5]!!.toInt())
+                            ,Arrays.asList("reglement_employe_id","=",v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -458,9 +457,6 @@ if(qtePrevu==qteReal){
     }
 
 }class AjouterSuivi : AsyncTask<String, Void,List<Any>?>(){
-    val db = "BTP_pfe"
-    val username = "admin"
-    val password = "pfe_chantier"
 
     var id:Int=0
 
@@ -477,11 +473,11 @@ if(qtePrevu==qteReal){
         try {
             //Testé l'authentification
             common_config.serverURL =
-                URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                URL(String.format("%s/xmlrpc/2/common",infos[5]))
 
             val uid: Int = client.execute(
                 common_config, "authenticate", Arrays.asList(
-                    db, username, password, Collections.emptyMap<Any, Any>()
+                    infos[6], infos[7], infos[8], Collections.emptyMap<Any, Any>()
                 )
             ) as Int
 
@@ -493,7 +489,7 @@ if(qtePrevu==qteReal){
                             serverURL = URL(
                                 String.format(
                                     "%s/xmlrpc/2/object",
-                                    "http://sogesi.hopto.org:7013"
+                                    infos[5]
                                 )
                             )
                         }
@@ -517,7 +513,7 @@ if(qtePrevu==qteReal){
 
            var id1: Int = models.execute(
                 "execute_kw", Arrays.asList(
-                    db, uid, password,
+                    infos[6], uid, infos[8],
                     "reg.employe", "create",
 
                     Arrays.asList(object : HashMap<Any, Any>() {
@@ -526,7 +522,7 @@ if(qtePrevu==qteReal){
                             put("reglement_employe_id", id)
 
                             put("employee_id",idE)
-                            put("chantier_id",2)
+                            put("chantier_id",infos[9])
 
                             put("date",dateD)
                             put("qte_realise", qteT)

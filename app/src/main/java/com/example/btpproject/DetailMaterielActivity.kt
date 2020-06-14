@@ -2,6 +2,7 @@ package com.example.btpproject
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,7 @@ import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Build
+import android.preference.PreferenceManager
 import android.view.*
 import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
@@ -45,6 +47,8 @@ class DetailMaterielActivity : AppCompatActivity() {
     var id_chantier:Int = 0
     var id:Int = 0
 
+    lateinit var mPreferences : SharedPreferences
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +58,12 @@ class DetailMaterielActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Matériel")
         supportActionBar!!.setDisplayHomeAsUpEnabled(false)
+
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
 
         intt = intent
         id = intt.getIntExtra("id",0)
@@ -71,7 +81,7 @@ class DetailMaterielActivity : AppCompatActivity() {
 
        // Toast.makeText(this, id.toString() , Toast.LENGTH_SHORT).show()
 
-        var conn = DetailMateriel().execute(id)
+        var conn = DetailMateriel().execute(id.toString(), url, db, username, password, id_chantier.toString())
         var details  = conn.get()
         val jsonArray = JSONArray(details)
 
@@ -109,7 +119,7 @@ statu=detail
             receptionMateriel.setText("Libérer")
             receptionMateriel.setOnClickListener {
                 val recp =
-                    Receptionner().execute(id.toString(), "", "libre")
+                    Receptionner().execute(id.toString(), "", "libre", url, db, username, password)
                 detailM.setText("Libéré")
                // receptionMateriel.setText("")
                 //receptionMateriel.setBackgroundColor(Color.WHITE)
@@ -144,7 +154,7 @@ receptionMateriel.setEnabled(false)
                      Toast.makeText(this, "Votre note est envoyée !!", Toast.LENGTH_SHORT).show()
 
                      val recp =
-                        Receptionner().execute(id.toString(), cmnt, "en_cour")
+                        Receptionner().execute(id.toString(), cmnt, "en_cour", url, db, username, password)
                      val i:Intent=intent
                      finish()
                      overridePendingTransition(0,0)
@@ -158,7 +168,7 @@ receptionMateriel.setEnabled(false)
                  mDialogView.annulerNote.setOnClickListener{
 
                          val recp =
-                             Receptionner().execute(id.toString(), "", "en_cour")
+                             Receptionner().execute(id.toString(), "", "en_cour", url, db, username, password)
                          mBuilder.dismiss()
 
                      }
@@ -257,22 +267,18 @@ receptionMateriel.setEnabled(false)
 
 
 
-    class DetailMateriel : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class DetailMateriel : AsyncTask<String, Void, List<Any>?>() {
 
-
-        override fun doInBackground(vararg id: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
                 Log.d(
@@ -286,7 +292,7 @@ receptionMateriel.setEnabled(false)
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -296,12 +302,12 @@ receptionMateriel.setEnabled(false)
 
                 //liste des demandes matériels
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "chantier.materiel", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("chantier_id", "=", 2),
-                            Arrays.asList("id", "=", id)
+                            Arrays.asList("chantier_id", "=", v[5]!!.toInt()),
+                            Arrays.asList("id", "=", v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -338,9 +344,6 @@ receptionMateriel.setEnabled(false)
     }
 
     class Receptionner : AsyncTask<String, Void,List<Any>?>(){
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
 
         var idE:Int=0
         var state:String=""
@@ -354,11 +357,11 @@ receptionMateriel.setEnabled(false)
             try {
                 //Testé l'authentification
                 common_config.serverURL =
-                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                    URL(String.format("%s/xmlrpc/2/common", infos[3]))
 
                 val uid: Int = client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        infos[4], infos[5], infos[6], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -370,7 +373,7 @@ receptionMateriel.setEnabled(false)
                                 serverURL = URL(
                                     String.format(
                                         "%s/xmlrpc/2/object",
-                                        "http://sogesi.hopto.org:7013"
+                                        infos[3]
                                     )
                                 )
                             }
@@ -415,7 +418,7 @@ receptionMateriel.setEnabled(false)
                 )as Int
                 println("************************  liste des données = $id1")*/
                 var id2=models.execute("execute_kw", asList(
-    db, uid, password,
+    infos[4], uid, infos[6],
     "chantier.materiel", "write",
     asList(
         asList(idE),

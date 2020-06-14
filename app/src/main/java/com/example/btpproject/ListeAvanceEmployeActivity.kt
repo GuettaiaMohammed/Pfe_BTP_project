@@ -3,9 +3,11 @@ package com.example.btpproject
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -45,6 +47,8 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
     lateinit var intt: Intent
     var id_chantier:Int = 0
 
+    lateinit var mPreferences : SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liste_avance_employe)
@@ -53,6 +57,12 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Demandes avance")
         supportActionBar!!.setDisplayHomeAsUpEnabled(false)
+
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
 
         intt = intent
         id_chantier = intt.getIntExtra("idChantier",0)
@@ -63,7 +73,7 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
         listEmployes.add("")
 
         //liste des demandes matériels
-        val conn = ListeAvance().execute(id_chantier)
+        val conn = ListeAvance().execute(id_chantier.toString(), url, db, username, password)
         val list = conn.get()
 
         //recupéré l'objet JSON
@@ -85,7 +95,7 @@ class ListeAvanceEmployeActivity : AppCompatActivity() {
         }}
 
         //liste des Employé spinner
-        val connEmp = ListeEmploye().execute(url)
+        val connEmp = ListeEmploye().execute(url, db, username, password)
         val listEmp = connEmp.get()
         val jsonArray3 = JSONArray(listEmp)
 
@@ -192,7 +202,7 @@ if(name==empl)
                         idCh.toString(),
                         date,
                         idE.toString(),
-                        montant
+                        montant, url, db, username, password
                     )
                     mBuilder.dismiss()
                     val i:Intent=intent
@@ -319,22 +329,18 @@ if(name==empl)
         return super.onOptionsItemSelected(item)
     }
 
-    class ListeAvance : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class ListeAvance : AsyncTask<String, Void, List<Any>?>() {
 
-
-        override fun doInBackground(vararg idCh: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
                 Log.d(
@@ -348,7 +354,7 @@ if(name==empl)
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -358,11 +364,11 @@ if(name==empl)
 
                 //liste des demandes avance
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "demande.avance", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("chantier_id", "=", idCh)
+                            Arrays.asList("chantier_id", "=", v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -390,20 +396,17 @@ if(name==empl)
     }
 
     class ListeEmploye : AsyncTask<String, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
 
-        override fun doInBackground(vararg url: String?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[0]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[1], v[2], v[3], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
                 Log.d(
@@ -417,7 +420,7 @@ if(name==empl)
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[0]))
                             }
                         })
                     }
@@ -427,7 +430,7 @@ if(name==empl)
                 var liste: List<*> = java.util.ArrayList<Any>()
 
                 liste = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[1], uid, v[3],
                     "hr.employee", "search_read",
                     Arrays.asList(
                         Arrays.asList(
@@ -464,9 +467,6 @@ if(name==empl)
 
 
     class AjouterDemandeAvance : AsyncTask<String, Void,List<Any>?>(){
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
 
         var idE:Int=0
         var dateD:String=""
@@ -480,11 +480,11 @@ if(name==empl)
             try {
                 //Testé l'authentification
                 common_config.serverURL =
-                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                    URL(String.format("%s/xmlrpc/2/common", infos[4]))
 
                 val uid: Int = client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        infos[5], infos[6], infos[7], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -496,7 +496,7 @@ if(name==empl)
                                 serverURL = URL(
                                     String.format(
                                         "%s/xmlrpc/2/object",
-                                        "http://sogesi.hopto.org:7013"
+                                        infos[4]
                                     )
                                 )
                             }
@@ -510,21 +510,14 @@ if(name==empl)
 
 
 
-               idCh = infos[0].toInt()
+                idCh = infos[0].toInt()
                 dateD = infos[1]
-               idE=infos[2].toInt()
+                idE=infos[2].toInt()
                 montant=infos[3]
-
-
-
-
-
-
-
 
                 var id1: Int = models.execute(
                     "execute_kw", Arrays.asList(
-                        db, uid, password,
+                        infos[5], uid, infos[7],
                         "demande.avance", "create",
                         Arrays.asList(object : HashMap<Any, Any>() {
                             init {

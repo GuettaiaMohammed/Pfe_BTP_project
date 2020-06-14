@@ -1,9 +1,11 @@
 package com.example.btpproject
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -30,16 +32,14 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
     private var listOT: MutableList<OrdreDeTravail>? = null
     private var listView: ListView? = null
     private var ordreTravailAdapter: OrdreDeTravailAdapter? = null
-    val db = "BTP_pfe"
-    val username = "admin"
-    val password = "pfe_chantier"
-    val url = "http://sogesi.hopto.org:7013"
 
     //liste spinner
     private val listlot = arrayListOf<String>()
 
     lateinit var i: Intent
     var id_chantier:Int = 0
+
+    lateinit var mPreferences : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,11 +53,17 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
         i = intent
         id_chantier = i.getIntExtra("idChantier",0)
 
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
+
         listView = findViewById(R.id.ordreDeTravailListe)
         listOT = ArrayList()
 
         //liste des demandes matériels
-        val conn = ListeOrdre().execute(id_chantier.toInt())
+        val conn = ListeOrdre().execute(id_chantier.toString(), url, db, username, password)
         val list = conn.get()
         val jsonArray = JSONArray(list)
 
@@ -217,22 +223,18 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    class ListeOrdre : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class ListeOrdre : AsyncTask<String, Void, List<Any>?>() {
 
-
-        override fun doInBackground(vararg idChantier: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
                 Log.d(
@@ -246,7 +248,7 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -256,11 +258,11 @@ class ListeOrdreDeTravailActivity : AppCompatActivity() {
 
                 //liste des demandes matériels
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "ordre.travail", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("chantier_id", "=", idChantier)
+                            Arrays.asList("chantier_id", "=", v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {

@@ -2,8 +2,10 @@ package com.example.btpproject
 
 import android.annotation.SuppressLint
 import android.app.ActionBar
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +35,8 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
     private var unite: TextView?= null
     private var qteRealise: TextView?= null
 
+    lateinit var mPreferences : SharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,7 +50,13 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
         listView = view.findViewById(R.id.listeLigneAjoutOt)
         ligneLotAdapter = FragmentLigneLotAdapterAjoutOt(view.context,0)
 
-        var conn = ListeLigneOt().execute(idLot)
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(view.context)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
+
+        var conn = ListeLigneOt().execute(idLot.toString(), url, db, username, password)
         if(conn.get()!!.isNotEmpty() || conn.get() != null) {
 
             lignes = conn.get() as ArrayList<LigneLotOT>?
@@ -62,6 +72,13 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
     }
 
     fun create(idOT: Int){
+
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(view.context)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
+
         if(lignes != null) {
             for (i in 0..(lignes!!.size) - 1) {
                 val num =
@@ -74,27 +91,25 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                     .text.toString()
                 val idLL = lignes!!.get(i).id
                 val connAjt =
-                    AjouterLigneOT().execute(idOT.toString(), num, name, unite, qte, idLot.toString(), idLL)
+                    AjouterLigneOT().execute(idOT.toString(), num, name, unite, qte, idLot.toString(), idLL, url, db, username, password)
 
             }
         }
     }
 
-    class ListeLigneOt : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class ListeLigneOt : AsyncTask<String, Void, List<Any>?>() {
 
-        override fun doInBackground(vararg id: Int?): List<Any>? {
+
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -103,7 +118,7 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -111,11 +126,11 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
 
                 //liste des id des lignes
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[2], uid, v[4],
                     "project.lot", "search_read",
                     Arrays.asList(
                         Arrays.asList(
-                            Arrays.asList("id", "=", id)
+                            Arrays.asList("id", "=", v[0]!!.toInt())
                         )
                     ),
                     object : HashMap<Any, Any>() {
@@ -151,7 +166,7 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                                 val idInt = idd[i].toInt()
                                 val listLigne =
                                     Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                                        db, uid, password,
+                                        v[2], uid, v[4],
                                         "ligne.lot", "search_read",
                                         Arrays.asList(
                                             Arrays.asList(
@@ -199,7 +214,7 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                                 val idInt = id.toInt()
                                 val listLigne =
                                     Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                                        db, uid, password,
+                                        v[2], uid, v[4],
                                         "ligne.lot", "search_read",
                                         Arrays.asList(
                                             Arrays.asList(
@@ -249,10 +264,6 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
     }
 
     class AjouterLigneOT : AsyncTask<String, Void,Int?>(){
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
-
 
         var num:String=""
         var name:String=""
@@ -269,11 +280,11 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
             try {
                 //Testé l'authentification
                 common_config.serverURL =
-                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                    URL(String.format("%s/xmlrpc/2/common", infos[7]))
 
                 val uid: Int = client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        infos[8], infos[9], infos[10], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -285,7 +296,7 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                                 serverURL = URL(
                                     String.format(
                                         "%s/xmlrpc/2/object",
-                                        "http://sogesi.hopto.org:7013"
+                                        infos[7]
                                     )
                                 )
                             }
@@ -296,7 +307,7 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
                 var liste: List<*> = java.util.ArrayList<Any>()
 
                 liste = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    infos[8], uid, infos[10],
                     "uom.uom", "search_read",
                     Arrays.asList(
                         Arrays.asList(
@@ -326,7 +337,7 @@ class FragmentListeLigneLotAjouteOt(var idLot: Int) : Fragment() {
 
                 var id: Int = models.execute(
                     "execute_kw", Arrays.asList(
-                        db, uid, password,
+                        infos[8], uid, infos[10],
                         "ligne.ordre.travail", "create",
                         Arrays.asList(object : HashMap<Any, Any>() {
                             init {

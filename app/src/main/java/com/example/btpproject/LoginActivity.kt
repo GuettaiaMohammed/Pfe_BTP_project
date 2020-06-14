@@ -1,10 +1,13 @@
 package com.example.btpproject
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
@@ -24,7 +27,16 @@ import java.net.URL
 import java.util.*
 import kotlin.collections.ArrayList
 
+/*
+internal val urlll = "http://sogesi.hopto.org:7013/"
+    internal val dbll = "BTP_pfe"
+    internal val usernamell = "admin"
+    internal val passwordll = "pfe_chantier"
+ */
+
 class LoginActivity : AppCompatActivity() {
+
+    lateinit var mPreferences : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +46,15 @@ class LoginActivity : AppCompatActivity() {
         var mdp=findViewById<EditText>(R.id.motPass)
         var erreur=findViewById<TextView>(R.id.erreur)
 
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
+
+
         loginImage.animate().scaleX(1.2F).scaleY(1.2F).setDuration(5000).start()
-        var conn=Connexion().execute("")
+        var conn=Connexion().execute(url, db, username, password)
         var list=conn.get()
         var json=JSONArray(list)
 
@@ -58,7 +77,7 @@ class LoginActivity : AppCompatActivity() {
                     }else{
                     if(user!=name&&pass!=login){
                         erreur.setText("Nom d'utilisteur ou mot de passe incorrect")
-                         erreur.setTextColor(Color.RED)
+                        erreur.setTextColor(Color.RED)
                         utilisateur.setText("")
                         mdp.setText("")
                         break
@@ -74,24 +93,29 @@ class LoginActivity : AppCompatActivity() {
                         break
                     }}}
                 }}
+
+        configBtn.setOnClickListener {
+            val intent = Intent(this, ConfigurationActivity::class.java)
+            // start your next activity
+            //intent.putExtra("idUser", idUser)
+            startActivity(intent)
+        }
     }
 
 
     class Connexion: AsyncTask<String, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+
 
         override fun doInBackground(vararg url: String?): List<Any>?{
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", url[0]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        url[1], url[2], url[3], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -100,7 +124,7 @@ class LoginActivity : AppCompatActivity() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", url[0]))
                             }
                         })
                     }
@@ -108,7 +132,7 @@ class LoginActivity : AppCompatActivity() {
 
                 //liste des chantier
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    url[1], uid, url[3],
                     "res.users", "search_read",
                     Arrays.asList(
                         Arrays.asList(

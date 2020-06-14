@@ -3,10 +3,12 @@ package com.example.btpproject
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -29,16 +31,7 @@ import kotlin.collections.ArrayList
 
 class ListeEmployeSuiviActivity : AppCompatActivity() {
 
-    //
-    internal val url = "http://sogesi.hopto.org:7013/"
-    internal val db = "BTP_pfe"
-    internal val username = "admin"
-    internal val password = "pfe_chantier"
-
     internal lateinit var view: View
-
-
-
     private var mesEmployes: ArrayList<Employe>? = null
     private var listView: ListView? = null
     private var employeAdapter: EmployeSuiviAdapter? = null
@@ -52,6 +45,8 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
     lateinit var intt: Intent
     var id_chantier:Int = 0
 
+    lateinit var mPreferences : SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liste_employes_suivi)
@@ -60,6 +55,12 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle("Suivi Employés")
         supportActionBar!!.setDisplayHomeAsUpEnabled(false)
+
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val url = mPreferences.getString("url", "http://sogesi.hopto.org:7013")
+        val db = mPreferences.getString("bdd", "BTP_pfe")
+        val username= mPreferences.getString("username", "admin")
+        val password = mPreferences.getString("passBdd", "pfe_chantier")
 
         intt = intent
         id_chantier = intt.getIntExtra("idChantier",0)
@@ -72,11 +73,10 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
 
         //
-        val conn = Connexion().execute(id_chantier)
-        val conn1=Employee().execute(url)
-        val conn2= MonChantier.Unite().execute(url)
-        val conn3=LignesLots().execute(id_chantier)
-        val conn4=LigneLots2().execute(id_chantier)
+        val conn = Connexion().execute(id_chantier.toString(), url, db, username, password)
+        val conn1=Employee().execute(url, db, username, password)
+        val conn2= MonChantier.Unite().execute(url, db, username, password)
+        val conn4=LigneLots2().execute(id_chantier.toString(), url, db, username, password)
         //liste des employés
         val listE=conn1.get()
         val jsonArray1 = JSONArray(listE)
@@ -156,7 +156,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                     val id = jsonArray.getJSONObject(i).getString("id").toString()
 
 
-                    intent.putExtra("id",id.toInt())
+                    intent.putExtra("id", id.toInt())
                     intent.putExtra("idChantier", id_chantier)
                     // start your next activity
                     startActivity(intent)
@@ -190,7 +190,6 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
             //Spinner
             val spinnerE = mDialogView.findViewById <Spinner>(R.id.spinnerEmploye)
             val spinnerU = mDialogView.findViewById <Spinner>(R.id.spinnerUnite)
-
             val spinnerL = mDialogView.findViewById <Spinner>(R.id.spinnerLigneLot)
 
             //Remplire Spinner
@@ -216,7 +215,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
                 empl=spinnerE.selectedItem.toString()
                 unite=spinnerU.selectedItem.toString()
-                    lLot=spinnerL.selectedItem.toString()
+                lLot=spinnerL.selectedItem.toString()
 
                 for (i in 0..(listLigne!!.size) - 1){
                     var name =listLigne[i].designation
@@ -254,7 +253,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                 }
                 if (nbHP!="" && pu!="" && qteP!="" && empl!="" && lLot!="" && unite!="")
                 {
-                    val demandeES = AjouterEmployeSuivi().execute(idE.toString(),idU.toString(),idlLot.toString(),qteP,pu,nbHP)
+                    val demandeES = AjouterEmployeSuivi().execute(idE.toString(),idU.toString(),idlLot.toString(),qteP,pu,nbHP, url, db, username, password)
                     mBuilder.dismiss()
 
                     val i:Intent=intent
@@ -388,21 +387,18 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
 
 
-    class Connexion : AsyncTask<Int, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
+    class Connexion : AsyncTask<String, Void, List<Any>?>() {
 
-        override fun doInBackground(vararg idCh: Int?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
                 val uid: Int=  client.execute(
                         common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                 )
                 ) as Int
 
@@ -412,7 +408,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                             }
                         })
                     }
@@ -420,11 +416,11 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
 
                 //liste des chantier
                 val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                        db, uid, password,
+                        v[2], uid, v[4],
                         "reglement.employe", "search_read",
                         Arrays.asList(
                                 Arrays.asList(
-                                        Arrays.asList("chantier_id","=",idCh)
+                                        Arrays.asList("chantier_id","=",v[0]!!.toInt())
                                 )
                         ),
                         object : HashMap<Any, Any>() {
@@ -452,20 +448,17 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
     }
 
     class Employee : AsyncTask<String, Void, List<Any>?>() {
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
 
-        override fun doInBackground(vararg url: String?): List<Any>? {
+        override fun doInBackground(vararg v: String?): List<Any>? {
             var client =  XmlRpcClient()
             var common_config  =  XmlRpcClientConfigImpl()
             try {
                 //Testé l'authentification
-                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[0]))
 
                 val uid: Int=  client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        v[1], v[2], v[3], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -475,7 +468,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                     init {
                         setConfig(object : XmlRpcClientConfigImpl() {
                             init {
-                                serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                                serverURL = URL(String.format("%s/xmlrpc/2/object", v[0]))
                             }
                         })
                     }
@@ -485,7 +478,7 @@ class ListeEmployeSuiviActivity : AppCompatActivity() {
                 var liste: List<*> = java.util.ArrayList<Any>()
 
                 liste = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    db, uid, password,
+                    v[1], uid, v[3],
                     "hr.employee", "search_read",
                     Arrays.asList(
                         Arrays.asList(
@@ -643,10 +636,6 @@ var json=JSONArray(listLot)
     }
 
     class AjouterEmployeSuivi : AsyncTask<String, Void,List<Any>?>(){
-        val db = "BTP_pfe"
-        val username = "admin"
-        val password = "pfe_chantier"
-
 
         var qteP:String=""
         var pu:String=""
@@ -662,11 +651,11 @@ var json=JSONArray(listLot)
             try {
                 //Testé l'authentification
                 common_config.serverURL =
-                    URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+                    URL(String.format("%s/xmlrpc/2/common", infos[6]))
 
                 val uid: Int = client.execute(
                     common_config, "authenticate", Arrays.asList(
-                        db, username, password, Collections.emptyMap<Any, Any>()
+                        infos[7], infos[8], infos[9], Collections.emptyMap<Any, Any>()
                     )
                 ) as Int
 
@@ -678,7 +667,7 @@ var json=JSONArray(listLot)
                                 serverURL = URL(
                                     String.format(
                                         "%s/xmlrpc/2/object",
-                                        "http://sogesi.hopto.org:7013"
+                                        infos[6]
                                     )
                                 )
                             }
@@ -705,7 +694,7 @@ var json=JSONArray(listLot)
 
                 var id: Int = models.execute(
                     "execute_kw", Arrays.asList(
-                        db, uid, password,
+                        infos[7], uid, infos[9],
                         "reglement.employe", "create",
                         Arrays.asList(object : HashMap<Any, Any>() {
                             init {
@@ -737,23 +726,19 @@ var json=JSONArray(listLot)
         }
     }
 
-class LigneLots2:AsyncTask<Int,Void,List<LigneLot>?>()
-{
-    val db = "BTP_pfe"
-    val username = "admin"
-    val password = "pfe_chantier"
+class LigneLots2:AsyncTask<String,Void,List<LigneLot>?>(){
     val listLigneLot = ArrayList<LigneLot>()
 
-    override fun doInBackground(vararg idCh: Int?): List<LigneLot>? {
+    override fun doInBackground(vararg v: String?): List<LigneLot>? {
         var client =  XmlRpcClient()
         var common_config  =  XmlRpcClientConfigImpl()
         try {
             //Testé l'authentification
-            common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", "http://sogesi.hopto.org:7013"))
+            common_config.serverURL = URL(String.format("%s/xmlrpc/2/common", v[1]))
 
             val uid: Int=  client.execute(
                 common_config, "authenticate", Arrays.asList(
-                    db, username, password, Collections.emptyMap<Any, Any>()
+                    v[2], v[3], v[4], Collections.emptyMap<Any, Any>()
                 )
             ) as Int
 
@@ -763,18 +748,18 @@ class LigneLots2:AsyncTask<Int,Void,List<LigneLot>?>()
                 init {
                     setConfig(object : XmlRpcClientConfigImpl() {
                         init {
-                            serverURL = URL(String.format("%s/xmlrpc/2/object", "http://sogesi.hopto.org:7013"))
+                            serverURL = URL(String.format("%s/xmlrpc/2/object", v[1]))
                         }
                     })
                 }
             }
 
             val listLot = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                db, uid, password,
+                v[2], uid, v[4],
                 "project.lot", "search_read",
                 Arrays.asList(
                     Arrays.asList(
-                        Arrays.asList("chantier_id","=",idCh),
+                        Arrays.asList("chantier_id","=",v[0]!!.toInt()),
                         Arrays.asList("state","=","en_cour")
 
                     )
@@ -801,7 +786,7 @@ class LigneLots2:AsyncTask<Int,Void,List<LigneLot>?>()
 
                    //liste des id des lignes
                    val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                       db, uid, password,
+                       v[2], uid, v[4],
                        "project.lot", "search_read",
                        Arrays.asList(
                            Arrays.asList(
@@ -840,7 +825,7 @@ class LigneLots2:AsyncTask<Int,Void,List<LigneLot>?>()
                                    val idInt = idd[i].toInt()
                                    val listLigne =
                                        Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                                           db, uid, password,
+                                           v[2], uid, v[4],
                                            "ligne.lot", "search_read",
                                            Arrays.asList(
                                                Arrays.asList(
@@ -889,7 +874,7 @@ class LigneLots2:AsyncTask<Int,Void,List<LigneLot>?>()
                                    val idInt = id.toInt()
                                    val listLigne =
                                        Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                                           db, uid, password,
+                                           v[2], uid, v[4],
                                            "ligne.lot", "search_read",
                                            Arrays.asList(
                                                Arrays.asList(
