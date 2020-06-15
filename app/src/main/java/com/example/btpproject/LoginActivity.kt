@@ -70,20 +70,8 @@ class LoginActivity : AppCompatActivity() {
                     val login=json.getJSONObject(i).getString("login").toString()
                     val password=json.getJSONObject(i).getString("password").toString()
                     idUser=json.getJSONObject(i).getString("id").toString().toInt()
-                    if(user==""&&pass=="")
-                    {
-                        Toast.makeText(this, "Veuillez entrer votre nom d'utilisateur et mot de passe ", Toast.LENGTH_SHORT).show()
 
-                    }else{
-                    if(user!=name&&pass!=login){
-                        erreur.setText("Nom d'utilisteur ou mot de passe incorrect")
-                        erreur.setTextColor(Color.RED)
-                        utilisateur.setText("")
-                        mdp.setText("")
-                        break
-                    } else{
-
-
+                    if(user==login&&(pass==password||pass=="")){
                         erreur.setText("Connecté")
                         erreur.setTextColor(Color.GREEN)
                         val intent = Intent(this, ListeChantierActivity::class.java)
@@ -91,7 +79,14 @@ class LoginActivity : AppCompatActivity() {
                         intent.putExtra("idUser", idUser)
                         startActivity(intent)
                         break
-                    }}}
+
+                    }else {
+                        erreur.setText("Nom d'utilisteur ou mot de passe incorrect")
+                        erreur.setTextColor(Color.RED)
+                        utilisateur.setText("")
+                        mdp.setText("")
+                        break
+                    }}
                 }}
 
         configBtn.setOnClickListener {
