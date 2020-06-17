@@ -36,8 +36,8 @@ class TableauDeBoardActivity : AppCompatActivity() {
 
     lateinit var i: Intent
     var id_chantier:Int = 0
-    lateinit var mesArticles: ArrayList<Article>
-    lateinit var mesMetiers: ArrayList<Employe>
+
+
 
     lateinit var pie: PieChart
     lateinit var bar: BarChart
@@ -64,7 +64,7 @@ class TableauDeBoardActivity : AppCompatActivity() {
         val password = mPreferences.getString("passBdd", "pfe_chantier")
 
         val conn = ListeArticleD().execute(id_chantier.toString(), url, db, username, password)
-        mesArticles = conn.get() as ArrayList<Article>
+        var mesArticles = conn.get() as ArrayList<Article>
 
         // PIE
         pie = findViewById(R.id.pieChart)
@@ -78,9 +78,9 @@ class TableauDeBoardActivity : AppCompatActivity() {
 
         val values: ArrayList<PieEntry> = ArrayList()
 
-        for (i in 0..(mesArticles.size) - 1) {
-            val nameA: String = mesArticles.get(i).nom.toString()
-            val qteD: Float = mesArticles.get(i).qteDemande.toString().toFloat()
+     if(mesArticles!=null){   for (i in 0..(mesArticles!!.size) - 1) {
+            val nameA: String = mesArticles!!.get(i).nom.toString()
+            val qteD: Float = mesArticles!!.get(i).qteDemande.toString().toFloat()
             if (values.size > 0) {
                 for (j in 0..values.size - 1) {
                     val nameV = values.get(j).label
@@ -97,7 +97,7 @@ class TableauDeBoardActivity : AppCompatActivity() {
             } else {
                 values.add(PieEntry(qteD, nameA))
             }
-        }
+        }}
 
 
         pie.animateY(1000)
@@ -124,7 +124,7 @@ class TableauDeBoardActivity : AppCompatActivity() {
 
         // BAR
         val conn2 = Metiers().execute(id_chantier.toString(), url, db, username, password)
-        mesMetiers = conn2.get() as ArrayList<Employe>
+        var mesMetiers = conn2.get() as ArrayList<Employe>
 
         bar = findViewById(R.id.barChart)
         var barEntries: ArrayList<BarEntry> = ArrayList()
@@ -145,9 +145,9 @@ class TableauDeBoardActivity : AppCompatActivity() {
 
             }
 
-            for (i in 0..mesMetiers.size - 1) {
-                val nameM: String = mesMetiers.get(i).metier.toString()
-                val qteMD: Float = mesMetiers.get(i).nom.toString().toFloat()
+          if(mesMetiers!=null) { for (i in 0..mesMetiers!!.size - 1) {
+                val nameM: String = mesMetiers!!.get(i).metier.toString()
+                val qteMD: Float = mesMetiers!!.get(i).nom.toString().toFloat()
                 if (metiers.size > 0) {
                     for (j in 0..metiers.size - 1) {
                         val nomM = metiers.get(j)
@@ -157,7 +157,7 @@ class TableauDeBoardActivity : AppCompatActivity() {
                         }
                     }
                 }
-            }
+            }}
         }
 
 
