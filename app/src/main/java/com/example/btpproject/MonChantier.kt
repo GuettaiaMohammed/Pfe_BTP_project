@@ -669,10 +669,11 @@ if (qte != "" && article !="") {
             }
             item.itemId == R.id.navigation_suiviJ ->
             {
-                val intent = Intent(this, ListeEmployeSuiviActivity::class.java)
-                intent.putExtra("idChantier", id_chantier)
-                // start your next activity
-                startActivity(intent)
+                val intent = Intent(this, ListeEmployeSuiviActivity::class.java).also {
+                    it.putExtra("idChantier", id_chantier)
+                    // start your next activity
+                    startActivity(it)
+                }
                 return true
             }
             item.itemId == R.id.navigation_avance ->
@@ -801,15 +802,17 @@ if (qte != "" && article !="") {
                     }
                 }
                 // récupérer détails de chantier
-                val record = (models.execute(
+                var idCh:Int=v[0]!!.toInt()
+             val record = (models.execute(
                         "execute_kw", asList(
-                        *arrayOf(v[2], uid, v[3], "project.chantier", "read", asList("id","=",v[0]!!.toInt()),
+                        *arrayOf(v[2], uid, v[4], "project.chantier", "read", asList(idCh),
                                 object : java.util.HashMap<Any,Any>() {
                             init {
                                 put("fields", asList("name", "date_debut", "date_fin_prev", "date_fin_reel"))
                             }
                         }))
                 ) as Array<Any>)[0] as Map<Any, String>
+
 
                 return listOf(record)
 

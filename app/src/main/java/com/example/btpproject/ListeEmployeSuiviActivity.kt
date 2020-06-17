@@ -849,11 +849,9 @@ class LigneLots2:AsyncTask<String,Void,List<LigneLot>?>(){
                                    if(listLigne.isNotEmpty()) {
                                        //liste des champs
                                        val jsonArray4 = JSONArray(listLigne)
-                                       val unite =
-                                           jsonArray4.getJSONObject(0).getString("unite").toString()
-                                       if(unite!=null){
-                                       var unit = unite.split("\"")[1]
-                                       var unit2 = unit.split("\"")[0]}
+
+
+
 
                                        val num = jsonArray4.getJSONObject(0).getString("num").toString()
                                        val name = jsonArray4.getJSONObject(0).getString("name").toString()
@@ -899,10 +897,6 @@ class LigneLots2:AsyncTask<String,Void,List<LigneLot>?>(){
                                    if(listLigne.isNotEmpty()) {
                                        //liste des champs
                                        val jsonArray4 = JSONArray(listLigne)
-                                       val unite =
-                                           jsonArray4.getJSONObject(0).getString("unite").toString()
-                                       var unit = unite.split("\"")[1]
-                                       var unit2 = unit.split("\"")[0]
 
                                        val num = jsonArray4.getJSONObject(0).getString("num").toString()
                                        val name = jsonArray4.getJSONObject(0).getString("name").toString()
