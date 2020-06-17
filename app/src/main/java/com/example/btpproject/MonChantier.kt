@@ -803,7 +803,7 @@ if (qte != "" && article !="") {
                 // récupérer détails de chantier
                 val record = (models.execute(
                         "execute_kw", asList(
-                        *arrayOf(v[2], uid, v[3], "project.chantier", "read", asList(v[0]!!.toInt()),
+                        *arrayOf(v[2], uid, v[3], "project.chantier", "read", asList("id","=",v[0]!!.toInt()),
                                 object : java.util.HashMap<Any,Any>() {
                             init {
                                 put("fields", asList("name", "date_debut", "date_fin_prev", "date_fin_reel"))

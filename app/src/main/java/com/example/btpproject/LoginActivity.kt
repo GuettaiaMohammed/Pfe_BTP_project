@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
@@ -26,6 +25,7 @@ import java.net.MalformedURLException
 import java.net.URL
 import java.util.*
 import kotlin.collections.ArrayList
+import android.widget.EditText as EditText1
 
 /*
 internal val urlll = "http://sogesi.hopto.org:7013/"
@@ -42,8 +42,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        var utilisateur=findViewById<EditText>(R.id.utilisateur)
-        var mdp=findViewById<EditText>(R.id.motPass)
+        var utilisateur=findViewById<EditText1>(R.id.utilisateur)
+        var mdp=findViewById<EditText1>(R.id.motPass)
         var erreur=findViewById<TextView>(R.id.erreur)
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
@@ -54,40 +54,69 @@ class LoginActivity : AppCompatActivity() {
 
 
         loginImage.animate().scaleX(1.2F).scaleY(1.2F).setDuration(5000).start()
-        var conn=Connexion().execute(url, db, username, password)
+        var conn=Authentification().execute(url, db, username, password)
         var list=conn.get()
         var json=JSONArray(list)
 
 
+
+        //
+        //
+
+
+
+
+
+
+
+
+
+
+
+        ///
         loginBtn.setOnClickListener {
             var user:String=utilisateur.text.toString()
 
             var pass:String=mdp.text.toString()
+            var login:String=""
+            var motPass:String=""
             var idUser:Int=0
-            if(list!=null){
-                for(i in 0..(list.size-1)){
-                    val name = json.getJSONObject(i).getString("name").toString()
-                    val login=json.getJSONObject(i).getString("login").toString()
-                    val password=json.getJSONObject(i).getString("password").toString()
-                    idUser=json.getJSONObject(i).getString("id").toString().toInt()
 
-                    if(user==login&&(pass==password||pass=="")){
-                        erreur.setText("Connecté")
-                        erreur.setTextColor(Color.GREEN)
-                        val intent = Intent(this, ListeChantierActivity::class.java)
-                        // start your next activity
-                        intent.putExtra("idUser", idUser)
-                        startActivity(intent)
-                        break
+            if(list!=null) {
+                for (i in 0..(list.size - 1)) {
 
-                    }else {
-                        erreur.setText("Nom d'utilisteur ou mot de passe incorrect")
-                        erreur.setTextColor(Color.RED)
-                        utilisateur.setText("")
-                        mdp.setText("")
-                        break
-                    }}
+                    val util = json.getJSONObject(i).getString("login").toString()
+                    val mpass = json.getJSONObject(i).getString("password").toString()
+                    val id = json.getJSONObject(i).getString("id").toString().toInt()
+
+                    if (user == util && (pass == mpass || pass == "")) {
+                        login=util
+                        motPass=mpass
+                        idUser=id
+                        println("************** login et mdp = $login , $motPass id= $idUser")
+
+
+                    }
                 }}
+
+
+            if(login!=""&&idUser!=0){
+                erreur.setText("Connecté")
+                erreur.setTextColor(Color.GREEN)
+                val intent = Intent(this, ListeChantierActivity::class.java)
+                // start your next activity
+                intent.putExtra("idUser", idUser)
+                startActivity(intent)
+
+
+            }else {
+                erreur.setText("Nom d'utilisteur ou mot de passe incorrect")
+                erreur.setTextColor(Color.RED)
+                utilisateur.setText("")
+                mdp.setText("")
+
+            }}
+
 
         configBtn.setOnClickListener {
             val intent = Intent(this, ConfigurationActivity::class.java)
@@ -98,7 +127,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    class Connexion: AsyncTask<String, Void, List<Any>?>() {
+    class Authentification: AsyncTask<String, Void, List<Any>?>() {
 
 
         override fun doInBackground(vararg url: String?): List<Any>?{

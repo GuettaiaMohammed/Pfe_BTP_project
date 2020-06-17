@@ -489,6 +489,7 @@ class ListeEmployeActivity : AppCompatActivity() {
 
                     var emp = empIdObj.split("[")[1]
                     var emp2 = emp.split("]")[0]
+                    println("****** $emp2")
                     var empId = emp2.toInt()
 
                     var nomJson = asList(models.execute("execute_kw", asList(
