@@ -64,135 +64,138 @@ class TableauDeBoardActivity : AppCompatActivity() {
         val password = mPreferences.getString("passBdd", "pfe_chantier")
 
         val conn = ListeArticleD().execute(id_chantier.toString(), url, db, username, password)
-        mesArticles = conn.get() as ArrayList<Article>
+        if(conn.get() != null) {
+            mesArticles = conn.get() as ArrayList<Article>
 
-        // PIE
-        pie = findViewById(R.id.pieChart)
-        pie.setUsePercentValues(true)
-        pie.description.isEnabled = true
-        pie.setExtraOffsets(5f, 10f, 5f, 5f)
-        pie.dragDecelerationFrictionCoef = 0.99f
-        pie.isDrawHoleEnabled = true
-        pie.setHoleColor(Color.WHITE)
-        pie.transparentCircleRadius = 60f
+            // PIE
+            pie = findViewById(R.id.pieChart)
+            pie.setUsePercentValues(true)
+            pie.description.isEnabled = true
+            pie.setExtraOffsets(5f, 10f, 5f, 5f)
+            pie.dragDecelerationFrictionCoef = 0.99f
+            pie.isDrawHoleEnabled = true
+            pie.setHoleColor(Color.WHITE)
+            pie.transparentCircleRadius = 60f
 
-        val values: ArrayList<PieEntry> = ArrayList()
-        if (mesArticles.isNotEmpty() || mesArticles != null) {
-            for (i in 0..(mesArticles.size) - 1) {
-                val nameA: String = mesArticles.get(i).nom.toString()
-                val qteD: Float = mesArticles.get(i).qteDemande.toString().toFloat()
-                if (values.size > 0) {
-                    for (j in 0..values.size - 1) {
-                        val nameV = values.get(j).label
-                        if (values.get(j).label.equals(nameA)) {
-                            var qteV = values.get(j).value
-                            var qte = qteV + qteD
-                            values.remove(values.get(j))
-                            values.add(PieEntry(qte, nameA))
+            val values: ArrayList<PieEntry> = ArrayList()
+            if (mesArticles.isNotEmpty() || mesArticles != null) {
+                for (i in 0..(mesArticles.size) - 1) {
+                    val nameA: String = mesArticles.get(i).nom.toString()
+                    val qteD: Float = mesArticles.get(i).qteDemande.toString().toFloat()
+                    if (values.size > 0) {
+                        for (j in 0..values.size - 1) {
+                            val nameV = values.get(j).label
+                            if (values.get(j).label.equals(nameA)) {
+                                var qteV = values.get(j).value
+                                var qte = qteV + qteD
+                                values.remove(values.get(j))
+                                values.add(PieEntry(qte, nameA))
+                            }
+                            if (j == values.size - 1 && !(values.get(j).label.equals(nameA))) {
+                                values.add(PieEntry(qteD, nameA))
+                            }
                         }
-                        if (j == values.size - 1 && !(values.get(j).label.equals(nameA))) {
-                            values.add(PieEntry(qteD, nameA))
-                        }
+                    } else {
+                        values.add(PieEntry(qteD, nameA))
                     }
-                } else {
-                    values.add(PieEntry(qteD, nameA))
                 }
             }
+
+
+            pie.animateY(1000)
+
+
+            var pieDataSet: PieDataSet = PieDataSet(values, "Articles")
+            pieDataSet.sliceSpace = 3f
+            pieDataSet.selectionShift = 5f
+            pieDataSet.setColors(
+                Color.rgb(193, 37, 82), Color.rgb(255, 102, 0), Color.rgb(245, 199, 0),
+                Color.rgb(106, 150, 31), Color.rgb(179, 100, 53)
+            )
+
+            var pieData: PieData = PieData(pieDataSet)
+            pieData.setValueTextSize(10f)
+            pieData.setValueTextColor(Color.YELLOW)
+
+            val description1 = Description()
+            description1.text = "Articles"
+
+            pie.setDescription(description1)
+            pie.data = pieData
+
         }
-
-
-        pie.animateY(1000)
-
-
-        var pieDataSet: PieDataSet = PieDataSet(values, "Articles")
-        pieDataSet.sliceSpace = 3f
-        pieDataSet.selectionShift = 5f
-        pieDataSet.setColors(
-            Color.rgb(193, 37, 82), Color.rgb(255, 102, 0), Color.rgb(245, 199, 0),
-            Color.rgb(106, 150, 31), Color.rgb(179, 100, 53)
-        )
-
-        var pieData: PieData = PieData(pieDataSet)
-        pieData.setValueTextSize(10f)
-        pieData.setValueTextColor(Color.YELLOW)
-
-        val description1 = Description()
-        description1.text = "Articles"
-
-        pie.setDescription(description1)
-        pie.data = pieData
-
-
         // BAR
         val conn2 = Metiers().execute(id_chantier.toString(), url, db, username, password)
-        mesMetiers = conn2.get() as ArrayList<Employe>
+        if(conn2.get() != null) {
+            mesMetiers = conn2.get() as ArrayList<Employe>
+            bar = findViewById(R.id.barChart)
+            var barEntries: ArrayList<BarEntry> = ArrayList()
+            var metiers: ArrayList<String> = ArrayList()
 
-        bar = findViewById(R.id.barChart)
-        var barEntries: ArrayList<BarEntry> = ArrayList()
-        var metiers: ArrayList<String> = ArrayList()
+            val conn3 = MonChantier.Metier().execute(url, db, username, password)
+            val listMetier = conn3.get()
 
-        val conn3 = MonChantier.Metier().execute(url, db, username, password)
-        val listMetier = conn3.get()
+            val jsonArray4 = JSONArray(listMetier)
 
-        val jsonArray4 = JSONArray(listMetier)
+            //récupéré lles données de l'objet JSON
+            if (listMetier!!.isNotEmpty() || mesMetiers.isNotEmpty()) {
+                for (i in 0..(listMetier!!.size) - 1) {
 
-        //récupéré lles données de l'objet JSON
-        if (listMetier!!.isNotEmpty() || mesMetiers.isNotEmpty()) {
-            for (i in 0..(listMetier!!.size) - 1) {
+                    val name = jsonArray4.getJSONObject(i).getString("name").toString()
+                    metiers.add(name)
+                    barEntries.add(BarEntry(i.toFloat(), 0f))
 
-                val name = jsonArray4.getJSONObject(i).getString("name").toString()
-                metiers.add(name)
-                barEntries.add(BarEntry(i.toFloat(), 0f))
+                }
 
-            }
-
-            for (i in 0..mesMetiers.size - 1) {
-                val nameM: String = mesMetiers.get(i).metier.toString()
-                val qteMD: Float = mesMetiers.get(i).nom.toString().toFloat()
-                if (metiers.size > 0) {
-                    for (j in 0..metiers.size - 1) {
-                        val nomM = metiers.get(j)
-                        if (nameM.equals(nomM)) {
-                            val barVal = barEntries.get(j).y
-                            barEntries.get(j).y = qteMD + barVal
+                for (i in 0..mesMetiers.size - 1) {
+                    val nameM: String = mesMetiers.get(i).metier.toString()
+                    val qteMD: Float = mesMetiers.get(i).nom.toString().toFloat()
+                    if (metiers.size > 0) {
+                        for (j in 0..metiers.size - 1) {
+                            val nomM = metiers.get(j)
+                            if (nameM.equals(nomM)) {
+                                val barVal = barEntries.get(j).y
+                                barEntries.get(j).y = qteMD + barVal
+                            }
                         }
                     }
                 }
             }
+
+
+            var barDataSet: BarDataSet = BarDataSet(barEntries, "Nombre employés")
+            barDataSet.setColors(
+                Color.rgb(193, 37, 82), Color.rgb(255, 102, 0), Color.rgb(245, 199, 0),
+                Color.rgb(106, 150, 31), Color.rgb(179, 100, 53)
+            )
+
+            val description = Description()
+            description.text = "Métiers"
+
+            var barData = BarData(barDataSet)
+
+            //barData.barWidth = 0.9f
+            bar.setDescription(description)
+            bar.data = barData
+
+
+            val xAxis: XAxis = bar.xAxis
+            xAxis.valueFormatter = IndexAxisValueFormatter(metiers)
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.setDrawAxisLine(false)
+            xAxis.setDrawGridLines(false)
+            xAxis.granularity = 1f
+            xAxis.labelCount = metiers.size
+            xAxis.labelRotationAngle = 270f
+
+            bar.animateY(2000)
+            bar.invalidate()
         }
-
-
-        var barDataSet: BarDataSet = BarDataSet(barEntries, "Nombre employés")
-        barDataSet.setColors(
-            Color.rgb(193, 37, 82), Color.rgb(255, 102, 0), Color.rgb(245, 199, 0),
-            Color.rgb(106, 150, 31), Color.rgb(179, 100, 53)
-        )
-
-        val description = Description()
-        description.text = "Métiers"
-
-        var barData = BarData(barDataSet)
-        //barData.barWidth = 0.9f
-        bar.setDescription(description)
-        bar.data = barData
-
-
-        val xAxis: XAxis = bar.xAxis
-        xAxis.valueFormatter = IndexAxisValueFormatter(metiers)
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.setDrawAxisLine(false)
-        xAxis.setDrawGridLines(false)
-        xAxis.granularity = 1f
-        xAxis.labelCount = metiers.size
-        xAxis.labelRotationAngle = 270f
-
-        bar.animateY(2000)
-        bar.invalidate()
-
 
         // Group bar
         val listEmpQte: ArrayList<EmpQte>
         val conn4 = QteEmploye().execute(id_chantier.toString(), url, db, username, password)
+        if(conn4.get() != null){
         listEmpQte = conn4.get() as ArrayList<EmpQte>
 
         barG = findViewById(R.id.barChartG)
@@ -292,7 +295,7 @@ class TableauDeBoardActivity : AppCompatActivity() {
             barMult.animateY(2000)
             barMult.invalidate()
 
-
+        }
         }
     }
 
