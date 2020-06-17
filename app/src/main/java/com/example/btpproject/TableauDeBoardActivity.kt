@@ -77,25 +77,26 @@ class TableauDeBoardActivity : AppCompatActivity() {
         pie.transparentCircleRadius = 60f
 
         val values: ArrayList<PieEntry> = ArrayList()
-
-        for (i in 0..(mesArticles.size) - 1) {
-            val nameA: String = mesArticles.get(i).nom.toString()
-            val qteD: Float = mesArticles.get(i).qteDemande.toString().toFloat()
-            if (values.size > 0) {
-                for (j in 0..values.size - 1) {
-                    val nameV = values.get(j).label
-                    if (values.get(j).label.equals(nameA)) {
-                        var qteV = values.get(j).value
-                        var qte = qteV + qteD
-                        values.remove(values.get(j))
-                        values.add(PieEntry(qte, nameA))
+        if (mesArticles.isNotEmpty() || mesArticles != null) {
+            for (i in 0..(mesArticles.size) - 1) {
+                val nameA: String = mesArticles.get(i).nom.toString()
+                val qteD: Float = mesArticles.get(i).qteDemande.toString().toFloat()
+                if (values.size > 0) {
+                    for (j in 0..values.size - 1) {
+                        val nameV = values.get(j).label
+                        if (values.get(j).label.equals(nameA)) {
+                            var qteV = values.get(j).value
+                            var qte = qteV + qteD
+                            values.remove(values.get(j))
+                            values.add(PieEntry(qte, nameA))
+                        }
+                        if (j == values.size - 1 && !(values.get(j).label.equals(nameA))) {
+                            values.add(PieEntry(qteD, nameA))
+                        }
                     }
-                    if (j == values.size - 1 && !(values.get(j).label.equals(nameA))) {
-                        values.add(PieEntry(qteD, nameA))
-                    }
+                } else {
+                    values.add(PieEntry(qteD, nameA))
                 }
-            } else {
-                values.add(PieEntry(qteD, nameA))
             }
         }
 
@@ -136,7 +137,7 @@ class TableauDeBoardActivity : AppCompatActivity() {
         val jsonArray4 = JSONArray(listMetier)
 
         //récupéré lles données de l'objet JSON
-        if (listMetier!!.isNotEmpty()) {
+        if (listMetier!!.isNotEmpty() || mesMetiers.isNotEmpty()) {
             for (i in 0..(listMetier!!.size) - 1) {
 
                 val name = jsonArray4.getJSONObject(i).getString("name").toString()
@@ -200,15 +201,16 @@ class TableauDeBoardActivity : AppCompatActivity() {
         val barEntriesQteR: ArrayList<BarEntry> = ArrayList()
         val nameEmp: ArrayList<String> = ArrayList()
 
+        if(listEmpQte.isNotEmpty()) {
+            for (i in 0..listEmpQte.size - 1) {
+                val name = listEmpQte.get(i).nom
+                val qteP = listEmpQte.get(i).qteP
+                val qteR = listEmpQte.get(i).qteR
 
-        for (i in 0..listEmpQte.size - 1) {
-            val name = listEmpQte.get(i).nom
-            val qteP = listEmpQte.get(i).qteP
-            val qteR = listEmpQte.get(i).qteR
-
-            barEntriesQteP.add(BarEntry(i.toFloat(), qteP.toFloat()))
-            barEntriesQteR.add(BarEntry(i.toFloat(), qteR.toFloat()))
-            nameEmp.add(name)
+                barEntriesQteP.add(BarEntry(i.toFloat(), qteP.toFloat()))
+                barEntriesQteR.add(BarEntry(i.toFloat(), qteR.toFloat()))
+                nameEmp.add(name)
+            }
         }
 
 
@@ -426,42 +428,16 @@ class TableauDeBoardActivity : AppCompatActivity() {
                     }
                 )) as Array<Any>)
                 println("********* chantier =$record")
-                val json = JSONArray(record)
-                var  name:String= ""
-                name=json.getJSONObject(0).getString("reference").toString()
+                if(record != null) {
+                    val json = JSONArray(record)
+                    var name: String = ""
+                    name = json.getJSONObject(0).getString("reference").toString()
 
 
-                println("********* namer =$name")
-                val list1 = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                    v[2], uid, v[4],
-                    "purchase.order", "search_read",
-                    Arrays.asList(
-                        Arrays.asList(
-                            Arrays.asList("origin", "=", name)
-                        )
-                    ),
-                    object : HashMap<Any, Any>() {
-                        init {
-                            put(
-                                "fields",
-                                Arrays.asList("id", "name")
-                            )
-                        }
-                    }
-                )) as Array<Any>)
-                println("**************************  champs chantier = $list1")
-                //liste des chantier
-                val jsonArray = JSONArray(list1)
-                var listeArticleDem = java.util.ArrayList<Article>()
-
-                for (i in 0..(list1.size) - 1) {
-
-                    var name = jsonArray.getJSONObject(i).getString("name").toString()
-
-
-                    val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                    println("********* namer =$name")
+                    val list1 = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                         v[2], uid, v[4],
-                        "stock.picking", "search_read",
+                        "purchase.order", "search_read",
                         Arrays.asList(
                             Arrays.asList(
                                 Arrays.asList("origin", "=", name)
@@ -471,73 +447,119 @@ class TableauDeBoardActivity : AppCompatActivity() {
                             init {
                                 put(
                                     "fields",
-                                    Arrays.asList("id", "state", "scheduled_date")
+                                    Arrays.asList("id", "name")
                                 )
                             }
                         }
                     )) as Array<Any>)
-                    println("**************************  champs chantier = $list")
-                    val jsonArray2 = JSONArray(list)
-                    if (list != null) {
-                        for (i2 in 0..(list.size) - 1) {
+                    println("**************************  champs chantier = $list1")
+                    //liste des chantier
+                    if (list1 != null) {
+                        val jsonArray = JSONArray(list1)
+                        var listeArticleDem = java.util.ArrayList<Article>()
 
-                            var idP = jsonArray2.getJSONObject(i2).getString("id").toInt()
+                        for (i in 0..(list1.size) - 1) {
 
-                            val list2 = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                            var name = jsonArray.getJSONObject(i).getString("name").toString()
+
+
+                            val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
                                 v[2], uid, v[4],
-                                "stock.move", "search_read",
+                                "stock.picking", "search_read",
                                 Arrays.asList(
                                     Arrays.asList(
-                                        Arrays.asList("picking_id", "=", idP)
+                                        Arrays.asList("origin", "=", name)
                                     )
                                 ),
                                 object : HashMap<Any, Any>() {
                                     init {
                                         put(
                                             "fields",
-                                            Arrays.asList(
-                                                "id",
-                                                "product_id",
-                                                "product_uom_qty",
-                                                "state",
-                                                "date_expected"
-                                            )
+                                            Arrays.asList("id", "state", "scheduled_date")
                                         )
                                     }
                                 }
                             )) as Array<Any>)
-
                             println("**************************  champs chantier = $list")
-                            val jsonArray3 = JSONArray(list2)
+                            val jsonArray2 = JSONArray(list)
+                            if (list != null) {
+                                for (i2 in 0..(list.size) - 1) {
 
-                            for (i1 in 0..(list2.size) - 1) {
-                                var state =
-                                    jsonArray3.getJSONObject(i1).getString("state").toString()
-                                var qte = jsonArray3.getJSONObject(i1).getString("product_uom_qty")
-                                    .toString()
-                                var idA = jsonArray3.getJSONObject(i1).getString("id").toInt()
+                                    var idP = jsonArray2.getJSONObject(i2).getString("id").toInt()
 
-                                var typeObj =
-                                    jsonArray3.getJSONObject(i1).getString("product_id").toString()
-                                var type = typeObj.split("\"")[1]
-                                var type2 = type.split("\"")[0]
+                                    val list2 =
+                                        Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                                            v[2], uid, v[4],
+                                            "stock.move", "search_read",
+                                            Arrays.asList(
+                                                Arrays.asList(
+                                                    Arrays.asList("picking_id", "=", idP)
+                                                )
+                                            ),
+                                            object : HashMap<Any, Any>() {
+                                                init {
+                                                    put(
+                                                        "fields",
+                                                        Arrays.asList(
+                                                            "id",
+                                                            "product_id",
+                                                            "product_uom_qty",
+                                                            "state",
+                                                            "date_expected"
+                                                        )
+                                                    )
+                                                }
+                                            }
+                                        )) as Array<Any>)
 
-                                var date= jsonArray3.getJSONObject(i1).getString("date_expected").toString()
+                                    println("**************************  champs chantier = $list")
+                                    val jsonArray3 = JSONArray(list2)
+                                    if (list2 != null) {
+                                        for (i1 in 0..(list2.size) - 1) {
+                                            var state =
+                                                jsonArray3.getJSONObject(i1).getString("state")
+                                                    .toString()
+                                            var qte =
+                                                jsonArray3.getJSONObject(i1)
+                                                    .getString("product_uom_qty")
+                                                    .toString()
+                                            var idA =
+                                                jsonArray3.getJSONObject(i1).getString("id").toInt()
 
-                                // println("**************************  article = $type2")
+                                            var typeObj =
+                                                jsonArray3.getJSONObject(i1).getString("product_id")
+                                                    .toString()
+                                            var type = typeObj.split("\"")[1]
+                                            var type2 = type.split("\"")[0]
 
-                                listeArticleDem!!.add(Article(idA, type2, qte ,date, state))
+                                            var date =
+                                                jsonArray3.getJSONObject(i1)
+                                                    .getString("date_expected")
+                                                    .toString()
+
+                                            // println("**************************  article = $type2")
+
+                                            listeArticleDem!!.add(
+                                                Article(
+                                                    idA,
+                                                    type2,
+                                                    qte,
+                                                    date,
+                                                    state
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
                             }
+
                         }
+
+                        return listeArticleDem
                     }
-
-
                 }
-
-
-
                 //  println("**************************  article = $listeArticleDem ")
-                return listeArticleDem
+
 
             }catch (e: MalformedURLException) {
                 Log.d("MalformedURLException", "*********************************************************")
@@ -606,58 +628,59 @@ class TableauDeBoardActivity : AppCompatActivity() {
                     }
                 )) as Array<Any>)
                 println("**************************  champs chantier = $listId")
-
-
                 val jsonArray1 = JSONArray(listId)
-
-                for(i in 0..(listId.size)-1) {
-                    var idD = jsonArray1.getJSONObject(i).getString("id").toInt()
+                if(listId != null) {
+                    for (i in 0..(listId.size) - 1) {
+                        var idD = jsonArray1.getJSONObject(i).getString("id").toInt()
 //
-
-
-
-                    val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
-                        v[2], uid, v[4],
-                        "ligne.demande.appro_personnel", "search_read",
-                        Arrays.asList(
+                        val list = Arrays.asList(*models.execute("execute_kw", Arrays.asList(
+                            v[2], uid, v[4],
+                            "ligne.demande.appro_personnel", "search_read",
                             Arrays.asList(
                                 Arrays.asList(
-                                    "demande_appro_personnel_id",
-                                    "=",idD)
-
-                            )
-                        ),
-                        object : HashMap<Any, Any>() {
-                            init {
-                                put(
-                                    "fields",
-                                    Arrays.asList("job_id", "qte")
+                                    Arrays.asList(
+                                        "demande_appro_personnel_id",
+                                        "=", idD
+                                    )
 
                                 )
+                            ),
+                            object : HashMap<Any, Any>() {
+                                init {
+                                    put(
+                                        "fields",
+                                        Arrays.asList("job_id", "qte")
+
+                                    )
+                                }
+                            }
+                        )) as Array<Any>)
+                        println("**************************  champs chantier = $list")
+
+                        if (list != null) {
+                            val jsonArray = JSONArray(list)
+
+
+                            for (i in 0..(list.size) - 1) {
+                                var metierObj =
+                                    jsonArray.getJSONObject(i).getString("job_id").toString()
+                                var qte = jsonArray.getJSONObject(i).getString("qte").toString()
+
+                                var met = metierObj.split("\"")[1]
+                                var met2 = met.split("\"")[0]
+
+
+                                println("**************************  metier = $met2")
+                                println("**************************  qte = $qte")
+
+                                listeEmp!!.add(Employe(qte, met2))
+
                             }
                         }
-                    )) as Array<Any>)
-                    println("**************************  champs chantier = $list")
-
-
-                    val jsonArray = JSONArray(list)
-
-
-                    for(i in 0..(list.size)-1){
-                        var metierObj = jsonArray.getJSONObject(i).getString("job_id").toString()
-                        var qte = jsonArray.getJSONObject(i).getString("qte").toString()
-
-                        var met = metierObj.split("\"")[1]
-                        var met2 = met.split("\"")[0]
-
-
-                        println("**************************  metier = $met2")
-                        println("**************************  qte = $qte")
-
-                        listeEmp!!.add(Employe(qte, met2))
-
-                    }}
+                    }
+                }
                 return listeEmp
+
 
             }catch (e: MalformedURLException) {
                 Log.d("MalformedURLException", "*********************************************************")
