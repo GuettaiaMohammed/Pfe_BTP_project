@@ -490,7 +490,7 @@ class ListeEmployeActivity : AppCompatActivity() {
                     var emp = empIdObj.split("[")[1]
                     var emp2 = emp.split("]")[0]
                     println("****** $emp2")
-                    var empId = emp2[0].toInt()
+                    var empId = emp2.toInt()
 
                     var nomJson = asList(models.execute("execute_kw", asList(
                         v[2], uid, v[4],
@@ -506,20 +506,24 @@ class ListeEmployeActivity : AppCompatActivity() {
                             }
                         }
                     ))as Array<Any>)
-
+println("************               name=")
                     val jsonArray2 = JSONArray(nomJson)
 
+if(nomJson.isNotEmpty()) {
 
-                    var nomEmpObj = jsonArray2.getJSONArray(0).getString(0).toString()
-                    var nomEmp = nomEmpObj.split("\"")[3]
+    if(jsonArray2!=null)
+    {    if(jsonArray2.getJSONArray(0).length()>0)
+
+    { var nomEmpObj = jsonArray2.getJSONArray(0).getString(0).toString()
+    var nomEmp = nomEmpObj.split("\"")[3]
 
 
-                    println("**************************  metier = $met2")
-                    println("**************************  nom employé = $nomEmp")
+    println("**************************  metier = $met2")
+    println("**************************  nom employé = $nomEmp")
 
-                    listeEmp!!.add(Employe(nomEmp, met2))
-
-                }}
+    listeEmp!!.add(Employe(nomEmp, met2))}
+}
+                }}}
                 return listeEmp
 
             }catch (e: MalformedURLException) {
