@@ -53,8 +53,8 @@ class FragmentListeLigneSuppDetailOt(var idOT: Int): Fragment() {
 
         val connLignsupp = ListeLigneSupp().execute(idOT.toString(), url, db, username, password)
         ligneSupps = connLignsupp.get() as ArrayList<LigneSupplementaireOT>?
-if(ligneSupps!=null){
-        ligneSuppAdapter!!.addAll(ligneSupps)}
+
+        ligneSuppAdapter!!.addAll(ligneSupps)
         listView!!.adapter = ligneSuppAdapter
 
         return view

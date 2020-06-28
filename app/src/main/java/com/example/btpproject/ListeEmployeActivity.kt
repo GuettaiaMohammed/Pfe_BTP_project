@@ -506,7 +506,7 @@ class ListeEmployeActivity : AppCompatActivity() {
                             }
                         }
                     ))as Array<Any>)
-println("************               name=")
+
                     val jsonArray2 = JSONArray(nomJson)
 
 if(nomJson.isNotEmpty()) {
